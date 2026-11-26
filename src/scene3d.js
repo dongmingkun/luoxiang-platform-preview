@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { createMeridianSystem } from "./meridians.js?v=20261107defense";
+import { createMeridianSystem } from "./meridians.js?v=20261126qi";
 import { createTaiji, createDantians, createClock, createStasis, createStage } from "./fx.js?v=20261107defense";
 import { ORGAN_META, ZANG_KEYS, NORMAL_STATE } from "./knowledge.js?v=20261107defense";
 
@@ -532,7 +532,7 @@ export class TCMScene3D {
       this.skinMaterial.uniforms.uBlocked.value = s.stagnation;
       this.skinMaterial.uniforms.uInflame.value = s.inflammation;
     }
-    if (this.meridians) this.meridians.update(s, this.affectedMeridians);
+    if (this.meridians) this.meridians.update(s, this.affectedMeridians, this.dayNight);
     this._updateLabelClasses();
   }
 
@@ -578,7 +578,7 @@ export class TCMScene3D {
     this.affectedOrgans = organs.slice();
     this.affectedMeridians = meridians.slice();
     this._updateLabelClasses();
-    if (this.meridians) this.meridians.update(this.state, this.affectedMeridians);
+    if (this.meridians) this.meridians.update(this.state, this.affectedMeridians, this.dayNight);
   }
 
   setState(state, affectedOrgans = [], affectedMeridians = []) {
@@ -822,8 +822,8 @@ export class TCMScene3D {
 
     if (this.skinMaterial) this.skinMaterial.uniforms.uTime.value = this.elapsed;
     if (this.meridians) {
-      this.meridians.tick(this.elapsed);
-      this.meridians.update(this.state, this.affectedMeridians);
+      this.meridians.update(this.state, this.affectedMeridians, this.dayNight);
+      this.meridians.tick(this.elapsed, dt);
     }
     if (this.taiji) this.taiji.update(this.state, dt, this.elapsed);
     if (this.dantians) this.dantians.update(this.state, dt, this.elapsed);
@@ -848,7 +848,7 @@ export class TCMScene3D {
       }
     }
 
-    this._updateLabels();
     this.renderer.render(this.scene, this.camera);
+    this._updateLabels();
   }
 }

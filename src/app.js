@@ -7,7 +7,7 @@ import {
   buildAnalysisReply, buildTreatmentReply, urgentReply, detectFormula,
   detectOrgan, detectMeridian, isCompareIntent, isResetIntent, isTreatIntent,
 } from "./agent.js?v=20261108teacher";
-import { TCMScene3D } from "./scene3d.js?v=20261126award";
+import { TCMScene3D } from "./scene3d.js?v=20261126qi";
 
 const $ = id => document.getElementById(id);
 const ui = {
