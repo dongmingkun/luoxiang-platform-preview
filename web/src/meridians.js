@@ -33,6 +33,24 @@ const MERIDIAN_PROFILES = {
   ren:      { thick: 0.80, speed: 0.56, urgent: 0.46, depth: 0.38 }, // 阴脉之海
 };
 
+// 参考 GB/T 12346《经穴名称与定位》的示范代表穴位（沿经脉路径相对比例示意，完整体表定位持续精修）
+const ACUPOINT_REFS = {
+  DU: [{ u: 0.22, name: "命门 GV4" }, { u: 0.62, name: "大椎 GV14" }, { u: 0.90, name: "百会 GV20" }],
+  RN: [{ u: 0.20, name: "关元 CV4" }, { u: 0.52, name: "中脘 CV12" }, { u: 0.78, name: "膻中 CV17" }],
+  LU: [{ u: 0.24, name: "中府 LU1" }, { u: 0.56, name: "尺泽 LU5" }, { u: 0.88, name: "太渊 LU9" }],
+  LI: [{ u: 0.14, name: "合谷 LI4" }, { u: 0.52, name: "曲池 LI11" }, { u: 0.86, name: "迎香 LI20" }],
+  ST: [{ u: 0.34, name: "天枢 ST25" }, { u: 0.68, name: "足三里 ST36" }, { u: 0.90, name: "冲阳 ST42" }],
+  SP: [{ u: 0.18, name: "三阴交 SP6" }, { u: 0.38, name: "阴陵泉 SP9" }, { u: 0.72, name: "大横 SP15" }],
+  HT: [{ u: 0.22, name: "极泉 HT1" }, { u: 0.56, name: "少海 HT3" }, { u: 0.88, name: "神门 HT7" }],
+  SI: [{ u: 0.16, name: "后溪 SI3" }, { u: 0.52, name: "小海 SI8" }, { u: 0.86, name: "听宫 SI19" }],
+  BL: [{ u: 0.32, name: "肺俞 BL13" }, { u: 0.48, name: "肾俞 BL23" }, { u: 0.76, name: "委中 BL40" }],
+  KI: [{ u: 0.08, name: "涌泉 KI1" }, { u: 0.18, name: "太溪 KI3" }, { u: 0.66, name: "气穴 KI13" }],
+  PC: [{ u: 0.30, name: "曲泽 PC3" }, { u: 0.76, name: "内关 PC6" }, { u: 0.92, name: "劳宫 PC8" }],
+  TE: [{ u: 0.20, name: "外关 TE5" }, { u: 0.52, name: "天井 TE10" }, { u: 0.86, name: "翳风 TE17" }],
+  GB: [{ u: 0.24, name: "风池 GB20" }, { u: 0.56, name: "环跳 GB30" }, { u: 0.76, name: "阳陵泉 GB34" }],
+  LR: [{ u: 0.10, name: "太冲 LR3" }, { u: 0.42, name: "曲泉 LR8" }, { u: 0.82, name: "期门 LR14" }],
+};
+
 function profileFor(baseId) {
   return MERIDIAN_PROFILES[SIX_STAGE[baseId]] || MERIDIAN_PROFILES.taiyang;
 }
@@ -251,6 +269,7 @@ export function createMeridianSystem(data) {
   const meridians = [];
   const vessels = [];
   const flows = [];
+  const acupointGeo = new THREE.SphereGeometry(0.0085, 12, 10);
 
   for (const path of data.meridians || []) {
     const prof = profileFor(path.baseId);
@@ -276,6 +295,26 @@ export function createMeridianSystem(data) {
     mesh.userData = { path, curve, isYin };
     group.add(mesh);
 
+    // 示范腧穴节点（参考 GB/T 12346）：仅在对应经脉高亮聚焦时清晰亮起，避免满身杂点
+    const acuGroup = new THREE.Group();
+    acuGroup.name = `${path.id}_Acupoints`;
+    const acuMat = new THREE.MeshBasicMaterial({
+      color: core.clone(),
+      transparent: true,
+      opacity: 0.0,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    });
+    for (const ref of ACUPOINT_REFS[path.baseId] || []) {
+      const pt = curve.getPointAt(ref.u);
+      const node = new THREE.Mesh(acupointGeo, acuMat);
+      node.position.copy(pt);
+      node.renderOrder = 7;
+      node.userData.acupointName = ref.name;
+      acuGroup.add(node);
+    }
+    group.add(acuGroup);
+
     const mEntry = {
       id: path.id,
       baseId: path.baseId,
@@ -286,6 +325,8 @@ export function createMeridianSystem(data) {
       side: path.side,
       mesh,
       material: mat,
+      acuGroup,
+      acuMat,
       curve,
       isYin,
       prof,
@@ -499,13 +540,22 @@ export function createMeridianSystem(data) {
         urgent *= 1 - stag * 0.22;
         if (blocked) { intensity *= 0.55; speed *= 0.20; urgent *= 0.65; }
 
-        // 浮沉: 真实模式下浮者透肤而显、沉者藏里而隐
+        // 浮沉与聚焦对比：高亮当令/受累经脉，压暗非重点背景经脉，让十二正经循行路线清晰可辨
         const surf = 0.25 + p.depth * 0.75;
-        if (real) intensity *= affected ? (0.42 + surf * 0.52) : (0.12 + surf * 0.22);
-        else intensity *= 0.52 + p.depth * 0.44;
+        const hasFocus = affectedBaseIds.length > 0;
+        if (real) {
+          intensity *= affected ? (0.52 + surf * 0.56) : (hasFocus ? (0.06 + surf * 0.11) : (0.14 + surf * 0.22));
+        } else {
+          intensity *= affected ? (0.72 + p.depth * 0.38) : (hasFocus ? (0.16 + p.depth * 0.18) : (0.52 + p.depth * 0.44));
+        }
 
         m.speed = THREE.MathUtils.clamp(speed, 0.04, 1.05);
         m.direction = blocked ? -1 : 1;
+
+        if (m.acuMat) {
+          m.acuMat.opacity = affected ? (real ? 0.78 : 0.92) : 0.0;
+          m.acuGroup.visible = affected;
+        }
 
         const u = m.material.uniforms;
         u.uIntensity.value = THREE.MathUtils.clamp(intensity, real ? 0.03 : 0.06, 1.85);
