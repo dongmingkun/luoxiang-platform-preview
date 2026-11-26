@@ -1,0 +1,266 @@
+/* Luoxiang Jingwei · Unified Platform Design Tokens & Navigation Chrome
+ * Shared across structure, yangqi, dataset, herbs, teacher, and judge pages.
+ * Offline-safe (system fonts only), high-contrast rice-paper & pine-jade palette. */
+
+:root {
+  --lx-paper: #f3f4ef;
+  --lx-surface: #ffffff;
+  --lx-tint: #f8faf6;
+  --lx-ink: #142c26;
+  --lx-ink-2: #2b473f;
+  --lx-muted: #536a62;
+  --lx-dim: #6e837b;
+  --lx-jade: #1b6b58;
+  --lx-jade-bright: #248a72;
+  --lx-jade-soft: #e6f2ed;
+  --lx-gold: #9a6d24;
+  --lx-gold-soft: #faf3e4;
+  --lx-gold-line: #e2cca0;
+  --lx-danger: #a6372e;
+  --lx-danger-soft: #fceceb;
+  --lx-line: #dde4dc;
+  --lx-line-strong: #c4d1c6;
+  --lx-stage-bg: #0c1f1b;
+  --lx-stage-border: #1d3c34;
+  --lx-shadow: 0 10px 28px rgba(15, 42, 34, 0.07);
+  --lx-font-serif: "Songti SC", "STSong", "Noto Serif SC", "SimSun", Georgia, serif;
+  --lx-font-sans: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+}
+
+/* Unified Top Navigation Bar */
+.lx-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 8px 20px;
+  background: rgba(251, 252, 249, 0.96);
+  border-bottom: 1px solid var(--lx-line);
+  backdrop-filter: blur(12px);
+  color: var(--lx-ink);
+  font-family: var(--lx-font-sans);
+}
+
+.lx-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--lx-ink);
+  flex: 0 0 auto;
+}
+
+.lx-mark {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1.5px solid var(--lx-jade);
+  background: linear-gradient(145deg, #eef7f3, #ffffff);
+  color: var(--lx-jade);
+  font: 600 18px/1 var(--lx-font-serif);
+}
+
+.lx-brand strong {
+  display: block;
+  font: 600 16px/1.2 var(--lx-font-serif);
+  letter-spacing: 0.1em;
+  color: var(--lx-ink);
+}
+
+.lx-brand small {
+  display: block;
+  margin-top: 2px;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: var(--lx-dim);
+  white-space: nowrap;
+}
+
+.lx-nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.lx-nav a {
+  padding: 6px 10px;
+  border-radius: 7px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--lx-muted);
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+}
+
+.lx-nav a:hover {
+  background: #edf3ef;
+  color: var(--lx-jade);
+}
+
+.lx-nav a[aria-current="page"] {
+  background: var(--lx-jade-soft);
+  color: var(--lx-jade);
+  font-weight: 600;
+}
+
+.lx-top-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.lx-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--lx-line);
+  background: var(--lx-tint);
+  color: var(--lx-muted);
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.lx-pill i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #2b9d6e;
+  box-shadow: 0 0 0 3px rgba(43, 157, 110, 0.15);
+}
+
+.lx-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 13px;
+  border-radius: 8px;
+  border: 1px solid var(--lx-line-strong);
+  background: #ffffff;
+  color: var(--lx-ink-2);
+  font-size: 12.5px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.lx-btn:hover:not(:disabled) {
+  border-color: var(--lx-jade);
+  color: var(--lx-jade);
+  background: var(--lx-jade-soft);
+}
+
+.lx-btn.primary {
+  border-color: var(--lx-jade);
+  background: var(--lx-jade);
+  color: #ffffff;
+}
+
+.lx-btn.primary:hover:not(:disabled) {
+  background: var(--lx-jade-bright);
+  border-color: var(--lx-jade-bright);
+  color: #ffffff;
+}
+
+.lx-btn:disabled { opacity: 0.42; cursor: not-allowed; }
+
+/* Bilateral SVG Callouts (shared across index / yangqi / dataset 3D stages) */
+.canvas-wrap .labels {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  overflow: hidden;
+}
+.canvas-wrap .callout-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.canvas-wrap .callout-line {
+  fill: none;
+  stroke: rgba(170, 214, 196, 0.42);
+  stroke-width: 1.15;
+  stroke-dasharray: 2.5 2.5;
+}
+.canvas-wrap .callout-line.affected {
+  stroke: rgba(242, 200, 114, 0.88);
+  stroke-width: 1.5;
+  stroke-dasharray: none;
+}
+.canvas-wrap .callout-dot {
+  stroke: rgba(12, 31, 27, 0.9);
+  stroke-width: 1.4;
+}
+.canvas-wrap .callout-dot.affected { stroke: #fff3cf; }
+.canvas-wrap .organ-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: auto;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: #e4f0ea;
+  background: rgba(11, 29, 24, 0.84);
+  border: 1px solid rgba(154, 204, 185, 0.36);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  opacity: 0.94;
+}
+.canvas-wrap .organ-label:hover {
+  border-color: #7ee3bd;
+  background: rgba(18, 52, 43, 0.94);
+}
+.canvas-wrap .organ-label-el {
+  font-size: 10px;
+  color: #93b7a8;
+  padding-left: 4px;
+  border-left: 1px solid rgba(154, 204, 185, 0.22);
+}
+.canvas-wrap .organ-label.affected {
+  background: rgba(68, 51, 18, 0.92);
+  color: #fff4d1;
+  border-color: rgba(235, 193, 102, 0.85);
+}
+.canvas-wrap .organ-label.affected::after { display: none; }
+
+@media (max-width: 1180px) {
+  .lx-pill { display: none; }
+}
+
+@media (max-width: 820px) {
+  .lx-topbar {
+    flex-wrap: wrap;
+    padding: 10px 14px;
+    gap: 8px;
+  }
+  .lx-nav {
+    width: 100%;
+    order: 3;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 2px;
+  }
+}

@@ -4,7 +4,7 @@
   "playwright": "1.64.1",
   "runtime_sha256": "ce84b038719c72711385b18ef4da37113ca2d069f45dd19820c0b2dea96357fe",
   "runtime_bytes": 116725,
-  "preview_base": "73b437b8f12d66b4212f8d0a7ffb72b110a2ee4b",
+  "preview_base": "2d4946cf55a35070a95415641eee70e51886644f",
   "protected_preview_modules_unchanged": [
     "web/src/app.js",
     "web/src/scene3d.js",
@@ -20,5 +20,7 @@
   "teacher_checks": 39,
   "legacy_baseline_checks": 10,
   "model_files_added": [],
-  "research_logic_changed": false
+  "research_logic_changed": false,
+  "upstream_main_merged": true,
+  "responsive_teacher_fix": "Mobile data-label cells override desktop nth-child width; 39 teacher checks and independent review passed"
 }

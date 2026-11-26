@@ -3,66 +3,75 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="络象经纬教师端：标准教学案例、教学知识表与本机演示记录。纯静态，无个人信息。" />
+  <meta name="description" content="络象经纬教师端：标准教学案例、经典方剂知识对照（直链药材原文检索）与本机演示记录。" />
   <link rel="icon" href="data:," />
   <title>教师端 · 教学控制台 | 络象经纬</title>
-  <link rel="stylesheet" href="styles.css?v=20261108teacher" />
-  <link rel="stylesheet" href="teacher.css?v=20261108teacher" />
+  <link rel="stylesheet" href="platform-theme.css?v=20261126award" />
+  <link rel="stylesheet" href="teacher.css?v=20261126award" />
 </head>
 <body class="teacher-body">
-  <header class="topbar">
-    <div class="brand">
-      <div class="yin-yang" aria-hidden="true"></div>
-      <div class="brand-text">
-        <h1>络象经纬 · 教师端</h1>
-        <p>教学控制台 · 标准案例与知识对照</p>
-      </div>
-    </div>
-    <nav class="top-actions" aria-label="平台页面">
-      <a class="btn ghost" href="showcase.html">演示总览</a>
-      <a class="btn ghost" href="index.html?demo=1">答辩模式</a>
-      <a class="btn ghost" href="research.html">研究模式</a>
-      <a class="btn ghost" href="judge.html">评委页</a>
-      <a class="btn ghost" href="structure.html">结构页</a>
-      <a class="btn ghost" href="herbs.html">药材资料</a>
+  <header class="lx-topbar">
+    <a class="lx-brand" href="showcase.html">
+      <span class="lx-mark" aria-hidden="true">络</span>
+      <span><strong>络象经纬</strong><small>LUOXIANG · TEACHER CONSOLE</small></span>
+    </a>
+    <nav class="lx-nav" aria-label="平台页面">
+      <a href="showcase.html">演示总览</a>
+      <a href="index.html?demo=1">三维教学</a>
+      <a href="structure.html">人体结构</a>
+      <a href="yangqi.html">阳气运行</a>
+      <a href="dataset.html">数据推演</a>
+      <a href="herbs.html">药材资料</a>
+      <a href="teacher.html" aria-current="page">教师端</a>
+      <a href="research.html">研究模式</a>
+      <a href="judge.html">评委速览</a>
     </nav>
+    <div class="lx-top-right">
+      <span class="lx-pill"><i></i>纯静态 · 零个人信息</span>
+    </div>
   </header>
 
   <main class="teacher-main">
     <section class="teacher-hero" aria-labelledby="teacher-title">
       <div>
-        <div class="section-kicker">课堂准备 / 教学控制台</div>
-        <h2 id="teacher-title">从一个标准案例，<br />开始课堂演示</h2>
-        <p class="teacher-lede">课前核对案例与经典方示例，课中一键进入答辩模式，课后查看这台浏览器的打开记录。</p>
-        <nav class="teacher-shortcuts" aria-label="本页内容">
-          <a href="#cases">标准案例 ↓</a>
-          <a href="#knowledge">教学知识表 ↓</a>
-          <a href="#records">本机演示记录 ↓</a>
+        <div class="teacher-kicker">CLASSROOM CONSOLE · 备课与课堂演示</div>
+        <h2 id="teacher-title">从一个标准案例，<br /><span>展开课堂三维演示。</span></h2>
+        <p class="teacher-lede">课前按证型核对经典方剂与药味原文，课中一键跳转答辩标准案例模式，课后在当前浏览器导出本机演示记录。</p>
+        <nav class="teacher-shortcuts" aria-label="本页快捷导航">
+          <a class="lx-btn primary" href="#cases">标准教学案例 ↓</a>
+          <a class="lx-btn" href="#knowledge">方剂与药味对照 ↓</a>
+          <a class="lx-btn" href="#records">本机演示记录 ↓</a>
         </nav>
       </div>
       <aside class="teacher-boundary">
-        <span class="privacy-pill"><i></i> 纯静态 · 无后端</span>
-        <h3>教学演示，不是生理测量/诊断/处方</h3>
-        <p>方名与功效方向沿用现有教材整理内容，不含剂量，待教学团队核对。页面不采集个人信息，不上传演示记录。</p>
-        <p>模型由队长另仓手动整合；本控制台无需模型即可使用。</p>
+        <span class="boundary-pill"><i></i> 教学演示边界 · 非医疗系统</span>
+        <h3>教学演示，不是生理测量、诊断或处方</h3>
+        <p>方名与功效方向沿用经典教材整理条目，不含用法剂量，待教学团队审阅确认。本页不采集个人信息，所有演示记录仅存于本地浏览器。</p>
+        <p>三维模型由独立建模仓交付并本地整合；教师端控制台无需模型亦可独立备课查阅。</p>
       </aside>
     </section>
 
     <section aria-labelledby="facts-title">
       <div class="teacher-section-head">
-        <div><div class="section-kicker">内容范围</div><h2 id="facts-title">教学内容概览</h2></div>
-        <span class="tag">内容数量 ≠ 使用量</span>
+        <div>
+          <div class="teacher-kicker">CONTENT SCOPE</div>
+          <h2 id="facts-title">教学内容规模概览</h2>
+        </div>
+        <span class="teacher-tag">内容数量 ≠ 教学使用量</span>
       </div>
       <dl id="fact-cards" class="fact-grid"></dl>
-      <p class="teacher-note">证型、经典方示例、症状标签按当前教学代码统计。14 个器官、26 条经络沿用既有模型整合记录口径，并非本页实时加载统计；实际模型版本与数量须在演示机整合后复核。</p>
+      <p class="teacher-note">证型、经典方示例与症状标签按平台知识库实时统计；14 个器官、26 条经络沿用既有模型整合口径，实际整合版本以演示机加载为准。</p>
     </section>
 
-    <section id="cases" class="card teacher-section" aria-labelledby="cases-title">
+    <section id="cases" class="teacher-card teacher-section" aria-labelledby="cases-title">
       <div class="teacher-section-head">
-        <div><div class="section-kicker">课中 / 标准案例</div><h2 id="cases-title">选择课堂演示案例</h2></div>
-        <span class="tag">沿用主站标准案例</span>
+        <div>
+          <div class="teacher-kicker">01 · CLASSROOM DEMO</div>
+          <h2 id="cases-title">标准教学演示案例</h2>
+        </div>
+        <span class="teacher-tag">一键直达 3D 答辩模式</span>
       </div>
-      <p class="teacher-note">打开后进入答辩模式，自动选择该案例，并隐藏自由症状输入。案例文字为教学示例，不是真实病例。</p>
+      <p class="teacher-note">点击「打开案例」进入答辩标准模式（自动投射该案例至 3D 并隐藏自由症状输入）。案例文字仅为教学示例，非真实病例。</p>
       <table id="case-table" class="teacher-table case-table">
         <caption>标准案例、对应证型与默认经典方示例</caption>
         <thead><tr><th scope="col">案例名</th><th scope="col">对应证型</th><th scope="col">经典方示例</th><th scope="col">操作</th></tr></thead>
@@ -70,45 +79,61 @@
       </table>
     </section>
 
-    <section id="knowledge" class="card teacher-section" aria-labelledby="knowledge-title">
+    <section id="knowledge" class="teacher-card teacher-section" aria-labelledby="knowledge-title">
       <div class="teacher-section-head">
-        <div><div class="section-kicker">课前 / 内容核对</div><h2 id="knowledge-title">教学知识表</h2></div>
-        <span class="tag">10 个经典方示例 · 不含剂量</span>
+        <div>
+          <div class="teacher-kicker">02 · FORMULA & HERB CROSS-CHECK</div>
+          <h2 id="knowledge-title">教学知识表（点击药味直达原文检索）</h2>
+        </div>
+        <span class="teacher-tag">10 个经典方示例 · 不含剂量</span>
       </div>
-      <p class="teacher-note">直接读取 knowledge.js 中的方名、组成药味、功效方向与对应证型。来源为教材整理/待核；以下方向仅用于教学对照，不构成用药建议。</p>
+      <p class="teacher-note">直接读取平台知识库中的方名、组成药味、功效方向与对应证型；点击任意药味标签可跳转至药材资料库查阅原始条目。</p>
+
+      <div id="pattern-filters" class="pattern-filters" role="group" aria-label="按证型筛选经典方"></div>
+
       <table id="knowledge-table" class="teacher-table knowledge-table">
         <caption>方剂教学条目 · 教学演示，不是生理测量/诊断/处方</caption>
-        <thead><tr><th scope="col">方名</th><th scope="col">组成药味</th><th scope="col">功效方向</th><th scope="col">对应证型</th><th scope="col">来源</th></tr></thead>
+        <thead><tr><th scope="col">方名</th><th scope="col">组成药味（点击查原文）</th><th scope="col">功效方向</th><th scope="col">对应证型</th><th scope="col">来源</th></tr></thead>
         <tbody></tbody>
       </table>
     </section>
 
-    <section id="records" class="card teacher-section" aria-labelledby="records-title">
+    <section id="records" class="teacher-card teacher-section" aria-labelledby="records-title">
       <div class="teacher-section-head">
-        <div><div class="section-kicker">课后 / 仅此浏览器</div><h2 id="records-title">本机演示记录</h2></div>
+        <div>
+          <div class="teacher-kicker">03 · LOCAL LOGS</div>
+          <h2 id="records-title">本机演示记录</h2>
+        </div>
         <div class="teacher-export">
-          <button id="export-json" class="btn ghost" type="button" disabled>导出 JSON</button>
-          <button id="export-csv" class="btn ghost" type="button" disabled>导出 CSV</button>
+          <button id="export-json" class="lx-btn" type="button" disabled>导出 JSON</button>
+          <button id="export-csv" class="lx-btn" type="button" disabled>导出 CSV</button>
+          <button id="clear-records" class="lx-btn danger" type="button" disabled>清空记录</button>
         </div>
       </div>
       <p class="record-boundary">本机演示记录，不是研究数据、不含个人信息。</p>
-      <p class="teacher-note">只统计从本页打开标准案例的操作次数，不代表学生人数、授课次数或学习效果。使用 localStorage 保存在当前浏览器与站点；清理站点数据后记录会消失。</p>
+      <p class="teacher-note">仅统计从本页打开标准案例的操作记录，不代表学生人数或学习效果；使用浏览器 localStorage 本地保存。</p>
       <p id="storage-status" class="teacher-note" role="status" aria-live="polite"></p>
       <p id="record-count" class="record-count" aria-live="polite">本机已记录 0 次打开</p>
       <div id="records-empty" class="records-empty">
         <b>还没有本机演示记录</b>
-        <p>从上方打开一个标准案例后，这里会显示时间、案例、证型与方剂。</p>
-        <a href="#cases">选择标准案例 ↑</a>
+        <p>从上方打开一个标准案例后，这里会自动记录时间、案例、证型与方剂示例。</p>
+        <a href="#cases">返回选择标准案例 ↑</a>
       </div>
       <table id="records-table" class="teacher-table records-table" hidden>
-        <caption>本机打开记录（新到旧）· 时间按当前设备时区显示，导出采用 ISO 时间</caption>
+        <caption>本机打开记录（新到旧）· 导出采用标准 ISO 时间</caption>
         <thead><tr><th scope="col">时间</th><th scope="col">案例</th><th scope="col">证型</th><th scope="col">方剂</th></tr></thead>
         <tbody></tbody>
       </table>
     </section>
+
     <noscript><p class="teacher-boundary">请启用 JavaScript 以读取教学内容与本机记录。当前未生成任何记录。</p></noscript>
-    <footer class="teacher-footer">络象经纬 · 阳迹枢机教学平台 · 教师端<br />本页记录与研究模式作答分开保存；教学参数不作为研究结果或医学结论。</footer>
+
+    <footer class="teacher-footer">
+      络象经纬 · 三维中医教学平台 · 教师端<br />
+      本页记录与研究模式作答完全隔离；教学参数不作为研究结论或临床依据。
+    </footer>
   </main>
-  <script type="module" src="src/teacher.js?v=20261108teacher"></script>
+
+  <script type="module" src="src/teacher.js?v=20261126award"></script>
 </body>
 </html>

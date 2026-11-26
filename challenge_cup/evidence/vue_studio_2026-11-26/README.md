@@ -19,3 +19,7 @@
 临时 8021 已关闭，长期 8020 保留。模型仅映射已存在的本地目录，没有复制、下载或提交。截图为实际运行界面；BodyParts3D 部分归 The Database Center for Life Science，CC BY-SA 2.1 Japan；Vue/Three.js 与平台代码按相应 MIT 许可保留署名。
 
 复现见 `docs/VUE_STUDIO.md`。测试依赖已固定于 package-lock，浏览器使用本机 Chrome。缺模型时按 INTEGRATION.md 手动准备，不从页面自动拉取。
+
+## 最终上游整合
+
+推送期间主分支更新到 `2d4946c`，已合并并保留其多页主题/功能更新；合并后重新通过 Vue 37 项、原主界面 46 项、教师端 39 项。当前发布 HTML 与之前本地验收 HTML 一致。上游教师表格移动卡片被桌面 nth-child 列宽覆盖，追加一条仅 ≤820px 生效的 data-label 单元格宽度规则，39 项重跑通过，独立复核在 390/820/821/1280 的范围正确。该修复不改教师逻辑或研究数据。最终 protected source 比较以 `2d4946c` 为基线。
