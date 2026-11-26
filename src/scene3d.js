@@ -36,19 +36,18 @@ const SKIN_FRAG = /* glsl */ `
     float fres = pow(1.0 - clamp(abs(dot(N, V)), 0.0, 1.0), 2.7);
 
     if (uMode > 0.5) {
-      // 真实皮肤：柔和的包裹光 + 世界坐标细颗粒 + 轻 subsurface 色偏，不做扫描线。
+      // 医疗图谱级半透明皮肤：清润中性象牙肤色 + 柔顺次表面包裹光 + 极微边缘轮廓，去除偏橙塑料感。
       float ndl = clamp(dot(N, normalize(uLightDir)), 0.0, 1.0);
-      float wrap = ndl * 0.55 + 0.45;
-      float grain = fract(sin(dot(floor(vW.xy * 380.0), vec2(12.9898, 78.233))) * 43758.5453);
-      vec3 col = mix(uSkinDeep, uSkin, wrap);
-      col *= 0.82 + ndl * 0.28;
-      col *= 0.975 + grain * 0.05;
-      col += vec3(0.16, 0.045, 0.03) * pow(wrap, 2.0) * 0.35;
-      col += uRim * fres * 0.16;
-      col = mix(col, vec3(0.72, 0.18, 0.14), uInflame * 0.20);
-      col = mix(col, vec3(0.38, 0.22, 0.48), uBlocked * 0.16);
-      float alpha = uOpacity + fres * 0.55 + 0.20;
-      gl_FragColor = vec4(col, clamp(alpha, 0.0, 0.92));
+      float wrap = clamp((dot(N, normalize(uLightDir)) + 0.55) / 1.55, 0.0, 1.0);
+      vec3 col = mix(uSkinDeep, uSkin, smoothstep(0.05, 0.95, wrap));
+      col *= 0.86 + ndl * 0.20;
+      // 柔和次表面暖透，不泛橙红
+      col += vec3(0.055, 0.032, 0.024) * pow(wrap, 2.2) * (1.0 - fres);
+      col += uRim * fres * 0.28;
+      col = mix(col, vec3(0.70, 0.22, 0.18), uInflame * 0.18);
+      col = mix(col, vec3(0.38, 0.24, 0.48), uBlocked * 0.15);
+      float alpha = uOpacity + fres * 0.48 + 0.14;
+      gl_FragColor = vec4(col, clamp(alpha, 0.0, 0.84));
       return;
     }
 
@@ -303,10 +302,10 @@ export class TCMScene3D {
       fragmentShader: SKIN_FRAG,
       uniforms: {
         uColor: { value: new THREE.Color("#5ca8e8") },
-        uRim: { value: new THREE.Color("#ffd9c7") },
-        uSkin: { value: new THREE.Color("#f2cbb7") },
-        uSkinDeep: { value: new THREE.Color("#c58c77") },
-        uLightDir: { value: new THREE.Vector3(2.5, 4, 3.5).normalize() },
+        uRim: { value: new THREE.Color("#cde6dc") },
+        uSkin: { value: new THREE.Color("#ddd2c7") },
+        uSkinDeep: { value: new THREE.Color("#94887f") },
+        uLightDir: { value: new THREE.Vector3(2.2, 3.8, 3.4).normalize() },
         uTime: { value: 0 },
         uOpacity: { value: this.skinOpacity },
         uBlocked: { value: 0 },
@@ -388,9 +387,22 @@ export class TCMScene3D {
   }
 
   _updateOrganCenters() {
-    this.organs.forEach(o => {
+    const size = new THREE.Vector3();
+    this.organs.forEach((o, key) => {
       const box = new THREE.Box3().setFromObject(o.mesh);
       box.getCenter(o.center);
+      box.getSize(size);
+      // 成对脏器（双肾、双肺）的包围盒中心会落在中线空白处，修正到真实单侧实体解剖位：
+      // 肾：腰部脊柱两侧、靠后（避免落在上腹正中）；肺：胸廓左侧实体肺叶。
+      if (key === "Kidneys") {
+        o.center.x = box.min.x + size.x * 0.20;
+        o.center.y = box.min.y + size.y * 0.50;
+        o.center.z = box.min.z + size.z * 0.38;
+      } else if (key === "Lungs") {
+        o.center.x = box.min.x + size.x * 0.24;
+        o.center.y = box.min.y + size.y * 0.56;
+        o.center.z = box.min.z + size.z * 0.52;
+      }
     });
   }
 
@@ -423,9 +435,10 @@ export class TCMScene3D {
   }
 
   _resetCameraForModel() {
-    const y = this.modelHeight * 0.565;
+    const y = this.modelHeight * 0.545;
     this.controls.target.set(0, y, 0);
-    this.camera.position.set(1.22, y + 0.40, 2.72);
+    // 拉近默认机位，让三维人体在画幅中更饱满清晰
+    this.camera.position.set(0.68, y + 0.18, 2.28);
     this.controls.autoRotate = true;
   }
 
@@ -438,7 +451,7 @@ export class TCMScene3D {
     this.labelLayer.appendChild(svg);
     this._calloutSvg = svg;
 
-    for (const key of [...ZANG_KEYS, "Uterus", "Ovaries"]) {
+    for (const key of [...ZANG_KEYS, "Stomach", "Uterus", "Ovaries"]) {
       if (!ORGAN_META[key]) continue;
       const meta = ORGAN_META[key];
       const el = document.createElement("button");
@@ -574,9 +587,27 @@ export class TCMScene3D {
     }
   }
 
+  _syncOrganVisibility() {
+    const real = this.visualMode === "real";
+    for (const [key, o] of this.organs) {
+      if (!this.layers.organs) {
+        o.mesh.visible = false;
+        continue;
+      }
+      // 保持头/躯干解剖层次一致：真实模式下无骨骼时默认隐去裸露大脑，
+      // 仅在开启骨骼层、全息模式、或督脉/大脑被显式聚焦时显示大脑。
+      if (key === "Brain" && real && !this.layers.skeleton) {
+        o.mesh.visible = this.affectedOrgans.includes("Brain") || this.selectedOrgan === "Brain";
+      } else {
+        o.mesh.visible = true;
+      }
+    }
+  }
+
   setAffected(organs = [], meridians = []) {
     this.affectedOrgans = organs.slice();
     this.affectedMeridians = meridians.slice();
+    this._syncOrganVisibility();
     this._updateLabelClasses();
     if (this.meridians) this.meridians.update(this.state, this.affectedMeridians, this.dayNight);
   }
@@ -585,6 +616,7 @@ export class TCMScene3D {
     this.state = { ...state };
     this.affectedOrgans = affectedOrgans;
     this.affectedMeridians = affectedMeridians;
+    this._syncOrganVisibility();
     this._applyOrgans();
   }
 
@@ -593,10 +625,11 @@ export class TCMScene3D {
     const real = this.visualMode === "real";
     if (this.skinMaterial) {
       this.skinMaterial.uniforms.uMode.value = real ? 1 : 0;
-      this.skinMaterial.uniforms.uRim.value.set(real ? "#ffd9c7" : "#b9ecff");
+      this.skinMaterial.uniforms.uRim.value.set(real ? "#cde6dc" : "#b9ecff");
       this.skinMaterial.uniforms.uColor.value.set("#5ca8e8");
     }
     this._applyLighting();
+    this._syncOrganVisibility();
     if (this.meridians) this.meridians.setStyle(this.visualMode);
     if (this.stage) this.stage.group.visible = !real;
     if (this.realPlinth) this.realPlinth.visible = real;
@@ -638,7 +671,7 @@ export class TCMScene3D {
   setLayers(layers) {
     this.layers = { ...this.layers, ...layers };
     if (this.skin) this.skin.visible = this.layers.skin;
-    for (const o of this.organs.values()) o.mesh.visible = this.layers.organs;
+    this._syncOrganVisibility();
     if (this.skeleton) this.skeleton.visible = this.layers.skeleton;
     if (this.meridians) {
       this.meridians.setVisible(this.layers.meridians);
@@ -677,11 +710,12 @@ export class TCMScene3D {
 
   resetView() {
     this.selectedOrgan = null;
+    this._syncOrganVisibility();
     this._updateLabelClasses();
-    const y = this.modelHeight * 0.565;
+    const y = this.modelHeight * 0.545;
     this._cameraTween = {
       target: new THREE.Vector3(0, y, 0),
-      pos: new THREE.Vector3(0, y + 0.05, 3.25),
+      pos: new THREE.Vector3(0, y + 0.04, 2.38),
       speed: 0.15,
     };
   }

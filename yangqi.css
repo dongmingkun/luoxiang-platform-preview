@@ -97,6 +97,72 @@
   border-color: #1d466b;
 }
 
+/* 十二时辰子午流注时间轴 */
+.shichen-bar {
+  margin-top: 9px;
+  padding: 8px 10px 7px;
+  border-radius: 9px;
+  background: #f3f7f4;
+  border: 1px solid var(--lx-line);
+}
+.shichen-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 11.5px;
+  color: var(--lx-ink-2);
+  margin-bottom: 5px;
+}
+.shichen-head b { color: var(--lx-jade); font-weight: 700; }
+.shichen-tag {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--lx-gold-soft);
+  border: 1px solid var(--lx-gold-line);
+  color: #7c5616;
+  white-space: nowrap;
+}
+.is-night .shichen-tag {
+  background: #e6eff9;
+  border-color: #9ec0e6;
+  color: #1c4c7d;
+}
+.shichen-slider {
+  width: 100%;
+  margin: 0;
+  accent-color: var(--lx-jade);
+  cursor: pointer;
+}
+.shichen-ticks {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 2px;
+  margin-top: 4px;
+}
+.shichen-tick {
+  border: 0;
+  background: transparent;
+  color: var(--lx-dim);
+  font-size: 10.5px;
+  font-weight: 500;
+  padding: 2px 0;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.14s ease;
+}
+.shichen-tick:hover { color: var(--lx-jade); background: rgba(27, 107, 88, 0.08); }
+.shichen-tick.is-on {
+  background: var(--lx-jade);
+  color: #ffffff;
+  font-weight: 700;
+}
+.is-night .shichen-tick.is-on { background: #1d466b; }
+.shichen-tick.is-night-slot:not(.is-on) { color: #5b7491; }
+
 .yq-tabs {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -164,28 +230,74 @@
   font-size: 12px;
   color: var(--lx-ink);
 }
-.qi-map { display: block; width: 100%; height: auto; max-height: 295px; }
-.body-outline { fill: rgba(27, 107, 88, 0.04); stroke: rgba(27, 107, 88, 0.22); stroke-width: 1.2; }
-.map-title { fill: var(--lx-dim); font-size: 9.5px; font-weight: 600; text-anchor: middle; letter-spacing: 0.12em; }
-.axis-line { fill: none; stroke-width: 1.9; stroke-linecap: round; opacity: 0.9; }
-.up-line, .lung-line, .liver-line { stroke: #d97732; }
-.down-line { stroke: #1b7ca8; stroke-dasharray: 4 4; }
+.qi-map { display: block; width: 100%; height: auto; max-height: 328px; }
+.body-outline { fill: rgba(27, 107, 88, 0.035); stroke: rgba(27, 107, 88, 0.22); stroke-width: 1.3; stroke-dasharray: 4 3; }
+.pivot-ring { fill: rgba(217, 166, 68, 0.08); stroke: rgba(176, 130, 45, 0.42); stroke-width: 1.25; stroke-dasharray: 3 3; }
+.pivot-label { fill: #7c5616; font-size: 10.5px; font-weight: 700; text-anchor: middle; letter-spacing: 0.06em; }
+.map-title { fill: var(--lx-ink-2); font-size: 11px; font-weight: 700; text-anchor: middle; letter-spacing: 0.08em; }
+.axis-line { fill: none; stroke-width: 2.2; stroke-linecap: round; opacity: 0.92; }
+.pivot-arc { stroke-width: 1.75; opacity: 0.85; }
+.up-line { stroke: #d97732; }
+.down-line { stroke: #1b7ca8; stroke-dasharray: 5 4; }
 .day-line { stroke: #b0822d; stroke-dasharray: 3 4; }
 .night-line { stroke: #2f69b2; stroke-dasharray: 3 4; opacity: 0; }
 .is-night .day-line { opacity: 0; }
 .is-night .night-line { opacity: 0.95; }
-.is-night .up-line { opacity: 0.55; }
+.is-night .up-line { opacity: 0.62; }
 .organ-node { cursor: pointer; }
 .organ-node circle {
   fill: #ffffff;
   stroke: var(--lx-jade);
-  stroke-width: 1.6;
-  transition: fill 0.16s ease, stroke 0.16s ease;
+  stroke-width: 1.9;
+  transition: fill 0.16s ease, stroke 0.16s ease, stroke-width 0.16s ease;
 }
-.organ-node text { fill: var(--lx-ink); font-size: 12.5px; font-weight: 600; text-anchor: middle; pointer-events: none; }
-.organ-node .node-sub { fill: var(--lx-muted); font-size: 8.5px; font-weight: 500; }
-.organ-node:hover circle, .organ-node.is-active circle { fill: var(--lx-jade-soft); stroke: var(--lx-gold); stroke-width: 2.2; }
-.qi-map-hint { font-size: 11px; line-height: 1.5; color: var(--lx-muted); margin: 4px 2px 0; }
+.organ-node.is-pivot circle { stroke: #b0822d; }
+.organ-node text { fill: var(--lx-ink); font-size: 14.5px; font-weight: 700; text-anchor: middle; pointer-events: none; }
+.organ-node .node-sub { fill: var(--lx-ink-2); font-size: 10.5px; font-weight: 600; }
+.organ-node:hover circle, .organ-node.is-active circle { fill: #e3f4ec; stroke: #c58822; stroke-width: 2.8; }
+.qi-map-hint { font-size: 11.5px; line-height: 1.5; color: var(--lx-muted); margin: 5px 2px 0; }
+
+/* 脏腑要点高亮联动 & 可展开经典原文引用 */
+.axis-list { list-style: none; padding-left: 0 !important; display: flex; flex-direction: column; gap: 6px; }
+.axis-list li {
+  margin-bottom: 0 !important;
+  padding: 7px 9px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: #f9fbf9;
+  transition: border-color 0.16s ease, background 0.16s ease;
+}
+.axis-list li.is-active {
+  border-color: var(--lx-jade);
+  background: #eaf5ef;
+  box-shadow: 0 0 0 2px rgba(27, 107, 88, 0.10);
+}
+.classic-cite {
+  margin-top: 4px;
+  font-size: 11.5px;
+}
+.classic-cite summary {
+  cursor: pointer;
+  color: var(--lx-jade);
+  font-weight: 600;
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.classic-cite summary::-webkit-details-marker { display: none; }
+.classic-cite summary::before { content: "▸"; font-size: 10px; transition: transform 0.15s ease; }
+.classic-cite[open] summary::before { transform: rotate(90deg); }
+.classic-cite p {
+  margin: 5px 0 0 !important;
+  padding: 6px 9px;
+  border-left: 2.5px solid var(--lx-gold);
+  background: #fbf8f0;
+  color: #534022 !important;
+  font-size: 11.5px !important;
+  line-height: 1.6 !important;
+  border-radius: 0 6px 6px 0;
+}
 
 .yq-section p, .yq-section li { font-size: 12.5px; line-height: 1.7; color: var(--lx-ink-2); }
 .yq-section p { margin: 0 0 8px; }
@@ -333,6 +445,58 @@
 }
 .yq-stage .canvas-wrap:not(.is-real) {
   background: radial-gradient(ellipse 65% 58% at 50% 45%, #113b44 0%, #09212a 60%, #051319 100%);
+}
+
+/* 右上悬浮：十二时辰流注与卫气行信息卡 */
+.shichen-hud {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 4;
+  width: 238px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(10, 29, 24, 0.86);
+  border: 1px solid rgba(232, 201, 138, 0.36);
+  backdrop-filter: blur(10px);
+  color: #edf5f0;
+  pointer-events: none;
+  box-shadow: 0 10px 24px rgba(4, 15, 12, 0.34);
+}
+.is-night .shichen-hud {
+  background: rgba(8, 22, 40, 0.88);
+  border-color: rgba(120, 174, 245, 0.42);
+}
+.shichen-hud-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.shichen-hud-badge {
+  font-size: 13px;
+  font-weight: 700;
+  color: #f7dfaa;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: rgba(196, 146, 54, 0.25);
+  border: 1px solid rgba(238, 198, 118, 0.45);
+}
+.is-night .shichen-hud-badge {
+  color: #cbe3ff;
+  background: rgba(45, 102, 176, 0.32);
+  border-color: rgba(132, 186, 255, 0.48);
+}
+.shichen-hud-hours { font-size: 11px; color: #9fc2b4; font-variant-numeric: tabular-nums; }
+.shichen-hud-meridian { font-size: 12.5px; font-weight: 700; color: #ffffff; margin-bottom: 3px; }
+.shichen-hud-route { font-size: 11px; line-height: 1.45; color: #c7dfd5; margin-bottom: 4px; }
+.shichen-hud-acu {
+  font-size: 10.5px;
+  line-height: 1.45;
+  color: #93ccb5;
+  padding-top: 4px;
+  border-top: 1px dashed rgba(132, 186, 165, 0.22);
 }
 
 .yq-hud {
