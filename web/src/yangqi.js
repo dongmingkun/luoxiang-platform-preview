@@ -1,4 +1,4 @@
-import { TCMScene3D } from "./scene3d.js?v=20261126award";
+import { TCMScene3D } from "./scene3d.js?v=20261126qi";
 import { NORMAL_STATE } from "./knowledge.js?v=20261107defense";
 
 const $ = id => document.getElementById(id);
