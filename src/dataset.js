@@ -722,7 +722,7 @@ function setDataView(view) {
   ui.btnTableView?.classList.toggle("is-on", table);
   ui.btnChartView?.setAttribute("aria-pressed", String(!table));
   ui.btnTableView?.setAttribute("aria-pressed", String(table));
-  if (ui.chart) ui.chart.hidden = table;
+  if (ui.chart) ui.chart.toggleAttribute("hidden", table);
   if (ui.seriesTableWrap) ui.seriesTableWrap.hidden = !table;
   ui.chartCard?.classList.toggle("is-table", table);
   if (currentCase) renderSeriesTable(currentCase);
