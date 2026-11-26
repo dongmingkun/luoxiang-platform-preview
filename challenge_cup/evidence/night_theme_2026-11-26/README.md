@@ -2,7 +2,13 @@
 
 工单：`WO-PF-20261126-002`。本轮仅新增 `web/studio-night.css` 并在主页面引入；无新依赖、网络请求、动画或三维材质改动。
 
-## 发布包
+## 主分支并行升级后的最终验收
+
+推送期间 GitHub 主分支更新至 `6ec2673`。保留上游新版界面、器官标注、对比交互与规则，主题接入该版本后再次运行上游浏览器脚本，**46 项通过**；五尺寸无横向溢出，五个脏腑标注无重叠，正常路径 console/page/HTTP 错误及外部/写请求均为 0。最终记录：`current-preview-verification.json`、`current-preview-1440.png`、`current-preview-390.png`。下文 56 项记录属于合并前的历史预览快照。
+
+上游脚本原先只以 `visibility:hidden` 判断移动菜单关闭，但新布局使用 `display:none`，造成误报。校验改为同时识别两种隐藏方式；未修改导航业务逻辑。总览的 `showcase-demo.jpg` 同步为这次真实深色工作台截图。临时 8021 服务已关闭。
+
+## 合并前历史发布包
 
 基于既有 GitHub `codex/frontend-studio-preview` / `753ded6`，原业务、三维与研究模块保持不变。新增主题后，原前端验收脚本重新运行 **56 项通过**，五尺寸无横向溢出，关键文字对比度检查通过，正常路径 console/page/HTTP 错误和外部/写请求均为 0，九页面返回 200。详见 `preview-verification.json`、`preview-1440.png`、`preview-390.png`。
 
