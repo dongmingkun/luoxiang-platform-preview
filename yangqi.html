@@ -8,7 +8,7 @@
   <title>阳气运行 | 络象经纬</title>
   <link rel="stylesheet" href="platform-theme.css?v=20261126award" />
   <link rel="stylesheet" href="styles.css?v=20261107defense" />
-  <link rel="stylesheet" href="yangqi.css?v=20261127tcm" />
+  <link rel="stylesheet" href="yangqi.css?v=20261127atlas2" />
 </head>
 <body class="yq-body">
   <div class="app yq-app">
@@ -41,21 +41,28 @@
               <span class="yq-eyebrow">TCM THEORY · YANG QI</span>
               <h2>阳气运行与升降枢机</h2>
             </div>
-            <button id="btn-yq-cycle" class="yq-cycle-btn" type="button" aria-pressed="false" title="按十二时辰自动演进卫阳昼出夜入">▶ 演进时辰</button>
+            <button id="btn-yq-cycle" class="yq-cycle-btn" type="button" aria-pressed="false" title="依次查看十二时辰与两条轨道">▶ 演进时辰</button>
           </div>
           <div class="phase-toggle" role="group" aria-label="昼夜卫阳快捷切换">
-            <button id="btn-yq-day" class="yq-phase-btn is-on" type="button">☀ 昼 · 行阳二十五度</button>
-            <button id="btn-yq-night" class="yq-phase-btn" type="button">☾ 夜 · 入阴二十五度</button>
+            <button id="btn-yq-day" class="yq-phase-btn is-on" type="button">跳到卯初 · 昼始</button>
+            <button id="btn-yq-night" class="yq-phase-btn" type="button">跳到酉初 · 夜始</button>
           </div>
 
           <!-- 十二时辰子午流注时间轴 -->
-          <div class="shichen-bar" aria-label="十二时辰卫气行时间轴">
+          <div class="shichen-bar" aria-label="时辰共用游标">
             <div class="shichen-head">
-              <span id="shichen-current-label"><b>辰时</b> · 07:00–09:00 · 足阳明胃经</span>
-              <span id="shichen-degree-tag" class="shichen-tag">昼 · 阳分</span>
+              <strong id="slot-hours">辰时 · 07:00–09:00</strong>
             </div>
-            <input id="shichen-slider" class="range shichen-slider" type="range" min="0" max="11" step="1" value="2" aria-label="拖动切换十二时辰" />
+            <div class="time-track"><span>营气流注 · 纳支当令</span><b id="shichen-current-label">足阳明胃经当令</b></div>
+            <div class="time-track wei-track"><span>卫气昼夜</span><b id="shichen-degree-tag">昼行阳分</b>
+              <progress id="wei-progress" max="25" value="0" aria-label="至该时辰末的累计示意度数"></progress>
+            </div>
+            <input id="shichen-slider" class="range shichen-slider" type="range" min="0" max="11" step="1" value="1" aria-label="拖动切换十二时辰" />
             <div id="shichen-ticks" class="shichen-ticks" role="group" aria-label="十二时辰快捷点选"></div>
+            <details class="clock-key"><summary>两条轨道怎样读</summary>
+              <p>《灵枢·营气》述流注经序。时辰配经取自《针灸大成·十二经纳地支歌》。</p>
+              <p>《灵枢·卫气行》以一昼、一夜各二十五周计。此处将卯初至酉初设为昼，酉初至次日卯初设为夜，按等时线性折算时辰起止的累计度数。季节昼长可变，图中数字仅供读图。</p>
+            </details>
           </div>
 
           <div class="yq-tabs" role="tablist" aria-label="阳气教学专题">
@@ -71,10 +78,10 @@
             <div class="qi-map-card">
               <div class="qi-map-head">
                 <b>左升右降 · 脾胃居中为枢（双向联动 3D）</b>
-                <span class="yq-tag">《素问》方位</span>
+                <span class="yq-tag">《素问·刺禁论》</span>
               </div>
-              <!-- 严格遵循《素问·刺禁论》“肝生于左，肺藏于右”、心上肾下、脾胃居中为枢 -->
-              <svg class="qi-map" viewBox="0 0 360 356" role="img" aria-label="中医脏腑升降枢机图：心上肾下、肝左升、肺右降、脾胃居中">
+              <!-- 肝肺左右取《刺禁论》，脾胃升降为后世释义。 -->
+              <svg class="qi-map" viewBox="0 0 360 356" role="group" aria-label="中医脏腑升降枢机图：心上肾下、肝左升、肺右降、脾胃居中">
                 <defs>
                   <marker id="arrow-up" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#d97732"/></marker>
                   <marker id="arrow-down" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#1b7ca8"/></marker>
@@ -83,13 +90,13 @@
                 </defs>
 
                 <!-- 顶/底焦位标 -->
-                <text x="180" y="18" class="map-title">上焦 · 心火居上 · 宣发布散</text>
-                <text x="180" y="348" class="map-title">下焦 · 肾水居下 · 潜藏归根</text>
+                <text x="180" y="18" class="map-title">上焦 · 心</text>
+                <text x="180" y="348" class="map-title">下焦 · 肾</text>
 
                 <!-- 人身圆运动外环 + 中焦枢机圆框 -->
                 <circle cx="180" cy="182" r="126" class="body-outline" />
                 <ellipse cx="180" cy="182" rx="68" ry="38" class="pivot-ring" />
-                <text x="180" y="232" class="pivot-label">中焦枢机 · 脾升胃降</text>
+
 
                 <!-- 左路升发弧：肾 → 肝 → 心（顺时针左升，暖橙） -->
                 <path d="M150 288 C102 276 70 246 62 208" class="axis-line up-line" marker-end="url(#arrow-up)" />
@@ -113,13 +120,13 @@
                 <g class="organ-node" data-organ="Heart" transform="translate(180 68)">
                   <circle r="24" />
                   <text y="5">心</text>
-                  <text y="-30" class="node-sub">火 · 下潜暖肾</text>
+                  <text y="-30" class="node-sub">火 · 心居上</text>
                 </g>
                 <!-- 肾（下） -->
                 <g class="organ-node" data-organ="Kidneys" transform="translate(180 294)">
                   <circle r="24" />
-                  <text y="5">肾 ☵</text>
-                  <text y="38" class="node-sub">水 · 元阳归根</text>
+                  <text y="5">肾</text>
+                  <text y="38" class="node-sub">水 · 肾居下</text>
                 </g>
                 <!-- 肝（左） -->
                 <g class="organ-node" data-organ="Liver" transform="translate(60 182)">
@@ -145,57 +152,21 @@
                   <text y="5">胃</text>
                   <text y="34" class="node-sub">降浊</text>
                 </g>
+                <text x="180" y="239" class="pivot-label">中焦枢机 · 脾升胃降</text>
               </svg>
-              <p class="qi-map-hint">橙弧示左路升发，青弧示右路肃降，中焦脾升胃降为枢；点击左图或右侧 3D 标签双向高亮联动。</p>
+              <p class="qi-map-hint">图左、图右表示气机升降。三维人体按解剖方位显示。点击脏腑可对照两图。</p>
             </div>
 
             <section class="card yq-section" id="section-zangfu">
               <div class="card-title"><span>脏腑协同要点与经典出处</span><span class="tag">点击展开原文</span></div>
               <ul class="axis-list">
-                <li data-organ-note="Kidneys">
-                  <b>肾阳（下焦 · 先天之根）</b>：命门真阳藏于两阴之中，温煦蒸腾上济心火。
-                  <details class="classic-cite">
-                    <summary>出处：《素问·生气通天论》/《景岳全书》</summary>
-                    <p>「阳气者，若天与日，失其所，则折寿而不彰。」（《素问·生气通天论》）；「命门为元气之根，为水火之宅。」（张景岳《景岳全书·传忠录》）</p>
-                  </details>
-                </li>
-                <li data-organ-note="Spleen">
-                  <b>脾阳（中焦左枢 · 主升清）</b>：运化水谷精微向上转输，助肝木左升、奉心肺。
-                  <details class="classic-cite">
-                    <summary>出处：《素问·经脉别论》/《四圣心源》</summary>
-                    <p>「饮入于胃，游溢精气，上输于脾，脾气散精，上归于肺。」（《素问·经脉别论》）；「中气者，和济水火之机，升降金木之轴。」（黄元御《四圣心源》）</p>
-                  </details>
-                </li>
-                <li data-organ-note="Stomach">
-                  <b>胃气（中焦右枢 · 主降浊）</b>：受纳腐熟水谷、通降下行，与脾升相配构成升降枢纽。
-                  <details class="classic-cite">
-                    <summary>出处：《素问·刺禁论》/《临证指南医案》</summary>
-                    <p>「脾为之使，胃为之市。」（《素问·刺禁论》）；「脾宜升则健，胃宜降则和。」（叶天士《临证指南医案》）</p>
-                  </details>
-                </li>
-                <li data-organ-note="Liver">
-                  <b>肝阳（左路 · 主升发）</b>：居左随脾气条达升发，疏泄气机、化生心火。
-                  <details class="classic-cite">
-                    <summary>出处：《素问·刺禁论》</summary>
-                    <p>「脏有要害，不可不察，肝生于左，肺藏于右。」（《素问·刺禁论》——指气机圆运动之左升右降方位）</p>
-                  </details>
-                </li>
-                <li data-organ-note="Lungs">
-                  <b>肺气（右路 · 主宣肃）</b>：居右随胃气肃降收敛，宣发布散卫阳于肌腠，下归肾水。
-                  <details class="classic-cite">
-                    <summary>出处：《素问·刺禁论》/《灵枢·决气》</summary>
-                    <p>「肺藏于右，心部于表，肾治于里。」（《素问·刺禁论》）；「上焦开发，宣五谷味，熏肤、充身、泽毛，若雾露之溉，是谓气。」（《灵枢·决气》）</p>
-                  </details>
-                </li>
-                <li data-organ-note="Heart">
-                  <b>心阳（上焦 · 君火下潜）</b>：在上温通血脉，心火下降温煦肾水，成水火既济之象。
-                  <details class="classic-cite">
-                    <summary>出处：《素问·六微旨大论》</summary>
-                    <p>「升已而降，降者谓天；降已而升，升者谓地。天气下降，气流于地；地气上升，气腾于天。」（《素问·六微旨大论》）</p>
-                  </details>
-                </li>
+                <li data-organ-note="Kidneys"><b>肾与命门</b><details class="classic-cite"><summary>经典原文 ·《素问·生气通天论》</summary><p>“阳气者，若天与日。”此句以天日喻阳气。</p></details><small>后世阐发 · 张介宾《景岳全书·传忠录·命门余义》　张介宾以元气之根、水火之宅解释命门。本图在下焦展示这一学说。</small></li>
+                <li data-organ-note="Spleen"><b>脾与转输</b><details class="classic-cite"><summary>经典原文 ·《素问·经脉别论》</summary><p>“脾气散精，上归于肺。”</p></details><small>图示释义　图中央向上的箭头表示脾的转输方向。</small></li>
+                <li data-organ-note="Stomach"><b>胃与受纳</b><details class="classic-cite"><summary>经典原文 ·《素问·刺禁论》</summary><p>“胃为之市。”</p></details><small>后世阐发 ·《临证指南医案·脾胃》华岫云按语　脾升与胃降相配，图中两条中轴箭头分别表示升、降。</small></li>
+                <li data-organ-note="Liver"><b>肝与左升</b><details class="classic-cite"><summary>经典原文 ·《素问·刺禁论》</summary><p>“肝生于左。”</p></details><small>图示释义　肝排在理论图左侧。三维标签另按肝网格投影。</small></li>
+                <li data-organ-note="Lungs"><b>肺与右降</b><details class="classic-cite"><summary>经典原文 ·《素问·刺禁论》</summary><p>“肺藏于右。”</p></details><small>图示释义　肺排在理论图右侧。三维标签指向胸腔内的肺。</small></li>
+                <li data-organ-note="Heart"><b>心与上焦</b><details class="classic-cite"><summary>经典原文 ·《素问·灵兰秘典论》</summary><p>“心者，君主之官也。”</p></details><small>图示释义　本图将心置于上部，与下部的肾构成读图参照。</small></li>
               </ul>
-              <p class="axis-rule">总纲：阳宜升而忌浮散，宜潜藏而忌沉埋；脾升胃降则左升右降常通。</p>
             </section>
           </section>
 
@@ -208,54 +179,48 @@
                 <button class="tool" data-channel="yang" type="button">三阳经</button>
                 <button class="tool" data-channel="yin" type="button">三阴经</button>
                 <button class="tool" data-channel="zangfu" type="button">五脏六腑</button>
-                <button class="tool" data-channel="fu" type="button">阳主阴从</button>
+                <button class="tool" data-channel="fu" type="button">卫气昼夜</button>
               </div>
-              <ul class="yq-list">
-                <li><b>督脉</b>为阳脉之海，总督一身阳气，上行入脑、下贯腰骶（示范穴位：命门、大椎、百会）。</li>
-                <li><b>三阳经</b>（太阳、阳明、少阳）主表主外，由躯干向四肢末梢布散。</li>
-                <li><b>三阴经</b>阴中抱阳，阳气由四肢内侧回纳归脏。</li>
-              </ul>
-              <p class="yq-note">据《素问·血气形志》六经气血多少之别，3D 经络流光呈现<b>粗细、快慢、浮沉</b>差异；高亮经脉同步显示参考 GB/T 12346《经穴名称与定位》的示范穴位节点（教学示意，完整体表坐标在独立模型仓持续校核）。</p>
+              <p class="yq-note">循行简述据《灵枢·经脉》，仅列主要体表走向。流光表示阅读方向。</p>
             </section>
-
-            <section class="card yq-summary">
-              <div class="section-kicker">核心纲领</div>
-              <p>肾阳为本，借脾胃中土升降，左肝升、右肺降，循督脉与十二经，昼行阳二十五度，夜入阴二十五度，周而复始。</p>
+            <section class="card yq-section atlas-card">
+              <div class="card-title"><span>足阳明胃经 · 45 穴</span><span class="tag">ST1–ST45</span></div>
+              <label for="st-point">按穴名或编号查看</label><select id="st-point"></select>
+              <div class="atlas-options"><label for="st-side">人体侧别</label><select id="st-side"><option value="L">左侧</option><option value="R">右侧</option></select>
+              <button type="button" id="st-locate">在体表标定</button><button type="button" id="st-region">放大该部位</button></div>
+              <label class="atlas-all"><input type="checkbox" id="st-all"> 显示本侧全部可定位点</label>
+              <p id="st-detail"></p><p id="st-status" role="status"></p>
+              <details><summary>本机标定草稿</summary><button type="button" id="st-export" disabled>导出草稿 CSV</button>
+                <label>恢复此模型的草稿<input id="st-import" type="file" accept=".csv,text/csv"></label>
+                <p id="st-metric"></p>
+                <p>标出同侧 ST19 与 ST25、ST25 与 ST30，或 ST35 与 ST41 后，可查看区间内有骨度依据的比例候选点。</p>
+              </details>
+              <a href="https://www.ntcamsac.ac.cn/upload/std_info/202306192125376309.pdf" target="_blank" rel="noopener">查阅 GB/T 12346—2021 第 5.3 节 ↗</a>
+              <p class="yq-note">图上位置分为经线示意、比例推算与手动标记，均待教师复核。标记按模型与侧别保存。刷新前可导出本机草稿。</p>
             </section>
           </section>
 
           <section class="yq-tab-panel" data-yq-panel="daynight" hidden>
             <section class="card yq-section" id="section-day" data-phase="day">
               <div class="card-title"><span>卫气昼夜周流（《灵枢·卫气行》）</span><span class="tag">25 + 25 度</span></div>
-              <p class="yq-day"><b>昼行于阳二十五度（卯–酉）：</b>平旦卫气出于目，循足太阳、手太阳、足少阳、手少阳、足阳明、手阳明等阳分周行二十五度，温养皮毛、固护腠理。</p>
-              <p class="yq-night"><b>夜行于阴二十五度（戌–寅）：</b>入夜卫气自足少阴注于肾，按五脏相克次序 <b>肾 → 心 → 肺 → 肝 → 脾</b> 周行五脏二十五度，阴为阳之宅，人得安睡。</p>
-              <details class="classic-cite">
-                <summary>展开原文：《灵枢·卫气行》</summary>
-                <p>「卫气之行，一日一夜五十周于身，昼日行于阳二十五周，夜行于阴二十五周，周于五脏。……其始入于阴，常从足少阴注于肾，肾注于心，心注于肺，肺注于肝，肝注于脾，脾复注于肾为周。」</p>
+              <p class="yq-day"><b>昼行阳分</b>　平旦自目而出，经足太阳、手太阳、足少阳、手少阳、足阳明、手阳明等阳分路线周行，合计二十五周。</p>
+              <p class="yq-night"><b>夜行阴分</b>　由足少阴入肾，每周依次为肾 → 心 → 肺 → 肝 → 脾 → 肾，一夜合计二十五周。</p>
+              <details class="classic-cite"><summary>经典原文 ·《灵枢·卫气行》</summary>
+                <p>“昼日行于阳二十五周，夜行于阴二十五周。”度数轨道展示整段进程，五脏次序在夜内循环。</p>
               </details>
-            </section>
-
-            <section class="card yq-section" id="section-yinyang">
-              <div class="card-title"><span>阴阳动态 · 阳主阴从</span><span class="tag">DYNAMICS</span></div>
-              <p><b>动态主从：</b>阳主升、主外、主卫外；阴主降、主内、主收藏。阴之职在藏阳、养阳、随阳而动。</p>
-              <details class="classic-cite">
-                <summary>出处：《素问·阴阳应象大论》/ 郑钦安《医理真传》</summary>
-                <p>「阳生阴长，阳杀阴藏。」（《素问·阴阳应象大论》）；郑钦安《医理真传》阐发坎中一阳，强调人身立命以元阳为统帅、以真阴为宅舍。</p>
-              </details>
-              <p class="yq-pathology"><b>功用失常：</b>阻滞则郁、不足则寒、浮越则虚火外飘、脱散则危。</p>
             </section>
           </section>
 
           <section class="yq-tab-panel" data-yq-panel="layers" hidden>
             <section class="card layers-card">
-              <div class="card-title"><span>解剖与经络透视层（头躯一致）</span><span class="tag">8 LAYERS</span></div>
+              <div class="card-title"><span>解剖与经络透视层（头躯一致）</span><span class="tag">显示控制</span></div>
               <div class="skin-row">
-                <label for="skin-opacity">皮肤透明度</label>
-                <input id="skin-opacity" class="range small" type="range" min="0" max="0.35" step="0.01" value="0.16" />
-                <b id="skin-opacity-value">标准</b>
+                <label for="skin-opacity">皮肤不透明度</label>
+                <input id="skin-opacity" class="range small" type="range" min="0" max="0.65" step="0.01" value="0.38" />
+                <b id="skin-opacity-value">38%</b>
               </div>
               <div id="layer-toggles" class="layer-toggles"></div>
-              <p class="privacy-note"><b>层次说明</b> 真实模式下头颅与躯干保持统一半透明皮肤层次（默认隐藏裸露大脑，仅在开启骨骼层、全息模式或聚焦督脉时显现）；骨盆外表面已做去性化隐私处理。</p>
+              <p class="privacy-note"><b>层次说明</b> 真实模式下头颅与躯干保持统一半透明皮肤层次（默认隐藏裸露大脑，仅在开启骨骼层、全息模式或聚焦督脉时显现）。</p>
             </section>
           </section>
         </div>
@@ -269,9 +234,9 @@
         <div class="yq-stage-head">
           <div>
             <span class="yq-stage-kicker">YANG QI · 3D VISUALIZER</span>
-            <h2>阳气运行 · 十二时辰卫气行与升降枢机</h2>
+            <h2>经脉当令与卫气昼夜</h2>
           </div>
-          <div class="view-state" id="view-state">辰时 · 卫阳行阳分</div>
+          <div class="view-state" id="view-state">辰时 · 足阳明胃经</div>
         </div>
 
         <div id="canvas-wrap" class="canvas-wrap">
@@ -281,6 +246,21 @@
           </div>
           <div id="labels" class="labels"></div>
 
+          <div id="surface-tags" aria-label="体表与双肾标注"></div>
+
+          <div class="yq-hud" id="yq-hud">
+            <span class="yq-hud-phase" id="yq-phase-label">卫气 · 昼行阳分</span>
+            <span id="yq-focus-label">辰时 · 足阳明胃经</span>
+          </div>
+
+          <div class="viewport-legend">
+            <span><i class="swatch yang"></i>阳经</span>
+            <span><i class="swatch yin"></i>阴经</span>
+            <span><i class="swatch qi"></i>循行示意</span>
+            <span class="hint">拖拽旋转 · 滚轮缩放 · 点击脏腑双向联动</span>
+          </div>
+        </div>
+
           <!-- 右上悬浮：十二时辰流注与卫气周流信息卡（利用舞台留白） -->
           <aside class="shichen-hud" id="shichen-hud" aria-label="当前时辰流注信息">
             <div class="shichen-hud-top">
@@ -288,22 +268,11 @@
               <span class="shichen-hud-hours" id="hud-shichen-hours">07:00–09:00</span>
             </div>
             <div class="shichen-hud-meridian" id="hud-shichen-meridian">足阳明胃经当令</div>
-            <div class="shichen-hud-route" id="hud-shichen-route">昼行阳分（25度）· 中焦受纳通降</div>
-            <div class="shichen-hud-acu" id="hud-shichen-acu">参考穴位（GB/T 12346）：天枢 ST25 · 足三里 ST36</div>
+            <div class="shichen-hud-route" id="hud-shichen-route">面部经颈、胸腹及下肢前外侧至足次趾。</div>
+            <div class="shichen-hud-acu" id="hud-shichen-acu">经穴举例 · 天枢 ST25 · 足三里 ST36</div>
+            <div class="hud-nav"><button type="button" id="slot-prev">上一时辰</button><button type="button" id="slot-next">下一时辰</button></div>
+            <button type="button" id="atlas-open">查看胃经穴位</button>
           </aside>
-
-          <div class="yq-hud" id="yq-hud">
-            <span class="yq-hud-phase" id="yq-phase-label">昼 · 卫阳行阳二十五度</span>
-            <span id="yq-focus-label">辰时 · 足阳明胃经</span>
-          </div>
-
-          <div class="viewport-legend">
-            <span><i class="swatch yang"></i>阳经</span>
-            <span><i class="swatch yin"></i>阴经</span>
-            <span><i class="swatch qi"></i>卫阳流/示范穴</span>
-            <span class="hint">拖拽旋转 · 滚轮缩放 · 点击脏腑双向联动</span>
-          </div>
-        </div>
 
         <div class="yq-stage-tools">
           <div class="tool-group">
@@ -313,12 +282,14 @@
           </div>
           <div class="tool-group">
             <span class="tool-label">视效</span>
-            <button id="btn-mode-real" class="tool is-on" type="button">真实</button>
-            <button id="btn-mode-holo" class="tool" type="button">全息</button>
+            <button id="btn-mode-real" class="tool is-on" type="button">解剖实色</button>
+            <button id="btn-mode-holo" class="tool" type="button">全息线光</button>
           </div>
           <div class="tool-group">
+            <button id="inspect-stomach" class="tool" type="button">正面看胃</button>
+            <button id="inspect-kidneys" class="tool" type="button">背看双肾</button>
             <button id="btn-view-reset" class="tool" type="button">复位</button>
-            <button id="btn-rotate" class="tool is-on" type="button">环绕</button>
+            <button id="btn-rotate" class="tool" type="button">环绕</button>
           </div>
         </div>
       </section>
@@ -326,7 +297,7 @@
   </div>
 
   <script type="importmap">{"imports":{"three":"./vendor/three.module.js","three/addons/":"./vendor/addons/"}}</script>
-  <script type="module" src="src/yangqi.js?v=20261127tcm"></script>
+  <script type="module" src="src/yangqi.js?v=20261127atlas2"></script>
   <script type="module" src="src/defense-guide.js?v=20261126award"></script>
 </body>
 </html>
