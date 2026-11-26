@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="络象经纬·医学生中医理论教学研究模式：知情同意、前后测、标准案例、匿名 CSV 导出。" />
+  <title>研究模式 | 络象经纬 · 人体图</title>
+  <link rel="stylesheet" href="research.css?v=20261107defense" />
+</head>
+<body>
+  <header class="r-topbar">
+    <div class="r-brand">
+      <div class="r-mark" aria-hidden="true"></div>
+      <div>
+        <h1>络象经纬 · 研究模式</h1>
+        <p>RESEARCH MODE · 医学生 · v1.3 · 本地 CSV · 无后端</p>
+      </div>
+    </div>
+    <div class="r-top-actions">
+      <span class="r-pill"><i></i> 本地运行 · 不上传</span>
+      <a class="r-pill r-back" href="structure.html">人体结构</a>
+      <a class="r-pill r-back" href="judge.html">评委速览</a>
+      <a class="r-pill r-back" href="yangqi.html">阳气运行</a>
+      <a class="r-pill r-back" href="index.html">返回演示</a>
+    </div>
+  </header>
+
+  <div class="r-shell">
+    <aside class="r-side">
+      <div class="r-side-card">
+        <h2>研究流程</h2>
+        <nav class="r-steps" aria-label="研究流程">
+          <div class="r-step is-active" data-step="1"><b>1</b><span>知情同意</span></div>
+          <div class="r-step" data-step="2"><b>2</b><span>前测问卷</span></div>
+          <div class="r-step" data-step="3"><b>3</b><span>学习任务</span></div>
+          <div class="r-step" data-step="4"><b>4</b><span>后测问卷</span></div>
+          <div class="r-step" data-step="5"><b>5</b><span>导出数据</span></div>
+        </nav>
+      </div>
+
+      <div class="r-side-card">
+        <h2>主持者设置</h2>
+        <div class="r-host">
+          <div>
+            <label for="host-id">受试者编号</label>
+            <input id="host-id" class="r-input" type="text" maxlength="24" placeholder="如 E-001 / C-001" autocomplete="off" />
+          </div>
+          <div>
+            <label for="host-group">组别</label>
+            <select id="host-group" class="r-select">
+              <option value="">请选择组别</option>
+              <option value="1">实验组 · 3D 智能体</option>
+              <option value="0">对照组 · 图文材料</option>
+            </select>
+          </div>
+          <button id="btn-apply-host" class="r-btn ghost" type="button">应用设置</button>
+          <p id="host-status" class="r-hint">请先分配匿名编号与组别；开始后不可更改。</p>
+        </div>
+      </div>
+
+      <div class="r-side-card">
+        <h2>数据与隐私</h2>
+        <p class="r-hint">本页不连接服务器，作答只保存在当前浏览器标签页；完成后请立即导出 CSV 交给主试。不要输入姓名、学号、病史或自己的症状。</p>
+        <p class="r-hint" style="margin-top:8px">研究只使用预设标准案例；页面不是诊断、处方或疗效预测。</p>
+        <button id="btn-reset" class="r-btn subtle" type="button" style="width:100%;margin-top:10px">清除本机作答</button>
+      </div>
+    </aside>
+
+    <main class="r-main">
+      <section id="screen-consent" class="screen is-active">
+        <div class="r-card">
+          <div class="r-kicker">STEP 1 / 5 · 知情同意</div>
+          <h2>在开始之前，请先了解这项研究</h2>
+          <p class="r-lead">本研究评估一款面向医学生的中医理论学习工具。你的参与将帮助我们理解：数据驱动的 3D 推演能否帮助医学生更好地理解阴阳二气、经络空间关系，以及用药引起的阴阳气血变化。</p>
+
+          <ul class="r-consent-list">
+            <li><b>研究内容：</b>先完成前测问卷，然后使用学习材料约 20–25 分钟，最后完成后测问卷；全程约 45–60 分钟。</li>
+            <li><b>匿名与隐私：</b>只记录匿名编号、组别、人口学类别与量表作答；不收集姓名、学号、联系方式、病史或用药信息。</li>
+            <li><b>标准案例：</b>学习材料使用预设案例，不需要也不应输入你自己的症状。</li>
+            <li><b>自愿退出：</b>你可以随时停止，不影响课程成绩或任何权益；在数据分析前可要求删除。</li>
+            <li><b>用途：</b>仅用于本项目研究与竞赛材料，报告只呈现汇总结果与匿名引语。</li>
+          </ul>
+
+          <div class="r-note">本工具是中医理论学习与三维可视化演示，<b>不构成诊断或处方</b>。页面中的“服药前后”变化是规则模拟，不是药效预测。如有身体不适，请就医并在执业医师指导下用药。</div>
+
+          <label class="r-check"><input type="checkbox" id="consent-1" /> 我已阅读并理解上述说明，自愿参与本研究。</label>
+          <label class="r-check"><input type="checkbox" id="consent-2" /> 我确认已年满 18 周岁。</label>
+          <label class="r-check"><input type="checkbox" id="consent-3" /> 我理解本工具不是诊断、治疗或用药建议，不会用它替代就医。</label>
+          <label class="r-check"><input type="checkbox" id="consent-4" /> 我同意匿名数据用于本项目研究与竞赛材料。</label>
+
+          <div class="r-actions">
+            <button id="btn-consent" class="r-btn" type="button" disabled>开始前测</button>
+            <span id="consent-hint" class="r-hint">请先完成主持者设置，并勾选全部同意项。</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-pretest" class="screen">
+        <div class="r-card">
+          <div class="r-kicker">STEP 2 / 5 · 前测</div>
+          <h2>前测问卷</h2>
+          <p class="r-lead">请按真实情况作答；没有标准答案。带 <b>*</b> 的题目需要完成。</p>
+          <div class="r-progress"><i id="pre-progress"></i></div>
+
+          <h3>一、基本信息</h3>
+          <div id="demographics" class="r-grid-2"></div>
+
+          <h3>二、中医药知识（A 卷）</h3>
+          <p class="r-hint">单选，共 10 题；请独立作答，不要查资料。</p>
+          <div id="knowledge-pre"></div>
+
+          <h3>三、对中医药的态度</h3>
+          <div id="attitude-pre"></div>
+
+          <h3>四、文化认同</h3>
+          <div id="identity-pre"></div>
+
+          <h3>五、学习/使用意愿</h3>
+          <div id="intention-pre"></div>
+
+          <h3>六、健康信息素养</h3>
+          <div id="health-literacy-pre"></div>
+
+          <div class="r-actions">
+            <button id="btn-pretest" class="r-btn" type="button">提交前测，进入学习</button>
+            <span class="r-hint">提交后答案不可修改；本页不会上传数据。</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-learning" class="screen">
+        <div class="r-card">
+          <div class="r-kicker">STEP 3 / 5 · 学习任务</div>
+          <h2 id="learning-title">学习任务</h2>
+          <p id="learning-desc" class="r-lead"></p>
+
+          <div class="r-timer" id="timer">00:00 <small>学习计时</small></div>
+
+          <div id="experiment-block" hidden>
+            <div class="r-note">请在新标签页打开 3D 智能体，按下面任务单操作。完成后回到本页进入后测。<b>不要输入自己的症状</b>，只使用页面里的标准案例按钮。</div>
+            <div class="r-actions" style="margin-top:12px">
+              <a id="btn-open-3d" class="r-btn gold" href="index.html?research=1" target="_blank" rel="noopener">打开 3D 智能体（新标签）</a>
+              <a id="btn-open-dataset" class="r-btn ghost" href="dataset.html?demo=1" target="_blank" rel="noopener">打开数据推演（新标签）</a>
+            </div>
+            <ul class="r-task-list">
+              <li><span class="n">1</span><span>旋转人体，找到并开关“皮肤 / 骨骼 / 器官 / 经络”图层，说出你看到的空间关系。</span></li>
+              <li><span class="n">2</span><span>点选“阳虚怕冷案”，观察证候卡：涉及哪些脏腑、哪些经络？</span></li>
+              <li><span class="n">3</span><span>打开数据推演，加载演示数据；选一个案例，读阴阳气血曲线与用药事件。</span></li>
+              <li><span class="n">4</span><span>拖动时间轴，把“用药前 → 用药后”的曲线变化与 3D 脏腑/经络变化对应起来。</span></li>
+              <li><span class="n">5</span><span>用自己的话解释“为什么这个方剂方向会导致这些指标变化”，并指出数据不能证明什么。</span></li>
+            </ul>
+          </div>
+
+          <div id="control-block" hidden>
+            <div class="r-note">请阅读下面的图文材料（约 20 分钟）。它与 3D 组使用同一套知识内容；阅读后回到本页进入后测。可以做笔记，但不要查资料。</div>
+            <div class="r-handout">
+              <h3>1. 阴阳：一对关系，不是两个东西</h3>
+              <p>阴阳是中国古代用来描述事物对立统一关系的范畴。凡是明亮的、温热的、向上的、活动的、外在的，多属阳；晦暗的、寒冷的、向下的、静止的、内在的，多属阴。阴阳之间有四层关系：对立制约、互根互用、消长平衡、相互转化。</p>
+              <table>
+                <thead><tr><th>属性</th><th>阳</th><th>阴</th></tr></thead>
+                <tbody>
+                  <tr><td>温度</td><td>温热</td><td>寒冷</td></tr>
+                  <tr><td>亮度</td><td>明亮</td><td>晦暗</td></tr>
+                  <tr><td>运动</td><td>动、升</td><td>静、降</td></tr>
+                  <tr><td>部位</td><td>外、上</td><td>内、下</td></tr>
+                </tbody>
+              </table>
+              <p class="small">“阴平阳秘，精神乃治”强调的不是谁多谁少，而是阴阳协调、相对平衡。</p>
+
+              <h3>2. 五行：木火土金水</h3>
+              <p>五行学说用五类属性描述事物之间的联系。相生：木生火、火生土、土生金、金生水、水生木；相克：木克土、土克水、水克火、火克金、金克木。中医把五脏、六腑、五官、情志等纳入同一张关系网。</p>
+              <table>
+                <thead><tr><th>五行</th><th>五脏</th><th>六腑</th><th>五官</th><th>情志</th></tr></thead>
+                <tbody>
+                  <tr><td>木</td><td>肝</td><td>胆</td><td>目</td><td>怒</td></tr>
+                  <tr><td>火</td><td>心</td><td>小肠</td><td>舌</td><td>喜</td></tr>
+                  <tr><td>土</td><td>脾</td><td>胃</td><td>口</td><td>思</td></tr>
+                  <tr><td>金</td><td>肺</td><td>大肠</td><td>鼻</td><td>悲</td></tr>
+                  <tr><td>水</td><td>肾</td><td>膀胱</td><td>耳</td><td>恐</td></tr>
+                </tbody>
+              </table>
+
+              <h3>3. 五脏六腑：各做什么</h3>
+              <table>
+                <thead><tr><th>脏腑</th><th>主要功能（教学表述）</th></tr></thead>
+                <tbody>
+                  <tr><td>心</td><td>主血脉，藏神；心气推动血液在脉中运行。</td></tr>
+                  <tr><td>肝</td><td>主疏泄，主藏血；调畅气机与情志，贮藏血液。</td></tr>
+                  <tr><td>脾</td><td>主运化，主统血；把水谷化为气血，运化水湿。</td></tr>
+                  <tr><td>肺</td><td>主气、司呼吸，主宣发肃降；通调水道。</td></tr>
+                  <tr><td>肾</td><td>藏精，主水，主纳气；与生长发育、生殖相关。</td></tr>
+                  <tr><td>六腑</td><td>共同特点是“传化物而不藏”，以通为用；胆、胃、小肠、大肠、膀胱、三焦各有分工。</td></tr>
+                </tbody>
+              </table>
+
+              <h3>4. 气血：气为血之帅，血为气之母</h3>
+              <p>气属阳，推动、温煦、防御、固摄；血属阴，濡养全身。气能生血、行血、摄血；血能载气、养气。气滞久则血瘀，气虚则血行无力；血虚则气无所养。理解气血关系，有助于理解“气滞血瘀”“气血两虚”等证候。</p>
+
+              <h3>5. 经络：身体里的“网络”</h3>
+              <p>经络是经脉与络脉的总称。十二正经包括手足三阴三阳，左右对称，与脏腑相属络；奇经八脉包括督脉、任脉、冲脉、带脉、阴维、阳维、阴跷、阳跷。经络既是气血运行的通道，也是脏腑与体表联系的通路。3D 版把 26 条经络曲线投影到真实体表，便于观察走向与交会。</p>
+
+              <h3>6. 子午流注：时间与经络</h3>
+              <p>子午流注把一天分为十二时辰，认为不同时辰气血流注的重点经脉不同。它是一套传统时间医学模型，用于教学理解，不等同于现代生理节律。</p>
+              <table>
+                <thead><tr><th>时辰</th><th>时间</th><th>当令经脉</th></tr></thead>
+                <tbody>
+                  <tr><td>寅时</td><td>3–5 点</td><td>肺经</td></tr>
+                  <tr><td>卯时</td><td>5–7 点</td><td>大肠经</td></tr>
+                  <tr><td>辰时</td><td>7–9 点</td><td>胃经</td></tr>
+                  <tr><td>巳时</td><td>9–11 点</td><td>脾经</td></tr>
+                  <tr><td>午时</td><td>11–13 点</td><td>心经</td></tr>
+                  <tr><td>未时</td><td>13–15 点</td><td>小肠经</td></tr>
+                  <tr><td>申时</td><td>15–17 点</td><td>膀胱经</td></tr>
+                  <tr><td>酉时</td><td>17–19 点</td><td>肾经</td></tr>
+                  <tr><td>戌时</td><td>19–21 点</td><td>心包经</td></tr>
+                  <tr><td>亥时</td><td>21–23 点</td><td>三焦经</td></tr>
+                  <tr><td>子时</td><td>23–1 点</td><td>胆经</td></tr>
+                  <tr><td>丑时</td><td>1–3 点</td><td>肝经</td></tr>
+                </tbody>
+              </table>
+
+              <h3>7. 三个标准案例（教学示例，不是诊断）</h3>
+              <div class="case">
+                <b>案例 A：阳虚怕冷</b>
+                <p>表现：怕冷、手脚冰凉、腰膝酸软、夜尿多、乏力。教学证候：肾阳虚。相关脏腑：肾、脾、膀胱；相关经络：肾经、督脉、膀胱经。经典方名示例：金匮肾气丸。模拟方向：温阳、化气、行水。</p>
+              </div>
+              <div class="case">
+                <b>案例 B：肝郁气滞</b>
+                <p>表现：胁肋胀痛、情绪抑郁、爱叹气、胸闷。教学证候：肝郁气滞，久则气滞血瘀。相关脏腑：肝、胆、脾；相关经络：肝经、胆经、心包经。经典方名示例：逍遥散或血府逐瘀汤。模拟方向：疏肝、理气、活血。</p>
+              </div>
+              <div class="case">
+                <b>案例 C：阴虚内热</b>
+                <p>表现：口干、盗汗、五心烦热、腰酸、失眠。教学证候：肾阴虚/阴虚火旺。相关脏腑：肾、心、肺、脑；相关经络：肾经、心经、肺经。经典方名示例：六味地黄丸。模拟方向：滋阴、清虚热。</p>
+              </div>
+              <p class="small">以上方名只用于教学识别，不含剂量，不构成处方；页面中的“0–28 天变化”是规则模拟，不是药效预测。</p>
+
+              <h3>8. 数据集与用药变化（文字版）</h3>
+              <p>实验组会在 3D 数据推演页看到同一份时序数据；这里用表格呈现，便于对照。数值是<b>教学参数字段</b>（0–1 或 0–1.2），不是患者实测，也不是疗效证据。</p>
+              <table class="data-table">
+                <thead><tr><th>天数</th><th>阴</th><th>阳</th><th>气</th><th>血</th><th>瘀滞</th><th>炎症</th><th>阻滞经络</th><th>用药事件</th></tr></thead>
+                <tbody>
+                  <tr><td>0</td><td>0.62</td><td>0.22</td><td>0.55</td><td>0.70</td><td>0.38</td><td>0.00</td><td>KI</td><td>用药前</td></tr>
+                  <tr><td>7</td><td>0.58</td><td>0.32</td><td>0.72</td><td>0.80</td><td>0.25</td><td>0.00</td><td>KI</td><td>开始用药：金匮肾气丸</td></tr>
+                  <tr><td>14</td><td>0.54</td><td>0.40</td><td>0.86</td><td>0.90</td><td>0.14</td><td>0.00</td><td>—</td><td>随访</td></tr>
+                  <tr><td>28</td><td>0.52</td><td>0.46</td><td>0.95</td><td>0.95</td><td>0.08</td><td>0.00</td><td>—</td><td>末次随访</td></tr>
+                </tbody>
+              </table>
+              <p class="small">阅读任务：① 指出阳气、气机、瘀滞的变化方向；② 判断这些变化是否与“温补肾阳、化气行水”的教学方向一致；③ 说明这份数据为什么不能证明“该方剂对患者有效”。</p>
+            </div>
+          </div>
+
+          <label class="r-check" style="margin-top:16px"><input type="checkbox" id="task-done" /> 我已完成学习任务（至少完成 3 项，或完成图文材料阅读），并准备好进入后测。</label>
+          <div class="r-actions">
+            <button id="btn-learning" class="r-btn" type="button" disabled>进入后测</button>
+            <span class="r-hint">建议学习 20–25 分钟；计时仅供记录，不会自动提交。</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-posttest" class="screen">
+        <div class="r-card">
+          <div class="r-kicker">STEP 4 / 5 · 后测</div>
+          <h2>后测问卷</h2>
+          <p class="r-lead">请根据刚才的学习体验作答；没有标准答案。带 <b>*</b> 的题目需要完成。</p>
+          <div class="r-progress"><i id="post-progress"></i></div>
+
+          <h3>一、中医药知识（B 卷）</h3>
+          <p class="r-hint">单选，共 10 题；请独立作答，不要查资料。</p>
+          <div id="knowledge-post"></div>
+
+          <h3>二、对中医药的态度</h3>
+          <div id="attitude-post"></div>
+
+          <h3>三、文化认同</h3>
+          <div id="identity-post"></div>
+
+          <h3>四、学习/使用意愿</h3>
+          <div id="intention-post"></div>
+
+          <h3>五、健康信息素养</h3>
+          <div id="health-literacy-post"></div>
+
+          <h3>六、学习投入</h3>
+          <div id="engagement-post"></div>
+
+          <h3>七、用药变化推理</h3>
+          <p class="r-hint">根据刚才的 3D / 图文材料作答；单选，共 3 题。</p>
+          <div id="reasoning-post"></div>
+
+          <div id="experiment-post" hidden>
+            <h3>八、临场感 / 具身体验</h3>
+            <div id="presence-post"></div>
+
+            <h3>九、系统可用性（SUS）</h3>
+            <p class="r-hint">1=非常不同意，5=非常同意。</p>
+            <div id="sus-post"></div>
+
+            <h3>十、技术接受</h3>
+            <div id="tam-post"></div>
+          </div>
+
+          <h3>十一、注意力检查</h3>
+          <div id="attention-check"></div>
+
+          <h3>十二、开放问题（选填）</h3>
+          <div class="r-field" style="margin-bottom:14px">
+            <label for="open-1">哪个画面、图层或功能最帮助你理解中医概念？为什么？</label>
+            <textarea id="open-1" class="r-textarea" maxlength="500"></textarea>
+          </div>
+          <div class="r-field" style="margin-bottom:14px">
+            <label for="open-2">哪个地方你仍然看不懂，或者觉得不可信？</label>
+            <textarea id="open-2" class="r-textarea" maxlength="500"></textarea>
+          </div>
+          <div class="r-field" style="margin-bottom:14px">
+            <label for="open-3">你愿意把它推荐给谁？在什么场景？</label>
+            <textarea id="open-3" class="r-textarea" maxlength="500"></textarea>
+          </div>
+          <div class="r-field">
+            <label for="open-4">你如何理解“服药前后模拟”？你觉得应该怎样标注边界？</label>
+            <textarea id="open-4" class="r-textarea" maxlength="500"></textarea>
+          </div>
+
+          <div class="r-actions">
+            <button id="btn-posttest" class="r-btn" type="button">提交后测</button>
+            <span class="r-hint">提交后生成匿名 CSV；数据只保存在本机，需手动导出。</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-done" class="screen">
+        <div class="r-card">
+          <div class="r-kicker">STEP 5 / 5 · 完成</div>
+          <h2>完成，感谢参与</h2>
+          <p class="r-lead">请点击“下载 CSV”，把文件交给主试。关闭标签页前请确认已导出；本页不会自动上传。</p>
+
+          <div id="summary" class="r-summary"></div>
+
+          <div class="r-actions">
+            <button id="btn-download" class="r-btn" type="button">下载 CSV</button>
+            <button id="btn-copy" class="r-btn ghost" type="button">复制 CSV</button>
+            <button id="btn-new" class="r-btn subtle" type="button">开始下一位受试者</button>
+          </div>
+
+          <div class="r-note">数据文件只含匿名编号、组别、量表分数与开放题文字；不含姓名、学号、联系方式、病史。开放题如写到可识别信息，请主试在分析前删除。</div>
+
+          <details style="margin-top:18px">
+            <summary style="cursor:pointer;font-size:13px;color:var(--teal)">查看 CSV 字段预览</summary>
+            <pre id="csv-preview" style="white-space:pre-wrap;word-break:break-all;font-size:11px;line-height:1.6;background:var(--paper-2);padding:12px;border-radius:8px;margin-top:10px"></pre>
+          </details>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="r-footer">
+    <p>络象经纬 · 阴阳智能体研究模式 · 本地静态页面，无后端、无上传。</p>
+    <p>解剖数据：BodyParts3D, (c) The Database Center for Life Science, licensed under CC BY-SA 2.1 Japan. 代码 MIT；Three.js MIT。</p>
+    <p>本页面仅用于中医理论学习、科普与研究，不构成诊断、处方或疗效预测。</p>
+  </footer>
+
+  <div id="toast" class="r-toast" role="status" aria-live="polite"></div>
+  <script type="module" src="src/research.js?v=20261107defense"></script>
+</body>
+</html>

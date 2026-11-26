@@ -1,0 +1,59 @@
+{
+  "row_count": 50854,
+  "field_count": 9,
+  "unique_names": 36726,
+  "duplicate_name_groups": 7784,
+  "extra_identical_rows": 959,
+  "missing_by_field": {
+    "名称": 0,
+    "功效": 764,
+    "性": 1584,
+    "味": 1538,
+    "应用": 24152,
+    "归经": 23156,
+    "注意事项": 33744,
+    "炮制": 41676,
+    "用法": 1547
+  },
+  "schema": "luoxiang/herb-quality@1",
+  "import_date": "2026-11-08",
+  "source": "用户提供文件；原始采集来源待核实",
+  "license": "待核实",
+  "content_review": "待验证",
+  "intended_use": "教学资料检索；不是病例或学习效果数据",
+  "json_csv_consistent": true,
+  "json_csv_mismatched_rows": 0,
+  "source_files": [
+    {
+      "name": "中草药数据集（50000味）.json",
+      "bytes": 56614822,
+      "sha256": "c26f639ee30bc8f52b922971d45c1cec927d83fccfb4f094b6df525345a3d914"
+    },
+    {
+      "name": "中草药数据集（50000味）.csv",
+      "bytes": 50104177,
+      "sha256": "96ddb0b43efe6ac0d5dbad1b677cf8f59669331025a95e3881121276778eee62"
+    }
+  ],
+  "catalog": {
+    "path": "data/herbs/catalog.json",
+    "bytes": 6859375,
+    "sha256": "ceb6b7069b3bde10d0c1c91d70a49e7d1921fed5e51314a953e69415af3672fd"
+  },
+  "projection": [
+    "source_row",
+    "名称",
+    "功效",
+    "性",
+    "味",
+    "归经",
+    "same_name_records"
+  ],
+  "excluded_from_web": [
+    "应用",
+    "注意事项",
+    "炮制",
+    "用法"
+  ],
+  "count_note": "按名称去空白统计，不是物种鉴定；同名记录和完全重复行均原样保留"
+}

@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="络象经纬·数据推演：导入队友的病例时序数据，驱动阴阳气血与经络 3D 变化。" />
+  <title>数据推演 | 络象经纬 · 人体图</title>
+  <link rel="stylesheet" href="styles.css?v=20261107defense" />
+  <link rel="stylesheet" href="dataset.css?v=20261107defense" />
+  <script>
+    window.__logs = [];
+    for (const level of ["error", "warn"]) {
+      const original = console[level];
+      console[level] = function (...args) {
+        try { window.__logs.push(level + ": " + args.map(String).join(" ")); } catch (e) {}
+        original.apply(console, args);
+      };
+    }
+    window.addEventListener("error", e => window.__logs.push("window: " + e.message));
+  </script>
+</head>
+<body>
+  <div class="app dataset-app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="yin-yang" aria-hidden="true"></div>
+        <div class="brand-text">
+          <h1>络象经纬 · 数据推演</h1>
+          <p>DATASET → YIN-YANG → 3D · v1.3</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <a class="btn ghost" href="structure.html">人体结构</a>
+        <span class="privacy-pill"><i></i> 本地解析 · 数据不上传</span>
+        <a class="btn ghost" href="judge.html">评委速览</a>
+        <a class="btn ghost" href="index.html">3D 演示</a>
+        <a class="btn ghost" href="yangqi.html">阳气运行</a>
+        <a class="btn ghost" href="research.html">研究模式</a>
+        <a class="btn ghost" href="herbs.html">药材资料</a>
+      </div>
+    </header>
+
+    <main class="dataset-layout">
+      <aside class="dataset-side">
+        <div class="dataset-scroll">
+          <section class="card import-card">
+            <div class="section-kicker">DATA INGEST</div>
+            <div class="card-title"><span>导入队友数据</span><span class="tag">CSV / JSON</span></div>
+            <p class="import-copy">每个案例按天记录阴、阳、气、血、瘀滞、炎症与用药事件；系统把数据映射到 3D 人体和经络。文件只在本机解析。</p>
+            <p class="import-copy">中草药条目不含时间序列，请到 <a href="herbs.html">药材资料检索</a> 查阅，不能作为病例或实验结果导入。</p>
+            <input id="file-input" type="file" accept=".csv,.tsv,.json,text/csv,text/tab-separated-values,application/json" hidden />
+            <div class="import-actions">
+              <button id="btn-pick" class="btn primary" type="button">选择数据文件</button>
+              <button id="btn-demo" class="btn ghost" type="button">加载演示数据</button>
+            </div>
+            <a class="btn ghost template-link" href="data/dataset_template.csv" download>下载 CSV 模板</a>
+            <div id="drop-zone" class="drop-zone" tabindex="0" role="button">拖拽 CSV / JSON 到这里，或点击选择</div>
+            <div id="import-status" class="import-status" role="status">尚未导入数据。</div>
+            <a class="btn ghost mobile-3d-link" href="#dataset-3d">查看 3D</a>
+          </section>
+
+          <section class="card" id="meta-card" hidden>
+            <div class="card-title"><span>数据信息</span><span class="tag" id="meta-license-tag">—</span></div>
+            <div id="meta-list" class="kv-list"></div>
+            <div id="meta-warnings" class="warnings"></div>
+          </section>
+
+          <section class="card">
+            <div class="card-title"><span>案例</span><span class="tag" id="case-count">0</span></div>
+            <div id="case-list" class="case-list">
+              <p class="empty-hint">导入数据后在这里选择案例。</p>
+            </div>
+          </section>
+
+          <section class="card" id="case-card" hidden>
+            <div class="card-title"><span>案例信息</span><span class="tag" id="case-source-tag">—</span></div>
+            <div id="case-detail"></div>
+          </section>
+
+          <section class="card chart-card" id="chart-card" hidden>
+            <div class="card-title"><span>阴阳气血</span><span class="tag">DATA VIEW</span></div>
+            <div class="chart-view-toggle" role="group" aria-label="数据视图">
+              <button id="btn-chart-view" class="tool is-on" type="button" aria-pressed="true">曲线</button>
+              <button id="btn-table-view" class="tool" type="button" aria-pressed="false">表格</button>
+            </div>
+            <svg id="series-chart" class="series-chart" viewBox="0 0 360 170" role="img" aria-label="阴阳气血随天数变化曲线"></svg>
+            <div id="series-table-wrap" class="series-table-wrap" hidden>
+              <table id="series-table" class="series-table">
+                <thead>
+                  <tr><th>天</th><th>阴</th><th>阳</th><th>气</th><th>血</th><th>瘀滞</th><th>炎症</th><th>阻滞经络</th><th>事件/用药</th></tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+            <div class="chart-legend">
+              <span><i style="background:#55d8ff"></i>阴</span>
+              <span><i style="background:#ffb36b"></i>阳</span>
+              <span><i style="background:#43d98b"></i>气</span>
+              <span><i style="background:#ff6b7a"></i>血</span>
+              <span><i style="background:#b06cff"></i>瘀滞</span>
+            </div>
+            <p class="chart-hint">点击曲线区域可跳到对应天数；竖线为当前时间。</p>
+          </section>
+
+          <section class="card layers-card">
+            <div class="card-title"><span>透视层</span><span class="tag">LAYERS</span></div>
+            <div class="skin-row">
+              <label for="skin-opacity">皮肤透明度</label>
+              <input id="skin-opacity" class="range small" type="range" min="0" max="0.35" step="0.01" value="0.10" />
+              <b id="skin-opacity-value">标准</b>
+            </div>
+            <div id="layer-toggles" class="layer-toggles"></div>
+            <p class="privacy-note"><b>隐私保护</b> 骨盆外表面已做去性化处理，不展示外生殖器与生殖系统细节；男女模型以比例、胸廓与骨盆轮廓区分。</p>
+          </section>
+
+          <p class="disclaimer">
+            导入数据由队友/使用者提供；系统只做可视化映射，不验证临床真实性，也不构成诊断、处方或疗效预测。真实病例必须脱敏；用药只显示名称/事件，不显示剂量。
+          </p>
+        </div>
+      </aside>
+
+      <section class="dataset-main" id="dataset-3d">
+        <div class="dataset-canvas">
+          <div id="canvas-wrap" class="canvas-wrap">
+            <div id="loading" class="loading">
+              <div class="loading-ring"></div>
+              <p id="loading-text">正在载入解剖模型…</p>
+            </div>
+            <div id="labels" class="labels" aria-hidden="true"></div>
+
+            <div class="view-head">
+              <div>
+                <div class="view-kicker">DATA → 3D · LIVE</div>
+                <h2>数据驱动 · 阴阳气血</h2>
+              </div>
+              <div class="view-state" id="view-state">未导入数据</div>
+            </div>
+
+            <div class="view-tools">
+              <span class="tool-label">性别</span>
+              <button id="btn-sex-male" class="tool is-on" type="button" title="男性教学模型">男</button>
+              <button id="btn-sex-female" class="tool" type="button" title="女性教学模型（比例重建）">女</button>
+              <span class="tool-sep" aria-hidden="true"></span>
+              <button id="btn-mode-real" class="tool is-on" type="button" title="真实皮肤与解剖色">真实</button>
+              <button id="btn-mode-holo" class="tool" type="button" title="全息透视">全息</button>
+              <button id="btn-view-reset" class="tool" type="button" title="复位视角">复位</button>
+              <button id="btn-rotate" class="tool is-on" type="button" title="自动旋转">环绕</button>
+            </div>
+
+            <div class="flow-hud" id="flow-hud" title="气：经络粒子流速/强度；血：血管粒子流速/强度。紫=阻滞，暗红=瘀滞。">
+              <span class="flow-title">气血流</span>
+              <span class="flow-readout qi"><i></i>气 <b id="flow-qi">—</b></span>
+              <span class="flow-readout blood"><i></i>血 <b id="flow-blood">—</b></span>
+            </div>
+
+            <div class="dataset-badge" id="data-badge">未导入数据</div>
+            <div class="viewport-legend">
+              <span><i class="swatch yin"></i>阴经</span>
+              <span><i class="swatch yang"></i>阳经</span>
+              <span><i class="swatch blocked"></i>瘀阻</span>
+              <span><i class="swatch qi"></i>气</span>
+              <span><i class="swatch blood"></i>血</span>
+              <span class="hint">拖拽旋转 · 滚轮缩放</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-panel">
+          <div class="timeline-head">
+            <div class="timeline-left">
+              <div class="section-kicker">TIMELINE</div>
+              <b id="timeline-case">未选择案例</b>
+              <div id="timeline-provenance" class="timeline-provenance">未导入数据</div>
+            </div>
+            <div class="timeline-day" id="day-label">—</div>
+          </div>
+
+          <div id="event-strip" class="event-strip" aria-hidden="true"></div>
+          <input id="day-slider" class="range" type="range" min="0" max="28" step="0.1" value="0" disabled />
+          <div class="timeline-actions">
+            <button id="btn-first" class="btn ghost" type="button" disabled>首个数据点</button>
+            <button id="btn-play" class="btn primary" type="button" disabled>▶ 播放变化</button>
+            <button id="btn-last" class="btn ghost" type="button" disabled>末次随访</button>
+            <span id="event-label" class="event-label">—</span>
+          </div>
+
+          <div class="metrics" id="metrics">
+            <div class="metric"><span>阴阳平衡</span><div class="bar"><i data-metric="balance"></i></div><b>—</b></div>
+            <div class="metric"><span>气机</span><div class="bar"><i data-metric="qi"></i></div><b>—</b></div>
+            <div class="metric"><span>血行</span><div class="bar"><i data-metric="blood"></i></div><b>—</b></div>
+            <div class="metric"><span>瘀滞</span><div class="bar danger"><i data-metric="stagnation"></i></div><b>—</b></div>
+          </div>
+          <p class="timeline-note" id="timeline-note">导入数据后，拖动时间轴观察 3D 变化；曲线点来自文件，点与点之间线性插值。</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./vendor/three.module.js",
+        "three/addons/": "./vendor/addons/"
+      }
+    }
+  </script>
+  <script type="module" src="src/dataset.js?v=20261108herbs"></script>
+</body>
+</html>
