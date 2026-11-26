@@ -1,7 +1,7 @@
 // 数据推演：把队友提供的 CSV/JSON 时序数据映射到 3D 阴阳气血与经络。
 // 纯前端解析，不上传文件；数据来源/许可由导入者在文件中声明。
 
-import { TCMScene3D } from "./scene3d.js?v=20261107defense";
+import { TCMScene3D } from "./scene3d.js?v=20261126award";
 import { ORGAN_META, MERIDIAN_NAMES, ZANG_KEYS, NORMAL_STATE, lerpState, clamp } from "./knowledge.js?v=20261107defense";
 import { isHerbReference } from "./herb-catalog.mjs?v=20261108herbs";
 

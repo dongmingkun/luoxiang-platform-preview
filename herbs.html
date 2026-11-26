@@ -5,39 +5,105 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" href="data:," />
   <title>药材资料检索 | 络象经纬</title>
-  <meta name="description" content="用户提供的中草药资料条目检索，保留同名记录与原始行号。来源、许可与内容待核实。" />
-  <link rel="stylesheet" href="styles.css?v=20261108herbs" />
-  <link rel="stylesheet" href="herbs.css?v=20261108herbs" />
+  <meta name="description" content="中草药教学资料原始条目离线检索，保留同名记录与原始行号，支持性、味、归经多维筛选。" />
+  <link rel="stylesheet" href="platform-theme.css?v=20261126award" />
+  <link rel="stylesheet" href="herbs.css?v=20261126award" />
 </head>
 <body class="herb-body">
-  <header class="topbar">
-    <div class="brand"><div class="yin-yang" aria-hidden="true"></div><div class="brand-text"><h1>络象经纬 · 药材资料</h1><p>HERB REFERENCE · 只读检索 · 原文待核</p></div></div>
-    <nav class="top-actions" aria-label="平台导航"><a class="btn ghost" href="index.html">主站</a><a class="btn ghost" href="teacher.html">教师端</a><a class="btn ghost" href="dataset.html">时序推演</a></nav>
+  <header class="lx-topbar">
+    <a class="lx-brand" href="showcase.html">
+      <span class="lx-mark" aria-hidden="true">络</span>
+      <span><strong>络象经纬</strong><small>LUOXIANG · HERB ARCHIVE</small></span>
+    </a>
+    <nav class="lx-nav" aria-label="平台导航">
+      <a href="showcase.html">演示总览</a>
+      <a href="index.html">三维教学</a>
+      <a href="structure.html">人体结构</a>
+      <a href="yangqi.html">阳气运行</a>
+      <a href="dataset.html">数据推演</a>
+      <a href="herbs.html" aria-current="page">药材资料</a>
+      <a href="teacher.html">教师端</a>
+      <a href="judge.html">评委速览</a>
+    </nav>
+    <div class="lx-top-right">
+      <span class="lx-pill"><i></i>离线 SHA-256 校验 · 只读检索</span>
+    </div>
   </header>
+
   <main class="herb-main">
     <section class="herb-intro">
-      <div><div class="section-kicker">资料接入 / 教学核对</div><h2>中草药资料，<br />按原始条目查阅</h2><p>检索名称与原文记载，保留同名资料差异。条目数与名称数均不等于独立药材物种数。</p></div>
-      <aside class="herb-notice"><b>来源、许可、内容均待核实</b><p>这批文件由用户提供，未附原始来源或许可证。本页的功效、性、味、归经只是资料原文，不作安全性或用药判断。</p><p>不展示用法剂量，不据此诊断、荐药或推演疗效。原文件完整保留供团队审阅。</p></aside>
+      <div>
+        <div class="herb-kicker">HERB REFERENCE · 教学核对与原文溯源</div>
+        <h2>中草药资料库，<br /><span>按原始条目精准检索。</span></h2>
+        <p>支持按药名、功效原文、四气（性）、五味（味）与归经多维检索，保留同名条目差异与原始行号；搜索时自动将完全匹配药名置顶。</p>
+      </div>
+      <aside class="herb-notice">
+        <b>学术核对边界 · 原文待审</b>
+        <p>本目录按接入资料原样建索引，保留同名记录与缺失字段，来源、许可及医学内容待教学团队逐条审阅。条目数与名称数不等于独立物种数。</p>
+        <p>仅展示性、味、归经与原文功效，不展示用法剂量，不作安全性或临床用药建议。</p>
+      </aside>
     </section>
-    <dl class="herb-facts"><div><dt>原始记录</dt><dd id="record-count">—</dd></div><div><dt>名称去空白后</dt><dd id="name-count">—</dd></div><div><dt>同名记录组</dt><dd id="duplicate-count">—</dd></div></dl>
+
+    <dl class="herb-facts">
+      <div><dt>原始记录条数</dt><dd id="record-count">—</dd></div>
+      <div><dt>去空白名称数</dt><dd id="name-count">—</dd></div>
+      <div><dt>同名记录分组</dt><dd id="duplicate-count">—</dd></div>
+    </dl>
+
     <section class="herb-search card" aria-labelledby="search-title">
-      <h3 id="search-title">检索资料</h3>
+      <div class="search-head-row">
+        <h3 id="search-title">多维原文检索</h3>
+        <div class="quick-herbs" aria-label="经典方常用药材快捷检索">
+          <span>常用示例：</span>
+          <button type="button" data-quick-herb="黄芪">黄芪</button>
+          <button type="button" data-quick-herb="熟地黄">熟地黄</button>
+          <button type="button" data-quick-herb="附子">附子</button>
+          <button type="button" data-quick-herb="桂枝">桂枝</button>
+          <button type="button" data-quick-herb="柴胡">柴胡</button>
+          <button type="button" data-quick-herb="当归">当归</button>
+          <button type="button" data-quick-herb="人参">人参</button>
+          <button type="button" data-quick-herb="茯苓">茯苓</button>
+          <button type="button" data-quick-herb="金银花">金银花</button>
+        </div>
+      </div>
+
       <form id="herb-form" class="herb-filters">
-        <label>名称 / 原文功效<input id="herb-query" type="search" maxlength="100" autocomplete="off" placeholder="如：黄芪、金银花" disabled /></label>
-        <label>性 · 原文包含<select id="herb-nature" disabled><option value="">全部</option><option>寒</option><option>凉</option><option>平</option><option>温</option><option>热</option></select></label>
-        <label>归经 · 原文包含<select id="herb-channel" disabled><option value="">全部</option><option>心</option><option>肝</option><option>脾</option><option>肺</option><option>肾</option><option>胃</option><option>胆</option><option>膀胱</option><option>大肠</option><option>小肠</option><option>心包</option><option>三焦</option></select></label>
-        <button id="herb-clear" class="btn ghost" type="button" disabled>清空筛选</button>
+        <label>名称 / 原文功效<input id="herb-query" type="search" maxlength="100" autocomplete="off" placeholder="如：黄芪、金银花、补气…" disabled /></label>
+        <label>性（四气）<select id="herb-nature" disabled><option value="">全部</option><option>寒</option><option>凉</option><option>平</option><option>温</option><option>热</option></select></label>
+        <label>味（五味）<select id="herb-taste" disabled><option value="">全部</option><option>甘</option><option>苦</option><option>辛</option><option>酸</option><option>咸</option><option>淡</option></select></label>
+        <label>归经<select id="herb-channel" disabled><option value="">全部</option><option>心</option><option>肝</option><option>脾</option><option>肺</option><option>肾</option><option>胃</option><option>胆</option><option>膀胱</option><option>大肠</option><option>小肠</option><option>心包</option><option>三焦</option></select></label>
+        <button id="herb-clear" class="lx-btn" type="button" disabled>清空筛选</button>
       </form>
-      <p id="herb-status" role="status" aria-live="polite">正在载入约 6.9 MB 的资料检索目录…</p>
-      <button id="herb-retry" class="btn ghost" type="button" hidden>重试加载</button>
+      <p id="herb-status" role="status" aria-live="polite">正在载入并校验资料检索目录…</p>
+      <button id="herb-retry" class="lx-btn" type="button" hidden>重试加载</button>
     </section>
-    <section aria-labelledby="results-title"><div class="results-head"><h3 id="results-title">原文条目</h3><span id="herb-range">—</span></div>
-      <ol id="herb-results" class="herb-results"></ol><p id="herb-empty" class="herb-empty" hidden>没有匹配条目，请调整名称或筛选条件。缺失字段不作补写。</p>
-      <nav class="herb-pagination" aria-label="结果分页"><button id="herb-prev" class="btn ghost" type="button" disabled>上一页</button><span id="herb-page">—</span><button id="herb-next" class="btn ghost" type="button" disabled>下一页</button></nav>
+
+    <section aria-labelledby="results-title">
+      <div class="results-head">
+        <h3 id="results-title">原文条目</h3>
+        <span id="herb-range">—</span>
+      </div>
+      <ol id="herb-results" class="herb-results"></ol>
+      <p id="herb-empty" class="herb-empty" hidden>没有匹配条目，请调整名称或筛选条件。缺失字段不作补写。</p>
+      <nav class="herb-pagination" aria-label="结果分页">
+        <button id="herb-prev" class="lx-btn" type="button" disabled>← 上一页</button>
+        <span id="herb-page">—</span>
+        <button id="herb-next" class="lx-btn" type="button" disabled>下一页 →</button>
+      </nav>
     </section>
-    <details class="herb-quality card"><summary>数据质量与接入说明</summary><p id="quality-note">等待目录核对。</p><p>JSON 空值与 CSV 空白对应后逐行比对。同名记录与完全相同的重复行都保留，原始行号用于回溯，不代表物种唯一标识。缺失、同名和原文差异须由教学团队审阅。</p><p>这是药材文字资料，不是病例、问卷或教学实验数据，也不含阴阳气血时序。<a href="dataset.html">时序数据推演另用对应格式</a>。</p></details>
-    <footer class="herb-footer">资料：用户提供 · 原始来源/许可待核实 · 仅教学核对 · 代码 MIT<br />本页无后端，不上传检索词，不改变研究作答与标准案例。</footer>
+
+    <details class="herb-quality card">
+      <summary>数据质量校验与接入说明（SHA-256 完整性核对）</summary>
+      <p id="quality-note">等待目录核对。</p>
+      <p>JSON 空值与 CSV 空白对应后逐行比对。同名记录与完全相同的重复行均完整保留，原始行号用于溯源核对，不代表物种唯一标识。</p>
+      <p>本库为药材文字资料，不含阴阳气血时序；时序数据推演请前往 <a href="dataset.html">数据推演页</a>。</p>
+    </details>
+
+    <footer class="herb-footer">
+      络象经纬 · 药材资料只读检索（本机浏览器离线校验，不上传检索词）· 代码 MIT
+    </footer>
   </main>
-  <script type="module" src="src/herbs.js?v=20261108herbs"></script>
+
+  <script type="module" src="src/herbs.js?v=20261126award"></script>
 </body>
 </html>

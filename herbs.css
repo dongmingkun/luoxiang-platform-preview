@@ -1,44 +1,239 @@
-.herb-body { height: auto; min-height: 100vh; overflow: auto; }
+/* Luoxiang Jingwei · Herb Reference Archive (Unified Rice-Paper & Pine-Jade System) */
+
+* { box-sizing: border-box; }
+.herb-body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--lx-paper);
+  color: var(--lx-ink);
+  font-family: var(--lx-font-sans);
+  font-size: 13.5px;
+  -webkit-font-smoothing: antialiased;
+}
 .herb-body [hidden] { display: none !important; }
-.herb-body a { color: var(--cyan); }
-.herb-main { max-width: 1200px; padding: 36px 26px 16px; margin: auto; }
-.herb-intro { display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; align-items: center; }
-.herb-intro h2 { font-size: clamp(28px, 4vw, 44px); line-height: 1.4; margin: 12px 0; }
-.herb-intro p, .herb-quality p { color: #aec5d1; font-size: 13px; line-height: 1.9; }
-.herb-notice { border: 1px solid #a57f4670; border-radius: 12px; background: #4a371b25; padding: 22px; }
-.herb-notice b { color: var(--gold); font-size: 15px; }
-.herb-notice p { font-size: 12px; }
-.herb-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 30px 0; }
-.herb-facts div { display: flex; flex-direction: column; background: var(--panel); border: 1px solid var(--line); padding: 20px; border-radius: 10px; }
-.herb-facts dt { color: #9bb5c3; font-size: 12px; order: 1; margin-top: 7px; }
-.herb-facts dd { font-size: 32px; color: var(--cyan); margin: 0; font-variant-numeric: tabular-nums; }
-.herb-search { padding: 22px; }
-.herb-search h3 { margin-top: 0; font-size: 19px; }
-.herb-filters { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr) auto; align-items: end; gap: 14px; }
-.herb-filters label { display: flex; flex-direction: column; gap: 8px; color: #aec5d1; font-size: 12px; min-width: 0; }
-.herb-filters input, .herb-filters select { width: 100%; min-width: 0; min-height: 42px; padding: 10px; font: inherit; background: #081b26; color: var(--text); border: 1px solid var(--line-strong); border-radius: 6px; }
-.herb-body button { min-height: 42px; }
-.herb-body :is(button, input, select, a, summary):focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
-#herb-status { color: #9cb7c5; font-size: 12px; line-height: 1.8; margin-bottom: 0; }
-#herb-status.is-error { color: #ffb3a3; }
-.results-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; margin-top: 28px; }
-.results-head h3 { font-size: 20px; }
-.results-head span { font-size: 12px; color: #9eb9c7; }
-.herb-results { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
-.herb-results li { border: 1px solid var(--line); border-radius: 10px; padding: 20px; background: var(--panel); min-width: 0; overflow-wrap: anywhere; }
-.herb-results h4 { margin: 7px 0 12px; font-size: 22px; color: #e0f1f6; }
-.herb-row-id { font-size: 10px; color: #779ba9; }
-.herb-same-name { display: inline-block; font-size: 10px; padding: 3px 7px; border: 1px solid #b9945370; border-radius: 5px; color: var(--gold); margin-bottom: 10px; }
-.herb-results dl { display: grid; grid-template-columns: 42px minmax(0, 1fr); gap: 6px 8px; margin: 0; font-size: 12px; line-height: 1.8; }
-.herb-results dt { color: #7f9fab; }
-.herb-results dd { color: #b5ced8; margin: 0; }
-.herb-effect { border-top: 1px solid var(--line); margin: 16px 0 0; padding-top: 12px; font-size: 12px; line-height: 1.9; color: #b2c9d3; }
-.herb-effect b { display: block; font-size: 10px; color: #7f9fab; font-weight: 400; }
-.herb-empty { text-align: center; color: #a7c4cf; padding: 36px 12px; line-height: 1.9; border: 1px dashed var(--line-strong); }
-.herb-pagination { display: flex; align-items: center; justify-content: center; gap: 20px; margin: 28px 0; color: #9eb9c7; font-size: 12px; }
-.herb-quality { padding: 20px; }
-.herb-quality summary { cursor: pointer; color: var(--cyan); font-size: 14px; }
-.herb-quality p { font-size: 12px; overflow-wrap: anywhere; }
-.herb-footer { text-align: center; padding: 30px 0; color: #829eaa; font-size: 11px; line-height: 2; }
-@media (max-width: 900px) { .herb-intro { grid-template-columns: minmax(0, 1fr); gap: 16px; } .herb-results { grid-template-columns: repeat(2, minmax(0, 1fr)); } .herb-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 540px) { .herb-main { padding: 24px 14px; } .herb-results { grid-template-columns: minmax(0, 1fr); } .herb-facts { gap: 6px; } .herb-facts div { padding: 13px 10px; } .herb-facts dd { font-size: 24px; } .herb-facts dt { font-size: 10px; } .herb-search { padding: 16px; } .herb-filters label:first-child { grid-column: 1 / -1; } .herb-filters button { grid-column: 1 / -1; } .herb-body .brand { min-width: 0; } .herb-pagination { gap: 12px; } }
+.herb-body a { color: var(--lx-jade); }
+.herb-body :is(button, input, select, a, summary):focus-visible { outline: 2px solid var(--lx-gold); outline-offset: 2px; }
+
+.herb-main { max-width: 1220px; padding: 34px 24px 20px; margin: 0 auto; }
+
+.herb-intro { display: grid; grid-template-columns: 1.15fr 0.95fr; gap: 36px; align-items: center; }
+.herb-kicker { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; color: var(--lx-jade); }
+.herb-intro h2 {
+  font: 600 clamp(28px, 3.6vw, 42px)/1.22 var(--lx-font-serif);
+  margin: 12px 0 14px;
+  color: var(--lx-ink);
+}
+.herb-intro h2 span { color: var(--lx-jade); }
+.herb-intro p { color: var(--lx-muted); font-size: 13.5px; line-height: 1.85; margin: 0; }
+
+.herb-notice {
+  border: 1px solid var(--lx-gold-line);
+  border-radius: 12px;
+  background: var(--lx-gold-soft);
+  padding: 20px 22px;
+}
+.herb-notice b { display: block; color: #7d5311; font-size: 14.5px; margin-bottom: 8px; }
+.herb-notice p { font-size: 12.5px; line-height: 1.75; color: #5f471c; margin: 6px 0 0; }
+
+.herb-facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 26px 0;
+}
+.herb-facts div {
+  display: flex;
+  flex-direction: column;
+  background: var(--lx-surface);
+  border: 1px solid var(--lx-line);
+  padding: 18px 20px;
+  border-radius: 12px;
+  box-shadow: var(--lx-shadow);
+}
+.herb-facts dt { color: var(--lx-muted); font-size: 12px; order: 1; margin-top: 6px; }
+.herb-facts dd {
+  font: 600 32px/1.1 var(--lx-font-serif);
+  color: var(--lx-jade);
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.card {
+  background: var(--lx-surface);
+  border: 1px solid var(--lx-line);
+  border-radius: 14px;
+  box-shadow: var(--lx-shadow);
+}
+
+.herb-search { padding: 20px 22px; }
+.search-head-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.herb-search h3 { margin: 0; font: 600 18px/1.2 var(--lx-font-serif); color: var(--lx-ink); }
+.quick-herbs { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; font-size: 12px; color: var(--lx-dim); }
+.quick-herbs button {
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--lx-line-strong);
+  background: var(--lx-tint);
+  color: var(--lx-ink-2);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.14s ease;
+}
+.quick-herbs button:hover { border-color: var(--lx-jade); background: var(--lx-jade-soft); color: var(--lx-jade); }
+
+.herb-filters {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 0.9fr) minmax(0, 0.9fr) minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 12px;
+}
+.herb-filters label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--lx-ink-2);
+  font-size: 12px;
+  font-weight: 600;
+  min-width: 0;
+}
+.herb-filters input, .herb-filters select {
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  padding: 8px 11px;
+  font: inherit;
+  font-weight: 400;
+  background: var(--lx-tint);
+  color: var(--lx-ink);
+  border: 1px solid var(--lx-line-strong);
+  border-radius: 8px;
+}
+.herb-filters input:focus, .herb-filters select:focus { border-color: var(--lx-jade); }
+.herb-filters .lx-btn { min-height: 40px; }
+
+#herb-status { color: var(--lx-muted); font-size: 12.5px; line-height: 1.7; margin: 12px 0 0; }
+#herb-status.is-error { color: var(--lx-danger); font-weight: 600; }
+#herb-retry { margin-top: 10px; }
+
+.results-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin: 26px 0 14px;
+}
+.results-head h3 { margin: 0; font: 600 20px/1.2 var(--lx-font-serif); color: var(--lx-ink); }
+.results-head span { font-size: 12.5px; font-weight: 500; color: var(--lx-jade); }
+
+.herb-results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 13px;
+}
+.herb-results li {
+  border: 1px solid var(--lx-line);
+  border-radius: 12px;
+  padding: 18px 20px;
+  background: var(--lx-surface);
+  min-width: 0;
+  overflow-wrap: anywhere;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+.herb-results li:hover {
+  border-color: var(--lx-jade);
+  box-shadow: 0 10px 24px rgba(15, 42, 34, 0.08);
+}
+.herb-card-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.herb-row-id { font-size: 11px; color: var(--lx-dim); font-variant-numeric: tabular-nums; }
+.herb-same-name {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border: 1px solid var(--lx-gold-line);
+  border-radius: 999px;
+  background: var(--lx-gold-soft);
+  color: #7d5311;
+}
+.herb-results h4 {
+  margin: 8px 0 11px;
+  font: 600 20px/1.25 var(--lx-font-serif);
+  color: var(--lx-ink);
+}
+.herb-results dl {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 5px 8px;
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.65;
+}
+.herb-results dt { color: var(--lx-dim); font-weight: 600; }
+.herb-results dd { color: var(--lx-ink-2); margin: 0; }
+.herb-effect {
+  border-top: 1px solid var(--lx-line);
+  margin: 13px 0 0;
+  padding-top: 11px;
+  font-size: 12.5px;
+  line-height: 1.75;
+  color: var(--lx-muted);
+}
+.herb-effect b { display: block; font-size: 11px; color: var(--lx-jade); font-weight: 600; margin-bottom: 3px; }
+
+.herb-empty {
+  text-align: center;
+  color: var(--lx-muted);
+  padding: 36px 14px;
+  line-height: 1.85;
+  border: 1.5px dashed var(--lx-line-strong);
+  border-radius: 12px;
+  background: var(--lx-surface);
+}
+.herb-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin: 26px 0;
+  color: var(--lx-ink-2);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.herb-quality { padding: 18px 22px; }
+.herb-quality summary { cursor: pointer; color: var(--lx-jade); font-size: 14px; font-weight: 600; }
+.herb-quality p { font-size: 12.5px; line-height: 1.8; color: var(--lx-muted); overflow-wrap: anywhere; margin: 10px 0 0; }
+
+.herb-footer {
+  text-align: center;
+  padding: 26px 0 14px;
+  color: var(--lx-dim);
+  font-size: 11.5px;
+}
+
+@media (max-width: 960px) {
+  .herb-intro { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .herb-results { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .herb-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .herb-filters label:first-child { grid-column: 1 / -1; }
+}
+@media (max-width: 560px) {
+  .herb-main { padding: 20px 14px; }
+  .herb-results { grid-template-columns: minmax(0, 1fr); }
+  .herb-facts { gap: 8px; }
+  .herb-facts div { padding: 13px 10px; }
+  .herb-facts dd { font-size: 24px; }
+  .herb-filters button { grid-column: 1 / -1; }
+}
