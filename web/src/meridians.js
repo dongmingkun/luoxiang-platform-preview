@@ -256,7 +256,7 @@ function createFlowBeads(curve, color, coreColor, pulseCount, kind, baseId, owne
   };
 }
 
-export function createMeridianSystem(data) {
+export function createMeridianSystem(data, adaptPath = null) {
   const group = new THREE.Group();
   group.name = "MeridianSystem";
   const vesselGroup = new THREE.Group();
@@ -273,7 +273,9 @@ export function createMeridianSystem(data) {
 
   for (const path of data.meridians || []) {
     const prof = profileFor(path.baseId);
-    const { curve, geo } = makeTube(path.points, 0.0044 * prof.thick);
+    const radius = 0.0044 * prof.thick;
+    const display = adaptPath?.(path, radius);
+    const { curve, geo } = makeTube(display?.points ?? path.points, display?.radius ?? radius);
     const isYin = path.polarity === "yin";
     // 阳经呈温煦流金色，阴经呈清润青碧色，视觉柔和分明、不刺眼
     const base = new THREE.Color(isYin ? "#2fb8ea" : "#f0943b");
