@@ -52,6 +52,14 @@ const ui = {
   loadingText: $("loading-text"),
   labels: $("labels"),
   btnSexMale: $("btn-sex-male"), btnSexFemale: $("btn-sex-female"),
+  deltaSummary: $("delta-summary"),
+  interpTrace: $("interp-trace"),
+  sampleAnchors: $("sample-anchors"),
+  mappingHud: $("mapping-hud"),
+  mappingRows: $("mapping-rows"),
+  btnMappingHud: $("btn-mapping-hud"),
+  btnExportReport: $("btn-export-report"),
+  faultResult: $("fault-result"),
 };
 
 const HEADER_MAP = {
@@ -613,11 +621,11 @@ function renderCaseDetail(c) {
   const organTags = c.organs.length
     ? c.organs.map((key) => {
       const meta = ORGAN_META[key];
-      return `<span class="org-tag" style="color:${meta.color};border-color:${meta.color}44">${esc(meta.zh)}</span>`;
+      return `<button type="button" class="org-tag is-clickable" data-focus-organ="${esc(key)}" title="点击在 3D 视图中聚焦${esc(meta.zh)}" style="border-color:${meta.color}55">${esc(meta.zh)}</button>`;
     }).join("")
     : '<span class="empty-hint">未提供脏腑字段</span>';
   const meridianTags = c.meridians.length
-    ? c.meridians.map((code) => `<span class="org-tag meridian">${esc(MERIDIAN_NAMES[code] || code)}</span>`).join("")
+    ? c.meridians.map((code) => `<button type="button" class="org-tag meridian is-clickable" data-focus-meridian="${esc(code)}" title="点击在 3D 视图中聚焦${esc(MERIDIAN_NAMES[code] || code)}">${esc(MERIDIAN_NAMES[code] || code)}</button>`).join("")
     : '<span class="empty-hint">未提供经络字段</span>';
   const events = c.events.length
     ? `<ul class="event-list">${c.events.map((e) => `<li>第 ${formatDay(e.day)} 天：${esc([e.event, e.medication].filter(Boolean).join(" · "))}</li>`).join("")}</ul>`
@@ -633,6 +641,36 @@ function renderCaseDetail(c) {
   `;
   ui.caseSourceTag.textContent = c.license && c.license !== "未提供" ? "许可已声明" : "许可待补";
   ui.caseCard.hidden = false;
+
+  // Render first-to-last delta summary inside chart card
+  if (ui.deltaSummary && c.series.length >= 2) {
+    const first = c.series[0];
+    const last = c.series[c.series.length - 1];
+    const pct = v => Math.round(clamp(v, 0, 1) * 100);
+    const items = [
+      { label: "平衡 Δ", d: pct(1 - Math.abs(last.yang - last.yin)) - pct(1 - Math.abs(first.yang - first.yin)), goodUp: true },
+      { label: "气机 Δ", d: pct(last.qi) - pct(first.qi), goodUp: true },
+      { label: "血行 Δ", d: pct(last.blood) - pct(first.blood), goodUp: true },
+      { label: "瘀滞 Δ", d: pct(last.stagnation) - pct(first.stagnation), goodUp: false },
+    ];
+    ui.deltaSummary.innerHTML = items.map(it => {
+      const sign = it.d > 0 ? "+" : "";
+      const cls = (it.goodUp ? it.d >= 0 : it.d <= 0) ? "up" : "down";
+      return `<div class="delta-pill ${cls}"><span>${it.label}</span><b>${sign}${it.d}%</b></div>`;
+    }).join("");
+    ui.deltaSummary.hidden = false;
+  } else if (ui.deltaSummary) {
+    ui.deltaSummary.hidden = true;
+  }
+
+  // Render clickable sample point anchor pills
+  if (ui.sampleAnchors && c.series.length) {
+    ui.sampleAnchors.innerHTML = c.series.map((p, idx) => {
+      const label = p.event ? `第 ${formatDay(p.day)} 天 · ${p.event}` : `第 ${formatDay(p.day)} 天（点 #${idx + 1}）`;
+      return `<button type="button" class="anchor-pill" data-anchor-day="${p.day}">${esc(label)}</button>`;
+    }).join("");
+    ui.sampleAnchors.hidden = false;
+  }
 }
 
 function renderEventStrip(c) {
@@ -808,8 +846,39 @@ function applyDay(day) {
     const past = [...series].reverse().find((p) => p.day <= d && p.medication);
     ui.eventLabel.textContent = past && d - past.day <= 7
       ? `用药：${past.medication}（第 ${formatDay(past.day)} 天起）`
-      : "—";
+      : "";
   }
+
+  // Sampling vs. Linear Interpolation real-time provenance badge
+  const sampleIdx = series.findIndex((p) => Math.abs(p.day - d) < 0.06);
+  if (ui.interpTrace) {
+    if (sampleIdx >= 0) {
+      ui.interpTrace.textContent = `● 原始采样点 #${sampleIdx + 1}`;
+      ui.interpTrace.className = "interp-trace is-sample";
+    } else {
+      ui.interpTrace.textContent = `◐ 线性插值（${formatDay(a.day)}d↔${formatDay(b.day)}d · t=${Math.round(t * 100)}%）`;
+      ui.interpTrace.className = "interp-trace is-interp";
+    }
+    ui.interpTrace.hidden = false;
+  }
+
+  // Live Field -> 3D Shader Mapping Inspector
+  if (ui.mappingRows) {
+    const bpm = Math.round(62 + state.blood * 26 + state.inflammation * 8);
+    const bal = Math.round(clamp(1 - Math.abs(state.yang - state.yin), 0, 1) * 100);
+    const blockedName = state.blockedMeridian ? (MERIDIAN_NAMES[state.blockedMeridian] || state.blockedMeridian) : "无特定阻滞";
+    ui.mappingRows.innerHTML = `
+      <div class="mapping-row"><b>yin ${state.yin.toFixed(2)} / yang ${state.yang.toFixed(2)}</b><span>→ 阴阳平衡 ${bal}% · 驱动太极转速与阴/阳经明暗对比</span></div>
+      <div class="mapping-row"><b>qi ${state.qi.toFixed(2)}</b><span>→ 经络粒子流速倍率 ×${state.qi.toFixed(2)} · 影响肺/肾脏器发光度</span></div>
+      <div class="mapping-row"><b>blood ${state.blood.toFixed(2)}</b><span>→ 心脏搏动节律 ${bpm} BPM · 驱动血脉管流速度</span></div>
+      <div class="mapping-row"><b>stagnation ${state.stagnation.toFixed(2)} · ${esc(blockedName)}</b><span>→ 阻滞经络紫色波动强度 ${Math.round(state.stagnation * 100)}% 与瘀点半径</span></div>
+    `;
+  }
+
+  ui.sampleAnchors?.querySelectorAll(".anchor-pill").forEach((pill) => {
+    pill.classList.toggle("is-active", Math.abs(Number(pill.dataset.anchorDay) - d) < 0.06);
+  });
+
   ui.timelineNote.textContent = point.note
     || `数据点 ${series.indexOf(point) + 1}/${series.length}；点与点之间线性插值，3D 为教学映射。`;
 
@@ -1089,6 +1158,112 @@ function bindSceneControls() {
     const value = Number(ui.skinOpacity.value);
     if (scene) scene.setSkinOpacity(value);
     ui.skinOpacityValue.textContent = value < 0.04 ? "透视" : value < 0.12 ? "清透" : value < 0.22 ? "标准" : "可见";
+  });
+
+  // Organ/Meridian tag click-to-focus in 3D
+  ui.caseDetail?.addEventListener("click", (e) => {
+    const orgBtn = e.target.closest("[data-focus-organ]");
+    if (orgBtn && scene) {
+      scene.focusOrgan(orgBtn.dataset.focusOrgan);
+      $("btn-rotate")?.classList.remove("is-on");
+      return;
+    }
+    const merBtn = e.target.closest("[data-focus-meridian]");
+    if (merBtn && scene) {
+      scene.focusMeridian(merBtn.dataset.focusMeridian);
+      $("btn-rotate")?.classList.remove("is-on");
+    }
+  });
+
+  // Clickable sample anchor pills
+  ui.sampleAnchors?.addEventListener("click", (e) => {
+    const pill = e.target.closest("[data-anchor-day]");
+    if (!pill) return;
+    stopPlay();
+    applyDay(Number(pill.dataset.anchorDay));
+  });
+
+  // Field -> 3D Mapping HUD toggle
+  ui.btnMappingHud?.addEventListener("click", () => {
+    const open = ui.mappingHud.hidden;
+    ui.mappingHud.hidden = !open;
+    ui.btnMappingHud.classList.toggle("is-on", open);
+    ui.btnMappingHud.setAttribute("aria-pressed", String(open));
+  });
+  $("mapping-close")?.addEventListener("click", () => {
+    ui.mappingHud.hidden = true;
+    ui.btnMappingHud?.classList.remove("is-on");
+    ui.btnMappingHud?.setAttribute("aria-pressed", "false");
+  });
+
+  // Export normalized case analysis report (pure local JSON)
+  ui.btnExportReport?.addEventListener("click", () => {
+    if (!currentCase || !dataset) return;
+    const payload = {
+      notice: "教学可视化映射摘要（非临床诊断、非疗效预测）",
+      exported_at: new Date().toISOString(),
+      dataset_meta: dataset.meta,
+      case_id: currentCase.case_id,
+      case_name: currentCase.case_name,
+      pattern: currentCase.pattern,
+      formula: currentCase.formula,
+      organs: currentCase.organs,
+      meridians: currentCase.meridians,
+      current_day: currentDay,
+      warnings: dataset.warnings,
+      series: currentCase.series,
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2) + "\n"], { type: "application/json;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `络象经纬-时序解析-${currentCase.case_id}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  });
+
+  // Engineering fault-tolerance boundary self-tests (for Challenge Cup B3 complexity verification)
+  const FAULT_FIXTURES = {
+    missing: {
+      name: "fault_missing_fields.csv",
+      raw: "dataset_name,source,license,case_id,case_name,pattern,day,qi,blood\n工程边界测试-缺字段,工程自检夹具（非临床）,仅测试,FT-01,缺阴阳字段容错测试,测试证型,0,0.65,0.75\n工程边界测试-缺字段,工程自检夹具（非临床）,仅测试,FT-01,缺阴阳字段容错测试,测试证型,14,0.88,0.90\n",
+      summary: "已通过【缺字段兜底】：缺失 yin/yang 时自动回退 0.5/0.5 并记录数据告警，3D 与曲线无崩溃。",
+    },
+    outofrange: {
+      name: "fault_out_of_range.csv",
+      raw: "dataset_name,source,license,case_id,case_name,pattern,day,yin,yang,qi,blood,stagnation\n工程边界测试-超界值,工程自检夹具（非临床）,仅测试,FT-02,超界数值截断测试,测试证型,0,1.85,-0.2,160%,0.8,1.4\n工程边界测试-超界值,工程自检夹具（非临床）,仅测试,FT-02,超界数值截断测试,测试证型,7,0.5,0.5,0.9,0.9,0.1\n",
+      summary: "已通过【超界值截断】：自动截断异常区间值（如 1.85 / -0.2 / 160%）并生成核对告警，防止渲染失真。",
+    },
+    unknown: {
+      name: "fault_unknown_meridian.csv",
+      raw: "dataset_name,source,license,case_id,case_name,pattern,organs,meridians,day,yin,yang,qi,blood,stagnation,blocked_meridian\n工程边界测试-未知经络,工程自检夹具（非临床）,仅测试,FT-03,未知阻滞经络告警测试,测试证型,Kidneys,KI,0,0.6,0.3,0.6,0.7,0.5,UNKNOWN_MER\n工程边界测试-未知经络,工程自检夹具（非临床）,仅测试,FT-03,未知阻滞经络告警测试,测试证型,Kidneys,KI,7,0.5,0.5,0.9,0.9,0.1,KI\n",
+      summary: "已通过【未知经络告警】：识别并报告未知经络代码 UNKNOWN_MER，未中断后续正常渲染。",
+    },
+    herb: {
+      name: "fault_herb_reference.csv",
+      raw: "名称,功效,性,味,归经\n黄芪,补气固表,温,甘,肺、脾\n",
+      summary: "已通过【非时序药材表拦截】：识别出缺少 day 的药材文本目录并拒绝按病例导入，引导前往 herbs.html。",
+    },
+  };
+  document.querySelectorAll("[data-fault]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const f = FAULT_FIXTURES[btn.dataset.fault];
+      if (!f || !ui.faultResult) return;
+      try {
+        const ds = parseDataset(f.raw, f.name);
+        applyDataset(ds);
+        ui.faultResult.className = "fault-result";
+        ui.faultResult.textContent = `${f.summary}（检出 ${ds.warnings.length} 条校验告警；可点上方「加载演示数据」恢复。）`;
+        ui.faultResult.hidden = false;
+      } catch (err) {
+        setStatus(`导入失败：${err.message}`, "error");
+        ui.faultResult.className = "fault-result is-intercept";
+        ui.faultResult.textContent = `${f.summary}（拦截提示：${err.message}）`;
+        ui.faultResult.hidden = false;
+      }
+    });
   });
 }
 

@@ -90,17 +90,33 @@
               <span><i style="background:#8a4cd9"></i>瘀滞</span>
             </div>
             <p class="chart-hint">点击曲线任意位置可跳至对应天数；竖线标示当前时间点。</p>
+            <div id="delta-summary" class="delta-summary" hidden></div>
           </section>
 
           <section class="card" id="case-card" hidden>
             <div class="card-title"><span>案例详情与用药事件</span><span class="tag" id="case-source-tag">—</span></div>
             <div id="case-detail"></div>
+            <div class="case-export-row">
+              <button id="btn-export-report" class="btn ghost" type="button">导出本案例解析摘要 (JSON)</button>
+            </div>
           </section>
 
           <details class="card meta-details" id="meta-card" hidden>
             <summary class="card-title"><span>数据来源与质量校验</span><span class="tag" id="meta-license-tag">—</span></summary>
             <div id="meta-list" class="kv-list"></div>
             <div id="meta-warnings" class="warnings"></div>
+          </details>
+
+          <details class="card fault-card">
+            <summary class="card-title"><span>工程健壮性边界自检</span><span class="tag">FAULT TEST</span></summary>
+            <p class="fault-desc">面向答辩现场核验：一键注入四类异常格式夹具（非临床数据），实测本地解析器的容错兜底与拦截能力。</p>
+            <div class="fault-grid">
+              <button type="button" class="btn ghost" data-fault="missing">缺字段兜底</button>
+              <button type="button" class="btn ghost" data-fault="outofrange">超界值截断</button>
+              <button type="button" class="btn ghost" data-fault="unknown">未知经络告警</button>
+              <button type="button" class="btn ghost" data-fault="herb">药材误导入拦截</button>
+            </div>
+            <div id="fault-result" class="fault-result" role="status" hidden></div>
           </details>
 
           <details class="card layers-card">
@@ -141,6 +157,14 @@
               </div>
               <div id="labels" class="labels"></div>
 
+              <div class="mapping-hud" id="mapping-hud" hidden>
+                <div class="mapping-hud-head">
+                  <span>FIELD → 3D SHADER MAPPING</span>
+                  <button type="button" id="mapping-close" aria-label="关闭映射追踪">✕</button>
+                </div>
+                <div id="mapping-rows" class="mapping-rows"></div>
+              </div>
+
               <div class="flow-hud" id="flow-hud" title="气：经络粒子流速/强度；血：血管粒子流速/强度。">
                 <span class="flow-title">气血流</span>
                 <span class="flow-readout qi"><i></i>气 <b id="flow-qi">—</b></span>
@@ -170,6 +194,7 @@
               <button id="btn-mode-holo" class="tool" type="button" title="全息透视">全息</button>
             </div>
             <div class="tool-group">
+              <button id="btn-mapping-hud" class="tool" type="button" aria-pressed="false" title="展开字段到 3D 渲染参数的实时映射链">映射链</button>
               <button id="btn-view-reset" class="tool" type="button" title="复位视角">复位</button>
               <button id="btn-rotate" class="tool is-on" type="button" title="自动旋转">环绕</button>
             </div>
@@ -182,9 +207,13 @@
               <b id="timeline-case">未选择案例</b>
               <div id="timeline-provenance" class="timeline-provenance">未导入数据</div>
             </div>
-            <div class="timeline-day" id="day-label">—</div>
+            <div class="timeline-right">
+              <span id="interp-trace" class="interp-trace" hidden></span>
+              <div class="timeline-day" id="day-label">—</div>
+            </div>
           </div>
 
+          <div id="sample-anchors" class="sample-anchors" role="group" aria-label="采样时间点快捷跳转" hidden></div>
           <div id="event-strip" class="event-strip" aria-hidden="true"></div>
           <input id="day-slider" class="range" type="range" min="0" max="28" step="0.1" value="0" disabled />
           <div class="timeline-actions">
@@ -208,5 +237,6 @@
 
   <script type="importmap">{"imports":{"three":"./vendor/three.module.js","three/addons/":"./vendor/addons/"}}</script>
   <script type="module" src="src/dataset.js?v=20261126award"></script>
+  <script type="module" src="src/defense-guide.js?v=20261126award"></script>
 </body>
 </html>

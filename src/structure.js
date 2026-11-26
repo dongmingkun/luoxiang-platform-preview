@@ -42,7 +42,28 @@ renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.12;
+renderer.localClippingEnabled = true;
 stage.prepend(renderer.domElement);
+
+// Real-time anatomical cross-section clipping plane + visual guide frame
+const clipPlaneY = new THREE.Plane(new THREE.Vector3(0, -1, 0), 10);
+const clipPlaneX = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 10);
+let clipMode = 'off';
+let clipRatio = 0.55;
+const sliceGuide = new THREE.Mesh(
+  new THREE.PlaneGeometry(0.92, 0.92),
+  new THREE.MeshBasicMaterial({ color: 0x248a72, transparent: true, opacity: 0.14, side: THREE.DoubleSide, depthWrite: false }),
+);
+const sliceRing = new THREE.LineLoop(
+  new THREE.BufferGeometry().setFromPoints([
+    new THREE.Vector3(-0.46, -0.46, 0), new THREE.Vector3(0.46, -0.46, 0),
+    new THREE.Vector3(0.46, 0.46, 0), new THREE.Vector3(-0.46, 0.46, 0),
+  ]),
+  new THREE.LineBasicMaterial({ color: 0x38b895, transparent: true, opacity: 0.72 }),
+);
+sliceGuide.add(sliceRing);
+sliceGuide.visible = false;
+scene.add(sliceGuide);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
@@ -275,6 +296,41 @@ function showOpacity(mesh, opacity) {
   mesh.material.needsUpdate = true;
 }
 
+function applyClipping() {
+  const slider = $('clip-slider');
+  const out = $('clip-value');
+  let activePlanes = [];
+  if (clipMode === 'y') {
+    const yCut = height * clipRatio;
+    clipPlaneY.constant = yCut;
+    activePlanes = [clipPlaneY];
+    sliceGuide.visible = true;
+    sliceGuide.rotation.set(Math.PI / 2, 0, 0);
+    sliceGuide.position.set(0, yCut, 0);
+    if (out) out.textContent = `横断面 ${(yCut * 100).toFixed(0)} cm`;
+  } else if (clipMode === 'x') {
+    const xCut = (clipRatio - 0.5) * 0.72;
+    clipPlaneX.constant = xCut;
+    activePlanes = [clipPlaneX];
+    sliceGuide.visible = true;
+    sliceGuide.rotation.set(0, Math.PI / 2, 0);
+    sliceGuide.position.set(xCut, height * 0.5, 0);
+    if (out) out.textContent = `矢状面 ${xCut >= 0 ? '+' : ''}${(xCut * 100).toFixed(0)} cm`;
+  } else {
+    sliceGuide.visible = false;
+    if (out) out.textContent = '关闭';
+  }
+  if (slider) slider.disabled = clipMode === 'off';
+  const applyTo = mesh => {
+    if (!mesh?.material) return;
+    mesh.material.clippingPlanes = activePlanes;
+    mesh.material.needsUpdate = true;
+  };
+  for (const m of skins) applyTo(m);
+  for (const m of bones) applyTo(m);
+  for (const o of organs.values()) applyTo(o.mesh);
+}
+
 function refresh() {
   for (const mesh of skins) {
     mesh.visible = $('show-skin').checked && !isolated;
@@ -294,6 +350,7 @@ function refresh() {
     const d = META[key][4];
     organ.mesh.position.copy(organ.home).add(new THREE.Vector3(...d).multiplyScalar(expansion));
   }
+  applyClipping();
   if (root) root.updateWorldMatrix(true, true);
   $('isolate').disabled = !selected;
   $('isolate').textContent = isolated ? '返回带参照视图' : '单独观察';
@@ -362,7 +419,9 @@ function selectOrgan(key) {
 
   const tcmMeta = $('selected-tcm-meta');
   tcmMeta.replaceChildren();
-  for (const tagText of [SYSTEMS[meta[2]], meta[6], `${organ.tris.toLocaleString('zh-CN')} 三角面`]) {
+  const dimText = `${(size.x * 100).toFixed(1)}×${(size.y * 100).toFixed(1)}×${(size.z * 100).toFixed(1)} cm（网格参考）`;
+  const relH = `${Math.round((organ.center.y / Math.max(0.1, height)) * 100)}% 身高位`;
+  for (const tagText of [SYSTEMS[meta[2]], meta[6], dimText, relH, `${organ.tris.toLocaleString('zh-CN')} 三角面`]) {
     const span = document.createElement('span');
     span.textContent = tagText;
     tcmMeta.append(span);
@@ -510,9 +569,22 @@ $('explode').addEventListener('input', () => {
 
 $('reset-view').addEventListener('click', () => {
   $('organ-search').value = '';
+  clipMode = 'off';
+  document.querySelectorAll('[data-clip]').forEach(b => b.classList.toggle('is-on', b.dataset.clip === 'off'));
   applyPreset('standard');
   setSystem('all', true);
   standardView('front', false, true);
+});
+document.querySelectorAll('[data-clip]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    clipMode = btn.dataset.clip;
+    document.querySelectorAll('[data-clip]').forEach(b => b.classList.toggle('is-on', b === btn));
+    applyClipping();
+  });
+});
+$('clip-slider')?.addEventListener('input', e => {
+  clipRatio = Number(e.currentTarget.value) / 100;
+  applyClipping();
 });
 $('clear-selection').addEventListener('click', () => setSystem('all', true));
 $('isolate').addEventListener('click', () => { if (selected) { isolated = !isolated; refresh(); } });

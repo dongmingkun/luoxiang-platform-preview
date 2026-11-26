@@ -63,7 +63,10 @@
     <section class="judge-section task-workbench" id="defense-workbench" aria-labelledby="workbench-title">
       <div class="judge-section-head">
         <div><span class="judge-kicker">TASK → OPERATION → EVIDENCE</span><h3 id="workbench-title">答辩任务台：沿步骤核查一个问题</h3></div>
-        <a class="status-chip" href="#benchmark-cases">往届参照与来源 ↓</a>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <a class="btn primary" href="structure.html?defense=1">▶ 开启 5 分钟答辩接力</a>
+          <a class="status-chip" href="#benchmark-cases">往届参照与来源 ↓</a>
+        </div>
       </div>
       <p class="task-intro">选择一项查看操作、可观察现象与证据缺口。这里是演示导览，点击不会产生验收、成绩或研究记录。</p>
       <div class="task-selectors" role="group" aria-label="选择演示任务" hidden>
@@ -354,5 +357,6 @@
   </main>
 
   <script type="module" src="src/judge.js?v=20261112benchmark"></script>
+  <script type="module" src="src/defense-guide.js?v=20261126award"></script>
 </body>
 </html>
