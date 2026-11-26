@@ -1,0 +1,32 @@
+{
+  "date": "2026-11-26",
+  "url": "http://127.0.0.1:8020",
+  "scope": "Palette and basic visible controls on current local working tree; not a review of concurrent business/scene changes",
+  "checks": [
+    "theme stylesheet HTTP 200",
+    "live scene and standard case remain visible",
+    "blue palette applied",
+    "no horizontal overflow 1920",
+    "no horizontal overflow 1280",
+    "no horizontal overflow 390",
+    "mobile navigation remains usable",
+    "panel usable simulation",
+    "panel usable layers",
+    "no live console or page errors"
+  ],
+  "geometry": [
+    {
+      "width": 1920,
+      "scroll": 1920
+    },
+    {
+      "width": 1280,
+      "scroll": 1280
+    },
+    {
+      "width": 390,
+      "scroll": 390
+    }
+  ],
+  "errors": []
+}
