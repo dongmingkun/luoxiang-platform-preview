@@ -42,3 +42,7 @@ git diff --check
 ## 真实画面与归属
 
 `web/assets/studio-preview.jpg` 从上述实际运行包截图，非生成解剖图。截图的解剖部分保留 BodyParts3D / The Database Center for Life Science / CC BY-SA 2.1 Japan；代码和 Three.js 保留 MIT。未复制往届团队素材，不以其奖项或指标为本项目背书。
+
+## 发布记录
+
+已推送至用户指定的私有仓库 `dongmingkun/luoxiang-platform-preview`，分支 `codex/frontend-studio-preview`；[PR #1](https://github.com/dongmingkun/luoxiang-platform-preview/pull/1) 等待团队验收，未合并 main。代码快照、模型分仓与真实数据边界保持不变。记录回填为纯文档改动，不改变上述测试对象。
