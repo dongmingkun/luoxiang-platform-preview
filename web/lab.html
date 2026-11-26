@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="络象经纬算法与实训中心：骨度分寸腧穴自动定位算法、中医知识图谱、本地可溯源问答联动 3D 与交互式点穴考核闭环。" />
+  <title>算法实训 · 骨度定位与点穴考核 | 络象经纬</title>
+  <link rel="stylesheet" href="platform-theme.css?v=20261126award" />
+  <link rel="stylesheet" href="styles.css?v=20261107defense" />
+  <link rel="stylesheet" href="lab.css?v=20261127lab" />
+</head>
+<body class="lab-body">
+  <div class="app lab-app">
+    <header class="lx-topbar">
+      <a class="lx-brand" href="showcase.html">
+        <span class="lx-mark" aria-hidden="true">络</span>
+        <span><strong>络象经纬</strong><small>LUOXIANG · ALGO &amp; EXAM LAB</small></span>
+      </a>
+      <nav class="lx-nav" aria-label="平台导航">
+        <a href="showcase.html">演示总览</a>
+        <a href="index.html">三维教学</a>
+        <a href="structure.html">人体结构</a>
+        <a href="yangqi.html">阳气运行</a>
+        <a href="lab.html" aria-current="page">算法实训</a>
+        <a href="dataset.html">数据推演</a>
+        <a href="herbs.html">药材资料</a>
+        <a href="teacher.html">教师端</a>
+        <a href="judge.html">评委速览</a>
+      </nav>
+      <div class="lx-top-right">
+        <span class="lx-pill" id="perf-pill"><i></i>加载中…</span>
+      </div>
+    </header>
+
+    <main class="lab-layout">
+      <aside class="lab-panel" aria-label="核心算法、知识图谱与考核控制面板">
+        <div class="lab-panel-head">
+          <span class="lab-eyebrow">ALGORITHMS · KG · TRACEABLE QA · EXAM</span>
+          <h2>算法与交互实训中心</h2>
+          <div class="lab-tabs" role="tablist" aria-label="实训功能切换">
+            <button type="button" role="tab" aria-selected="true" data-lab-tab="locator">骨度定位</button>
+            <button type="button" role="tab" aria-selected="false" data-lab-tab="exam">点穴考核</button>
+            <button type="button" role="tab" aria-selected="false" data-lab-tab="kg">知识图谱</button>
+            <button type="button" role="tab" aria-selected="false" data-lab-tab="qa">溯源问答</button>
+          </div>
+        </div>
+
+        <div class="lab-scroll">
+          <!-- TAB 1: 骨度分寸自动定位算法 -->
+          <section class="lab-tab-panel" data-lab-panel="locator">
+            <div class="lab-card">
+              <div class="lab-card-head">
+                <b>骨度分寸 · 腧穴自动定位算法</b>
+                <span class="lab-tag">GB/T 12346</span>
+              </div>
+              <p class="lab-desc">基于 11 个体表骨性标志点自动折算局部「同身寸」，按身高与体型参数实时求解 18 个国标示范穴位三维体表坐标（Raycaster 贴合）。</p>
+
+              <div class="param-grid">
+                <label class="param-row">
+                  <span>设定身高</span>
+                  <input id="param-height" type="range" min="155" max="190" step="1" value="172" />
+                  <b id="param-height-val">172 cm</b>
+                </label>
+                <label class="param-row">
+                  <span>体型宽窄比</span>
+                  <input id="param-build" type="range" min="0.90" max="1.12" step="0.02" value="1.00" />
+                  <b id="param-build-val">1.00×</b>
+                </label>
+              </div>
+
+              <div class="cun-metrics" id="cun-metrics" aria-label="分段骨度分寸换算值">
+                <div><span>躯干纵寸</span><b id="cun-tv">—</b></div>
+                <div><span>躯干横寸</span><b id="cun-th">—</b></div>
+                <div><span>前臂寸</span><b id="cun-fa">—</b></div>
+                <div><span>小腿寸</span><b id="cun-ll">—</b></div>
+              </div>
+
+              <div class="locator-eval-bar">
+                <div>
+                  <span>算法解 vs 经线参考均值</span>
+                  <b id="locator-ref-diff">— mm</b>
+                </div>
+                <div>
+                  <span>专家标注金标准误差 (MAE)</span>
+                  <b class="is-pending">待专家标注采集</b>
+                </div>
+              </div>
+
+              <div class="lab-btn-row">
+                <button id="btn-toggle-landmarks" type="button" class="lab-btn is-on">显示骨性标志点 (11)</button>
+                <button id="btn-export-acupoints" type="button" class="lab-btn">导出坐标 CSV</button>
+              </div>
+            </div>
+
+            <div class="lab-card">
+              <div class="lab-card-head">
+                <b>国标示范经穴坐标表（点击聚焦 3D）</b>
+                <span class="lab-tag" id="acu-count-tag">18 穴</span>
+              </div>
+              <div id="acupoint-list" class="acupoint-list"></div>
+            </div>
+          </section>
+
+          <!-- TAB 2: 3D 交互式点穴考核 -->
+          <section class="lab-tab-panel" data-lab-panel="exam" hidden>
+            <div class="lab-card exam-hero-card">
+              <div class="lab-card-head">
+                <b>3D 交互式点穴考核闭环</b>
+                <span class="lab-tag">距离评分</span>
+              </div>
+              <p class="lab-desc">直接在右侧 3D 人体体表点击取穴，系统按三维欧氏偏差（mm）即时评分并标出偏差向量；结果可导出 CSV 导入教师端汇总班级薄弱穴位。</p>
+              <div class="lab-btn-row">
+                <button id="btn-exam-start" type="button" class="lab-btn primary">开始 5 题随机考核</button>
+                <button id="btn-exam-hint" type="button" class="lab-btn" disabled>显示骨度提示</button>
+              </div>
+            </div>
+
+            <div class="lab-card" id="exam-prompt-card">
+              <div class="exam-status" id="exam-status">点击上方「开始 5 题随机考核」进入点穴实训模式。</div>
+              <div class="exam-target" id="exam-target" hidden>
+                <div class="exam-q-no" id="exam-q-no">第 1 / 5 题</div>
+                <h3 id="exam-q-title">请点击定位：足三里（ST36）</h3>
+                <p id="exam-q-meta">归经：足阳明胃经 · 区域：小腿</p>
+                <p id="exam-q-hint" class="exam-hint" hidden></p>
+                <div class="exam-feedback" id="exam-feedback" hidden></div>
+                <div class="lab-btn-row" style="margin-top:8px">
+                  <button id="btn-exam-next" type="button" class="lab-btn primary" hidden>下一题 →</button>
+                  <button id="btn-exam-skip" type="button" class="lab-btn">跳过此题</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="lab-card" id="exam-summary-card">
+              <div class="lab-card-head">
+                <b>本次考核实时统计</b>
+                <button id="btn-export-exam" type="button" class="lab-btn-mini" disabled>导出考核 CSV</button>
+              </div>
+              <div class="exam-stats-grid">
+                <div><span>已完成</span><b id="exam-done">0 / 5</b></div>
+                <div><span>平均偏差</span><b id="exam-mean-mm">—</b></div>
+                <div><span>平均得分</span><b id="exam-mean-score">—</b></div>
+              </div>
+              <ol id="exam-history" class="exam-history"></ol>
+              <p class="lab-footnote">导出 CSV 后可在 <a href="teacher.html#exam-analytics">教师端 · 班级点穴薄弱穴位分析 ↗</a> 汇总多份答卷。</p>
+            </div>
+          </section>
+
+          <!-- TAB 3: 中医三维知识图谱 -->
+          <section class="lab-tab-panel" data-lab-panel="kg" hidden>
+            <div class="lab-card">
+              <div class="lab-card-head">
+                <b>中医五层知识图谱（点击节点联动 3D）</b>
+                <span class="lab-tag" id="kg-stats-tag">25 节点 · 25 边</span>
+              </div>
+              <div class="kg-legend" aria-label="图谱实体图例">
+                <span><i style="background:#b0822d"></i>经典</span>
+                <span><i style="background:#1b6b58"></i>脏腑</span>
+                <span><i style="background:#1c6e9c"></i>经脉</span>
+                <span><i style="background:#c45b2c"></i>腧穴</span>
+                <span><i style="background:#6c4899"></i>药方</span>
+              </div>
+              <svg id="kg-svg" class="kg-svg" viewBox="0 0 390 360" role="img" aria-label="中医五层结构化知识图谱"></svg>
+            </div>
+
+            <div class="lab-card" id="kg-detail-card">
+              <div class="lab-card-head">
+                <b id="kg-detail-title">点击上方任意图谱节点查看关联</b>
+                <span class="lab-tag" id="kg-detail-type">图谱溯源</span>
+              </div>
+              <p id="kg-detail-summary" class="lab-desc">每个节点均与 3D 脏腑、经脉、国标穴位或药材原文库绑定，实现跨页面数据贯通。</p>
+              <div id="kg-neighbors" class="kg-neighbors"></div>
+              <div id="kg-detail-link" class="kg-detail-link" hidden></div>
+            </div>
+          </section>
+
+          <!-- TAB 4: 本地离线可溯源问答联动 3D -->
+          <section class="lab-tab-panel" data-lab-panel="qa" hidden>
+            <div class="lab-card">
+              <div class="lab-card-head">
+                <b>本地离线可溯源问答 · 联动 3D</b>
+                <span class="lab-tag">零上传 · 教学边界</span>
+              </div>
+              <p class="lab-desc">知识图谱 + 本地关键词检索，答案均附《内经》或 GB/T 12346 明确出处，并自动触发 3D 高亮与聚焦；临床诊疗/开方提问自动拦截。</p>
+
+              <form id="qa-form" class="qa-form">
+                <input id="qa-input" type="text" placeholder="例如：卫气夜里怎么走？足三里怎么定位？" autocomplete="off" />
+                <button type="submit" class="lab-btn primary">检索并联动</button>
+              </form>
+
+              <div class="qa-presets" id="qa-presets" aria-label="高频答辩示范问题"></div>
+            </div>
+
+            <div id="qa-result" class="lab-card qa-result" hidden>
+              <div class="lab-card-head">
+                <b id="qa-res-title">检索结果</b>
+                <span class="lab-tag" id="qa-res-badge">已溯源</span>
+              </div>
+              <p id="qa-res-answer" class="qa-answer"></p>
+              <blockquote id="qa-res-quote" class="qa-quote"></blockquote>
+              <div id="qa-res-source" class="qa-source"></div>
+              <div id="qa-res-action" class="qa-action"></div>
+              <div id="qa-res-link" class="kg-detail-link" hidden></div>
+            </div>
+          </section>
+        </div>
+
+        <div class="lab-boundary">
+          学术与合规边界：本页算法、图谱与问答均为中医教学与科研原型，不提供临床诊断或处方；专家标注误差与教学实验成绩待真实采集。
+        </div>
+      </aside>
+
+      <section class="lab-stage" aria-label="三维算法与实训视窗">
+        <div class="lab-stage-head">
+          <div>
+            <span class="lab-stage-kicker">3D INTERACTIVE LAB</span>
+            <h2 id="stage-title">骨度分寸体表定位 · 三维实景验证</h2>
+          </div>
+          <div class="stage-badges">
+            <span class="stage-chip" id="stage-mode-chip">定位视图</span>
+            <span class="stage-chip perf" id="fps-chip">FPS —</span>
+          </div>
+        </div>
+
+        <div id="canvas-wrap" class="canvas-wrap">
+          <div id="loading" class="loading">
+            <div class="loading-ring"></div>
+            <p id="loading-text">正在载入人体模型…</p>
+          </div>
+          <div id="labels" class="labels"></div>
+
+          <aside class="lab-hud" id="lab-hud">
+            <div class="lab-hud-kicker" id="hud-kicker">BONE-CUN SOLVER</div>
+            <div class="lab-hud-title" id="hud-title">18 个国标示范穴位已贴合体表</div>
+            <div class="lab-hud-sub" id="hud-sub">拖动左侧身高/体型滑块，观察骨度分寸实时重算。</div>
+          </aside>
+
+          <div class="viewport-legend">
+            <span><i class="swatch acu"></i>国标算法点</span>
+            <span><i class="swatch lm"></i>骨性标志点</span>
+            <span><i class="swatch click"></i>考核点击点</span>
+            <span class="hint">单指/左键旋转 · 双指/滚轮缩放 · 考核模式下轻点体表取穴</span>
+          </div>
+        </div>
+
+        <div class="lab-stage-tools">
+          <div class="tool-group">
+            <span class="tool-label">模型</span>
+            <button id="btn-sex-male" class="tool is-on" type="button">男</button>
+            <button id="btn-sex-female" class="tool" type="button">女</button>
+          </div>
+          <div class="tool-group">
+            <span class="tool-label">视效</span>
+            <button id="btn-mode-real" class="tool is-on" type="button">真实</button>
+            <button id="btn-mode-holo" class="tool" type="button">全息</button>
+          </div>
+          <div class="tool-group">
+            <button id="btn-view-front" class="tool" type="button">正面</button>
+            <button id="btn-view-back" class="tool" type="button">背面</button>
+            <button id="btn-view-reset" class="tool" type="button">复位</button>
+            <button id="btn-rotate" class="tool" type="button">环绕</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script type="importmap">{"imports":{"three":"./vendor/three.module.js","three/addons/":"./vendor/addons/"}}</script>
+  <script type="module" src="src/lab.js?v=20261127lab"></script>
+  <script type="module" src="src/defense-guide.js?v=20261126award"></script>
+</body>
+</html>

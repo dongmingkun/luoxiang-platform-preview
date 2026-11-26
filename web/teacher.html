@@ -20,6 +20,7 @@
       <a href="index.html?demo=1">三维教学</a>
       <a href="structure.html">人体结构</a>
       <a href="yangqi.html">阳气运行</a>
+      <a href="lab.html">算法实训</a>
       <a href="dataset.html">数据推演</a>
       <a href="herbs.html">药材资料</a>
       <a href="teacher.html" aria-current="page">教师端</a>
@@ -126,6 +127,27 @@
       </table>
     </section>
 
+    <section id="exam-analytics" class="teacher-card teacher-section" aria-labelledby="exam-analytics-title">
+      <div class="teacher-section-head">
+        <div>
+          <div class="teacher-kicker">04 · ACUPOINT EXAM ANALYTICS</div>
+          <h2 id="exam-analytics-title">班级点穴考核汇总 · 薄弱穴位诊断</h2>
+        </div>
+        <div class="teacher-export">
+          <label class="lx-btn primary" for="exam-csv-input" style="cursor:pointer">导入学生考核 CSV（可多选）</label>
+          <input id="exam-csv-input" type="file" accept=".csv" multiple hidden />
+          <button id="btn-exam-sample" class="lx-btn" type="button">载入格式示例</button>
+        </div>
+      </div>
+      <p class="teacher-note">导入学生在 <a href="lab.html">算法实训 · 点穴考核 ↗</a> 导出的本机 CSV（不含个人身份信息），自动汇总各穴位平均三维偏差（mm）、均分与薄弱项排序，辅助教师针对性讲评与对照实验前后测统计。</p>
+      <p id="exam-analytics-status" class="record-count" aria-live="polite">尚未导入考核 CSV（本地浏览器解析，不上传任何文件）。</p>
+      <table id="exam-analytics-table" class="teacher-table" hidden>
+        <caption>班级薄弱穴位排行（按平均三维偏差 mm 降序排列）</caption>
+        <thead><tr><th scope="col">穴位（国标码）</th><th scope="col">归经</th><th scope="col">作答次数</th><th scope="col">平均偏差 (mm)</th><th scope="col">平均得分</th><th scope="col">教学建议</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
     <noscript><p class="teacher-boundary">请启用 JavaScript 以读取教学内容与本机记录。当前未生成任何记录。</p></noscript>
 
     <footer class="teacher-footer">
@@ -134,6 +156,6 @@
     </footer>
   </main>
 
-  <script type="module" src="src/teacher.js?v=20261126award"></script>
+  <script type="module" src="src/teacher.js?v=20261127lab"></script>
 </body>
 </html>

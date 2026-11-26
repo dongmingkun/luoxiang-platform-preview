@@ -200,3 +200,96 @@ window.addEventListener('storage', event => {
   if (event.key === STORAGE_KEY || event.key === null) renderRecords(readRecords());
 });
 window.addEventListener('pageshow', () => renderRecords(readRecords()));
+
+// —— 04 · 班级点穴考核 CSV 本地汇总（薄弱穴位诊断） ——
+function parseExamCsv(text) {
+  const lines = text.replace(/^\uFEFF/, '').split(/\r?\n/).filter(l => l.trim());
+  if (lines.length < 2) return [];
+  const headers = lines[0].split(',').map(h => h.trim());
+  const idx = name => headers.indexOf(name);
+  const iCode = idx('acupoint_code');
+  const iName = idx('acupoint_name');
+  const iMer = idx('meridian');
+  const iErr = idx('error_mm');
+  const iScore = idx('score');
+  if (iCode < 0 || iErr < 0) return [];
+  const rows = [];
+  for (let i = 1; i < lines.length; i += 1) {
+    const cols = lines[i].split(',').map(c => c.trim().replace(/^"|"$/g, ''));
+    const err = Number(cols[iErr]);
+    const score = Number(cols[iScore]);
+    if (!cols[iCode] || !Number.isFinite(err)) continue;
+    rows.push({
+      code: cols[iCode],
+      name: cols[iName] || cols[iCode],
+      meridian: cols[iMer] || '—',
+      err,
+      score: Number.isFinite(score) ? score : 0,
+    });
+  }
+  return rows;
+}
+
+function renderExamAnalytics(rows, sourceLabel) {
+  const statusEl = $('exam-analytics-status');
+  const table = $('exam-analytics-table');
+  if (!table || !statusEl) return;
+  if (!rows.length) {
+    statusEl.textContent = '未解析到有效点穴考核记录（请确认 CSV 包含 acupoint_code 与 error_mm 列）。';
+    table.hidden = true;
+    return;
+  }
+  const map = new Map();
+  for (const r of rows) {
+    const cur = map.get(r.code) || { code: r.code, name: r.name, meridian: r.meridian, count: 0, sumErr: 0, sumScore: 0 };
+    cur.count += 1;
+    cur.sumErr += r.err;
+    cur.sumScore += r.score;
+    map.set(r.code, cur);
+  }
+  const ranked = [...map.values()]
+    .map(x => ({ ...x, meanErr: x.sumErr / x.count, meanScore: x.sumScore / x.count }))
+    .sort((a, b) => b.meanErr - a.meanErr);
+  const overallErr = (rows.reduce((a, r) => a + r.err, 0) / rows.length).toFixed(1);
+  const overallScore = Math.round(rows.reduce((a, r) => a + r.score, 0) / rows.length);
+  statusEl.textContent = `${sourceLabel}：共汇总 ${rows.length} 条作答、覆盖 ${ranked.length} 个穴位｜整体平均偏差 ${overallErr} mm，均分 ${overallScore}。`;
+
+  const tbody = table.tBodies[0];
+  tbody.replaceChildren();
+  for (const item of ranked) {
+    const tr = document.createElement('tr');
+    cell(tr, '穴位', `${item.name} (${item.code})`, true);
+    cell(tr, '归经', item.meridian);
+    cell(tr, '作答次数', String(item.count));
+    cell(tr, '平均偏差', `${item.meanErr.toFixed(1)} mm`);
+    cell(tr, '平均得分', `${Math.round(item.meanScore)} 分`);
+    const advice = item.meanErr > 35 ? '重点复训 · 强化骨度标志演示' : item.meanErr > 20 ? '建议巩固 · 结合体表参照' : '掌握良好';
+    cell(tr, '教学建议', advice);
+    tbody.appendChild(tr);
+  }
+  table.hidden = false;
+}
+
+$('exam-csv-input')?.addEventListener('change', async e => {
+  const files = [...(e.target.files || [])];
+  if (!files.length) return;
+  const all = [];
+  for (const f of files) {
+    all.push(...parseExamCsv(await f.text()));
+  }
+  renderExamAnalytics(all, `已导入 ${files.length} 份本机考核 CSV`);
+  e.target.value = '';
+});
+
+$('btn-exam-sample')?.addEventListener('click', () => {
+  const sampleCsv = [
+    'timestamp,acupoint_code,acupoint_name,meridian,region,error_mm,score,grade,sex,height_cm',
+    '2026-11-27T00:00:00Z,SP6,三阴交,足太阴脾经,小腿,42.5,63,合格,male,172',
+    '2026-11-27T00:00:00Z,SP6,三阴交,足太阴脾经,小腿,38.1,68,合格,female,162',
+    '2026-11-27T00:00:00Z,GV4,命门,督脉,腰部,31.4,76,合格,male,172',
+    '2026-11-27T00:00:00Z,ST36,足三里,足阳明胃经,小腿,18.2,93,优良,male,172',
+    '2026-11-27T00:00:00Z,ST36,足三里,足阳明胃经,小腿,14.6,97,优良,female,162',
+    '2026-11-27T00:00:00Z,CV12,中脘,任脉,上腹,11.3,100,精准,male,172',
+  ].join('\n');
+  renderExamAnalytics(parseExamCsv(sampleCsv), '格式示例（非真实班级成绩）');
+});
