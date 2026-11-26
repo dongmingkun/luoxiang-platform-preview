@@ -1,4 +1,15 @@
 import { parseCatalog, filterEntries, pageOf } from './herb-catalog.mjs?v=20261126award';
+import { FORMULAS, PATTERNS } from './knowledge.js?v=20261107defense';
+
+// Reverse index from classic curriculum herb name -> teaching formulas in this platform
+const HERB_FORMULAS = new Map();
+for (const formula of Object.values(FORMULAS)) {
+  const patName = PATTERNS[formula.pattern]?.name?.split(' / ')[0] || '';
+  for (const h of formula.herbs || []) {
+    if (!HERB_FORMULAS.has(h)) HERB_FORMULAS.set(h, []);
+    HERB_FORMULAS.get(h).push({ name: formula.name, pattern: patName });
+  }
+}
 
 const $ = id => document.getElementById(id);
 const format = value => Number(value).toLocaleString('zh-CN');
@@ -30,6 +41,17 @@ function render() {
     const effect = make('p', 'herb-effect');
     effect.append(make('b', '', '原文功效 · 待审'), document.createTextNode(entry.effect?.trim() || '未提供'));
     card.append(dl, effect);
+    const refs = HERB_FORMULAS.get(entry.name.trim());
+    if (refs?.length) {
+      const refBox = make('div', 'herb-formula-ref');
+      refBox.append(make('span', '', '教学经典方关联：'));
+      for (const f of refs) {
+        const link = make('a', '', `${f.name}（${f.pattern}）↗`);
+        link.href = 'teacher.html#knowledge';
+        refBox.append(link);
+      }
+      card.append(refBox);
+    }
     $('herb-results').append(card);
   }
   $('herb-empty').hidden = matches.length > 0;

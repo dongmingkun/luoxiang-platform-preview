@@ -80,6 +80,18 @@
           <input id="skin-opacity" type="range" min="0" max="0.65" step="0.01" value="0.10" />
           <label class="toggle"><span>骨骼空间参照</span><input id="show-skeleton" type="checkbox" checked /></label>
           <label class="toggle"><span>双侧名称与引导线</span><input id="show-labels" type="checkbox" checked /></label>
+          <div class="slicer-box">
+            <div class="slicer-head">
+              <span>实时断层剖切</span>
+              <output id="clip-value">关闭</output>
+            </div>
+            <div class="slicer-modes" role="group" aria-label="解剖断层剖切方向">
+              <button type="button" class="slicer-btn is-on" data-clip="off">关闭</button>
+              <button type="button" class="slicer-btn" data-clip="y">横断面</button>
+              <button type="button" class="slicer-btn" data-clip="x">矢状面</button>
+            </div>
+            <input id="clip-slider" type="range" min="0" max="100" step="1" value="55" disabled aria-label="断层剖切深度" />
+          </div>
         </section>
 
         <div class="pipeline-note">
@@ -178,6 +190,7 @@
     <span>BodyParts3D © DBCLS · <a href="https://creativecommons.org/licenses/by-sa/2.1/jp/" target="_blank" rel="noopener">CC BY-SA 2.1 Japan</a> · 代码 / Three.js MIT</span>
   </footer>
 
-  <script type="module" src="src/structure.js?v=20261126award"></script>
+  <script type="module" src="src/structure.js?v=20261126award2"></script>
+  <script type="module" src="src/defense-guide.js?v=20261126award"></script>
 </body>
 </html>

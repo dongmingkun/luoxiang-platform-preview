@@ -191,6 +191,28 @@
   color: var(--lx-muted);
 }
 .herb-effect b { display: block; font-size: 11px; color: var(--lx-jade); font-weight: 600; margin-bottom: 3px; }
+.herb-formula-ref {
+  margin-top: 10px;
+  padding-top: 9px;
+  border-top: 1px dashed var(--lx-gold-line);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: #7d5311;
+}
+.herb-formula-ref a {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--lx-gold-soft);
+  border: 1px solid var(--lx-gold-line);
+  color: #6b4b12;
+  font-weight: 600;
+  text-decoration: none;
+}
+.herb-formula-ref a:hover { background: #f2e4c2; }
 
 .herb-empty {
   text-align: center;
