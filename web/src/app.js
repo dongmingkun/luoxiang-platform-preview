@@ -7,7 +7,7 @@ import {
   buildAnalysisReply, buildTreatmentReply, urgentReply, detectFormula,
   detectOrgan, detectMeridian, isCompareIntent, isResetIntent, isTreatIntent,
 } from "./agent.js?v=20261108teacher";
-import { TCMScene3D } from "./scene3d.js?v=20261107defense";
+import { TCMScene3D } from "./scene3d.js?v=20261126award";
 
 const $ = id => document.getElementById(id);
 const ui = {
@@ -142,30 +142,57 @@ function clearSymptoms() {
   clearTimeout(chipTimer);
 }
 
+function emitStudioState(currentState = NORMAL_STATE) {
+  const detail = {
+    pattern,
+    formula,
+    beforeState: { ...beforeState },
+    afterState: { ...afterState },
+    currentState: { ...currentState },
+    currentDay,
+    visualMode,
+    sex,
+  };
+  window.__tcmStudioState = detail;
+  window.dispatchEvent(new CustomEvent("tcm:state-change", { detail }));
+}
+
 function setAnalysisCard() {
   if (!pattern) {
-    ui.analysisTag.textContent = "等待输入";
+    ui.analysisTag.textContent = "等待选择";
     ui.analysisBody.className = "analysis-empty";
-    ui.analysisBody.innerHTML = "<p>点选症状或输入描述后，智能体会给出教学性的证候匹配，并标出相关脏腑与经络。</p>";
+    ui.analysisBody.innerHTML = "<div class=\"analysis-placeholder\">从上方选择一个标准案例</div><p>观察证候与相关脏腑、经络的教学对应关系，点击脏腑/经络标签可在 3D 视图中聚焦。</p>";
     return;
   }
   const organTags = pattern.organs.map(k => {
     const meta = ORGAN_META[k];
-    return `<span class="org-tag" style="color:${meta.color};border-color:${meta.color}44">${meta.zh}</span>`;
+    return `<button type="button" class="org-tag is-interactive" data-focus-organ="${k}" title="点击在 3D 中聚焦${meta.zh}" style="--tag-accent:${meta.color}"><i style="background:${meta.color}"></i>${meta.zh}</button>`;
   }).join("");
   const meridianTags = pattern.meridians.map(m =>
-    `<span class="org-tag meridian">${MERIDIAN_NAMES[m] || m}</span>`).join("");
+    `<button type="button" class="org-tag meridian is-interactive" data-focus-meridian="${m}" title="点击在 3D 中聚焦${MERIDIAN_NAMES[m] || m}">${MERIDIAN_NAMES[m] || m}</button>`).join("");
   const sym = analysis?.symptoms.map(s => s.label).join(" · ") || "—";
+  const herbsHtml = formula?.herbs?.length
+    ? `<div class="formula-herbs">${formula.herbs.map(h => `<span>${escapeHtml(h)}</span>`).join("")}</div>`
+    : "";
   ui.analysisTag.textContent = "教学匹配";
   ui.analysisBody.className = "";
   ui.analysisBody.innerHTML = `
-    <div class="pattern-name">${pattern.name}</div>
-    <div class="pattern-sub">${pattern.subtitle}</div>
-    <div class="confidence"><span>教学匹配度（非诊断概率）</span><div class="bar"><i style="width:${Math.round((analysis?.confidence || 0) * 100)}%"></i></div><span>${Math.round((analysis?.confidence || 0) * 100)}%</span></div>
+    <div class="pattern-head">
+      <div>
+        <div class="pattern-name">${pattern.name}</div>
+        <div class="pattern-sub">${pattern.subtitle}</div>
+      </div>
+      <span class="pattern-score">${Math.round((analysis?.confidence || 0) * 100)}%</span>
+    </div>
+    <div class="confidence"><span>规则匹配度（非诊断概率）</span><div class="bar"><i style="width:${Math.round((analysis?.confidence || 0) * 100)}%"></i></div></div>
     <div class="analysis-copy">${escapeHtml(pattern.description)}</div>
-    <div class="analysis-copy" style="color:#7e97a5">已匹配：${escapeHtml(sym)}</div>
-    <div class="tag-list">${organTags}${meridianTags}</div>
-    <div class="formula-brief">经典方示例 <b>${formula?.name || "—"}</b><br>${formula?.actions || ""}</div>
+    <div class="analysis-matched"><span>已匹配</span> ${escapeHtml(sym)}</div>
+    <div class="tag-list" aria-label="相关脏腑与经络（点击聚焦）">${organTags}${meridianTags}</div>
+    <div class="formula-brief">
+      <div class="formula-brief-head"><span>经典方示例</span><b>${formula?.name || "—"}</b><em>不含剂量</em></div>
+      <div class="formula-brief-act">${formula?.actions || ""}</div>
+      ${herbsHtml}
+    </div>
   `;
 }
 
@@ -289,8 +316,11 @@ function updateMetrics(state) {
   }
   const flowQi = document.getElementById("flow-qi");
   const flowBlood = document.getElementById("flow-blood");
+  const flowBalance = document.getElementById("flow-balance");
   if (flowQi) flowQi.textContent = `${Math.round(qi * 100)}%`;
   if (flowBlood) flowBlood.textContent = `${Math.round(blood * 100)}%`;
+  if (flowBalance) flowBalance.textContent = `${Math.round(balance * 100)}%`;
+  emitStudioState(state);
 }
 
 function applyLayerPreset(mode) {
@@ -547,12 +577,32 @@ async function boot() {
   ui.btnBefore.addEventListener("click", () => { stopPlay(); applyDay(0); });
   ui.btnAfter.addEventListener("click", () => { stopPlay(); applyDay(28); });
   ui.btnPlay.addEventListener("click", () => { if (playing) stopPlay(); else playTreatment(); });
+  ui.analysisBody.addEventListener("click", e => {
+    const organBtn = e.target.closest("[data-focus-organ]");
+    if (organBtn && scene) {
+      const key = organBtn.dataset.focusOrgan;
+      scene.focusOrgan(key);
+      $("btn-rotate")?.classList.remove("is-on");
+      const meta = ORGAN_META[key];
+      if (meta) {
+        scene.container?.dispatchEvent(new CustomEvent("tcm:organ-select", { detail: { key, meta } }));
+      }
+      return;
+    }
+    const merBtn = e.target.closest("[data-focus-meridian]");
+    if (merBtn && scene) {
+      scene.focusMeridian(merBtn.dataset.focusMeridian);
+      $("btn-rotate")?.classList.remove("is-on");
+    }
+  });
   ui.formulaSelect.addEventListener("change", () => {
     const f = Object.values(FORMULAS).find(x => x.name === ui.formulaSelect.value);
     if (f) {
       formula = f;
+      setAnalysisCard();
       ui.formulaNote.textContent = `${f.name}：${f.actions}。${f.note} 当前版本按证候演示作用方向，不做方剂间疗效比较。`;
       addMessage("agent", `已切换到「${f.name}」。当前版本按证候演示作用方向，切换方剂只更换教学示例，不比较疗效；方名与剂量需由专业医师决定。`);
+      emitStudioState(scene?.state || NORMAL_STATE);
     }
   });
   ui.skinOpacity.addEventListener("input", () => {
@@ -572,9 +622,28 @@ async function boot() {
   });
   $("btn-compare").addEventListener("click", () => {
     if (!pattern) { addMessage("agent", "先完成证候分析，再做服药前后对比。"); return; }
+    if (document.body.classList.contains("studio-body")) return;
     stopPlay();
     applyDay(currentDay > 14 ? 0 : 28);
   });
+  window.__tcmAppActions = {
+    applyDay: d => { stopPlay(); applyDay(d); },
+    stopPlay,
+    playTreatment,
+    applyLayerPreset: preset => {
+      if (preset === "meridian") {
+        Object.assign(layers, { skin: true, organs: true, skeleton: false, meridians: true, vessels: false, flow: true, clock: true, taiji: false });
+      } else if (preset === "holo") {
+        setVisualMode("holo");
+        return;
+      } else {
+        setVisualMode("real");
+        return;
+      }
+      document.querySelectorAll(".layer-pill").forEach(b => b.classList.toggle("is-on", Boolean(layers[b.dataset.layer])));
+      if (scene) scene.setLayers(layers);
+    },
+  };
 }
 
 boot();

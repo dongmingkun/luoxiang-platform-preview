@@ -110,6 +110,13 @@ export class TCMScene3D {
     this.skinOpacity = 0.10;
     this.visualMode = "real";
     this.dayNight = "day";
+    this.labelsVisible = true;
+    this.selectedOrgan = null;
+    this._cameraTween = null;
+    this._lastClockKey = "";
+    this._calloutSvg = null;
+    this._calloutPaths = new Map();
+    this._calloutDots = new Map();
   }
 
   async init() {
@@ -140,23 +147,49 @@ export class TCMScene3D {
     this.controls.target.set(0, 0.98, 0);
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.07;
-    this.controls.minDistance = 1.45;
+    this.controls.minDistance = 1.15;
     this.controls.maxDistance = 6.2;
     this.controls.maxPolarAngle = Math.PI * 0.93;
     this.controls.autoRotate = true;
     this.controls.autoRotateSpeed = 0.45;
+    this.controls.addEventListener("start", () => {
+      this._cameraTween = null;
+    });
 
-    this.hemiLight = new THREE.HemisphereLight(0xfff3e8, 0x0a1018, 1.1);
+    this.hemiLight = new THREE.HemisphereLight(0xfff5ec, 0x0b1614, 1.25);
     this.scene.add(this.hemiLight);
-    this.keyLight = new THREE.DirectionalLight(0xfff4ea, 2.6);
-    this.keyLight.position.set(2.5, 4, 3.5);
+    this.keyLight = new THREE.DirectionalLight(0xfff6ee, 2.85);
+    this.keyLight.position.set(2.4, 4.2, 3.6);
     this.scene.add(this.keyLight);
-    this.rimLight = new THREE.PointLight(0x9fc7ff, 5.0, 8);
-    this.rimLight.position.set(-2.2, 2.1, -2.2);
+    this.rimLight = new THREE.PointLight(0x88d4c8, 5.4, 9);
+    this.rimLight.position.set(-2.3, 2.2, -2.3);
     this.scene.add(this.rimLight);
-    this.warmLight = new THREE.PointLight(0xffc2a1, 2.8, 6);
-    this.warmLight.position.set(1.3, 1.2, 2.2);
+    this.warmLight = new THREE.PointLight(0xffcba6, 3.1, 6.5);
+    this.warmLight.position.set(1.4, 1.25, 2.3);
     this.scene.add(this.warmLight);
+
+    // Subtle calibrated medical pedestal ring visible in real mode
+    this.realPlinth = new THREE.Group();
+    const plinthRingOuter = new THREE.Mesh(
+      new THREE.RingGeometry(0.46, 0.472, 96),
+      new THREE.MeshBasicMaterial({ color: 0x6ec3a8, transparent: true, opacity: 0.24, side: THREE.DoubleSide, depthWrite: false }),
+    );
+    plinthRingOuter.rotation.x = -Math.PI / 2;
+    plinthRingOuter.position.y = 0.004;
+    const plinthRingInner = new THREE.Mesh(
+      new THREE.RingGeometry(0.31, 0.316, 96),
+      new THREE.MeshBasicMaterial({ color: 0xc9a86a, transparent: true, opacity: 0.22, side: THREE.DoubleSide, depthWrite: false }),
+    );
+    plinthRingInner.rotation.x = -Math.PI / 2;
+    plinthRingInner.position.y = 0.004;
+    const plinthDisc = new THREE.Mesh(
+      new THREE.CircleGeometry(0.46, 72),
+      new THREE.MeshBasicMaterial({ color: 0x0f2a23, transparent: true, opacity: 0.45, side: THREE.DoubleSide, depthWrite: false }),
+    );
+    plinthDisc.rotation.x = -Math.PI / 2;
+    plinthDisc.position.y = 0.002;
+    this.realPlinth.add(plinthDisc, plinthRingOuter, plinthRingInner);
+    this.scene.add(this.realPlinth);
 
     this.stage = createStage();
     this.scene.add(this.stage.group);
@@ -398,13 +431,43 @@ export class TCMScene3D {
 
   _setupLabels() {
     if (!this.labelLayer) return;
+    const svgNS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(svgNS, "svg");
+    svg.setAttribute("class", "callout-svg");
+    svg.setAttribute("aria-hidden", "true");
+    this.labelLayer.appendChild(svg);
+    this._calloutSvg = svg;
+
     for (const key of [...ZANG_KEYS, "Uterus", "Ovaries"]) {
       if (!ORGAN_META[key]) continue;
-      const el = document.createElement("div");
+      const meta = ORGAN_META[key];
+      const el = document.createElement("button");
+      el.type = "button";
       el.className = "organ-label";
-      el.innerHTML = `<span class="dot" style="background:${ORGAN_META[key].color}"></span>${ORGAN_META[key].zh}`;
+      el.dataset.organKey = key;
+      el.setAttribute("aria-label", `查看${meta.zh}（五行属${meta.element}）`);
+      el.innerHTML = `<span class="dot" style="background:${meta.color}"></span><span class="organ-label-zh">${meta.zh}</span><span class="organ-label-el">${meta.element}</span>`;
+      el.addEventListener("click", (e) => {
+        e.stopPropagation();
+        this.selectedOrgan = key;
+        this.focusOrgan(key);
+        this._updateLabelClasses();
+        this.container?.dispatchEvent(new CustomEvent("tcm:organ-select", { detail: { key, meta } }));
+      });
       this.labelLayer.appendChild(el);
       this.labels.set(key, el);
+
+      const line = document.createElementNS(svgNS, "polyline");
+      line.setAttribute("class", "callout-line");
+      svg.appendChild(line);
+      this._calloutPaths.set(key, line);
+
+      const dot = document.createElementNS(svgNS, "circle");
+      dot.setAttribute("class", "callout-dot");
+      dot.setAttribute("r", "3.2");
+      dot.style.fill = meta.color;
+      svg.appendChild(dot);
+      this._calloutDots.set(key, dot);
     }
   }
 
@@ -475,7 +538,39 @@ export class TCMScene3D {
 
   _updateLabelClasses() {
     for (const [key, el] of this.labels) {
-      el.classList.toggle("affected", this.affectedOrgans.includes(key));
+      const affected = this.affectedOrgans.includes(key);
+      const selected = this.selectedOrgan === key;
+      el.classList.toggle("affected", affected);
+      el.classList.toggle("is-selected", selected);
+      this._calloutPaths.get(key)?.classList.toggle("affected", affected || selected);
+      this._calloutDots.get(key)?.classList.toggle("affected", affected || selected);
+    }
+  }
+
+  setLabelsVisible(visible) {
+    this.labelsVisible = Boolean(visible);
+    if (this.labelLayer) this.labelLayer.classList.toggle("is-hidden", !this.labelsVisible);
+  }
+
+  setCameraPreset(which = "front", animate = true) {
+    const y = this.modelHeight * 0.565;
+    const dist = 3.25;
+    const target = new THREE.Vector3(0, y, 0);
+    let pos;
+    if (which === "back") pos = new THREE.Vector3(0, y + 0.05, -dist);
+    else if (which === "left") pos = new THREE.Vector3(-dist, y + 0.05, 0.2);
+    else if (which === "right") pos = new THREE.Vector3(dist, y + 0.05, 0.2);
+    else pos = new THREE.Vector3(0, y + 0.05, dist);
+    this.controls.autoRotate = false;
+    this.selectedOrgan = null;
+    this._updateLabelClasses();
+    if (animate) {
+      this._cameraTween = { pos, target, speed: 0.14 };
+    } else {
+      this._cameraTween = null;
+      this.controls.target.copy(target);
+      this.camera.position.copy(pos);
+      this.controls.update();
     }
   }
 
@@ -504,6 +599,7 @@ export class TCMScene3D {
     this._applyLighting();
     if (this.meridians) this.meridians.setStyle(this.visualMode);
     if (this.stage) this.stage.group.visible = !real;
+    if (this.realPlinth) this.realPlinth.visible = real;
     if (this.container) this.container.classList.toggle("is-real", real);
     this._applyOrgans();
   }
@@ -513,21 +609,21 @@ export class TCMScene3D {
     const night = this.dayNight === "night";
     const dim = night ? 0.48 : 1;
     if (this.hemiLight) {
-      this.hemiLight.color.set(night ? (real ? "#8fa8c8" : "#6f9fff") : (real ? "#fff3e8" : "#8fcfff"));
-      this.hemiLight.groundColor.set(real ? "#0a1018" : "#081018");
-      this.hemiLight.intensity = (real ? 1.1 : 1.0) * dim;
+      this.hemiLight.color.set(night ? (real ? "#8fa8c8" : "#6f9fff") : (real ? "#fff5ec" : "#8fcfff"));
+      this.hemiLight.groundColor.set(real ? "#0b1614" : "#081018");
+      this.hemiLight.intensity = (real ? 1.25 : 1.0) * dim;
     }
     if (this.keyLight) {
-      this.keyLight.color.set(night ? "#a9c4ff" : (real ? "#fff4ea" : "#cfe8ff"));
-      this.keyLight.intensity = (real ? 2.6 : 2.2) * (night ? 0.38 : 1);
+      this.keyLight.color.set(night ? "#a9c4ff" : (real ? "#fff6ee" : "#cfe8ff"));
+      this.keyLight.intensity = (real ? 2.85 : 2.2) * (night ? 0.38 : 1);
     }
     if (this.rimLight) {
-      this.rimLight.color.set(real ? "#9fc7ff" : "#2f7fff");
-      this.rimLight.intensity = (real ? 5.0 : 11) * (night ? 0.55 : 1);
+      this.rimLight.color.set(real ? "#88d4c8" : "#2f7fff");
+      this.rimLight.intensity = (real ? 5.4 : 11) * (night ? 0.55 : 1);
     }
     if (this.warmLight) {
-      this.warmLight.color.set(real ? "#ffc2a1" : "#ff7a45");
-      this.warmLight.intensity = (real ? 2.8 : 5) * (night ? 0.35 : 1);
+      this.warmLight.color.set(real ? "#ffcba6" : "#ff7a45");
+      this.warmLight.intensity = (real ? 3.1 : 5) * (night ? 0.35 : 1);
     }
     if (this.container) this.container.classList.toggle("is-night", night);
   }
@@ -562,44 +658,166 @@ export class TCMScene3D {
   focusOrgan(key) {
     const o = this.organs.get(key);
     if (!o) return;
-    this.controls.target.copy(o.center);
-    this.camera.position.copy(o.center).add(new THREE.Vector3(1.0, 0.25, 2.0));
+    this.selectedOrgan = key;
+    this._updateLabelClasses();
+    const target = o.center.clone();
+    const pos = o.center.clone().add(new THREE.Vector3(0.55, 0.14, 1.55));
     this.controls.autoRotate = false;
+    this._cameraTween = { pos, target, speed: 0.14 };
   }
 
   focusMeridian(baseId) {
     if (!this.meridians) return;
     const center = this.meridians.centerOf(baseId);
-    this.controls.target.copy(center);
-    this.camera.position.copy(center).add(new THREE.Vector3(1.2, 0.3, 2.2));
+    const target = center.clone();
+    const pos = center.clone().add(new THREE.Vector3(0.85, 0.22, 1.85));
     this.controls.autoRotate = false;
+    this._cameraTween = { pos, target, speed: 0.14 };
   }
 
   resetView() {
-    this._resetCameraForModel();
+    this.selectedOrgan = null;
+    this._updateLabelClasses();
+    const y = this.modelHeight * 0.565;
+    this._cameraTween = {
+      target: new THREE.Vector3(0, y, 0),
+      pos: new THREE.Vector3(0, y + 0.05, 3.25),
+      speed: 0.15,
+    };
   }
 
   _updateLabels() {
     if (!this.labels.size) return;
     const w = this.container.clientWidth;
     const h = this.container.clientHeight;
+    if (this._calloutSvg) {
+      this._calloutSvg.setAttribute("viewBox", `0 0 ${Math.max(1, w)} ${Math.max(1, h)}`);
+    }
+    if (!this.labelsVisible || !this.layers.organs) {
+      for (const [key, el] of this.labels) {
+        el.style.display = "none";
+        this._calloutPaths.get(key)?.setAttribute("points", "");
+        const dot = this._calloutDots.get(key);
+        if (dot) dot.style.display = "none";
+      }
+      return;
+    }
+
+    // Project body centerline and shoulder reference to derive clean bilateral callout rails
+    const torsoCenter = new THREE.Vector3(0, this.modelHeight * 0.56, 0).project(this.camera);
+    const shoulderRef = new THREE.Vector3(0.24, this.modelHeight * 0.72, 0).project(this.camera);
+    const cx = (torsoCenter.x * 0.5 + 0.5) * w;
+    const shoulderX = (shoulderRef.x * 0.5 + 0.5) * w;
+    const halfSpan = THREE.MathUtils.clamp(Math.abs(shoulderX - cx) + 46, w < 520 ? 86 : 118, w * 0.34);
+    const leftRail = THREE.MathUtils.clamp(cx - halfSpan, 52, w * 0.34);
+    const rightRail = THREE.MathUtils.clamp(cx + halfSpan, w * 0.66, w - 52);
+
+    const visible = [];
     for (const [key, el] of this.labels) {
       const o = this.organs.get(key);
-      if (!o) { el.style.display = "none"; continue; }
-      const p = o.center.clone().project(this.camera);
-      if (p.z > 1 || p.x < -1.2 || p.x > 1.2 || p.y < -1.2 || p.y > 1.2) {
+      if (!o || !o.mesh.visible) {
         el.style.display = "none";
+        this._calloutPaths.get(key)?.setAttribute("points", "");
+        const dot = this._calloutDots.get(key);
+        if (dot) dot.style.display = "none";
         continue;
       }
-      el.style.display = "flex";
-      el.style.transform = `translate(-50%,-50%) translate(${(p.x * 0.5 + 0.5) * w}px, ${(-p.y * 0.5 + 0.5) * h}px)`;
+      const p = o.center.clone().project(this.camera);
+      if (p.z > 1 || p.x < -1.15 || p.x > 1.15 || p.y < -1.15 || p.y > 1.15) {
+        el.style.display = "none";
+        this._calloutPaths.get(key)?.setAttribute("points", "");
+        const dot = this._calloutDots.get(key);
+        if (dot) dot.style.display = "none";
+        continue;
+      }
+      const ax = (p.x * 0.5 + 0.5) * w;
+      const ay = (-p.y * 0.5 + 0.5) * h;
+      visible.push({ key, el, ax, ay });
     }
+
+    if (!visible.length) return;
+
+    // Partition cleanly into left & right bilateral columns to prevent any overlapping pile-up
+    const left = [];
+    const right = [];
+    const sortedByX = visible.slice().sort((a, b) => a.ax - b.ax);
+    const split = Math.ceil(sortedByX.length / 2);
+    sortedByX.forEach((item, idx) => {
+      if (idx < split) left.push(item);
+      else right.push(item);
+    });
+
+    const minY = 74;
+    const maxY = Math.max(minY + 40, h - 104);
+    const minGap = w < 520 ? 30 : 36;
+
+    const layoutColumn = (items, side) => {
+      items.sort((a, b) => a.ay - b.ay);
+      // Center vertically around natural anchors while enforcing strict non-overlap spacing
+      const ys = items.map(it => THREE.MathUtils.clamp(it.ay, minY, maxY));
+      for (let i = 1; i < ys.length; i++) {
+        if (ys[i] - ys[i - 1] < minGap) ys[i] = ys[i - 1] + minGap;
+      }
+      if (ys.length && ys[ys.length - 1] > maxY) {
+        const overflow = ys[ys.length - 1] - maxY;
+        for (let i = 0; i < ys.length; i++) ys[i] -= overflow;
+        for (let i = ys.length - 2; i >= 0; i--) {
+          if (ys[i + 1] - ys[i] < minGap) ys[i] = ys[i + 1] - minGap;
+        }
+        for (let i = 0; i < ys.length; i++) ys[i] = THREE.MathUtils.clamp(ys[i], minY, maxY);
+      }
+
+      const railX = side === "left" ? leftRail : rightRail;
+      items.forEach((it, i) => {
+        const ly = ys[i];
+        it.el.style.display = "inline-flex";
+        it.el.classList.toggle("is-left", side === "left");
+        it.el.classList.toggle("is-right", side === "right");
+        it.el.style.transform = side === "left"
+          ? `translate(-100%, -50%) translate(${railX.toFixed(1)}px, ${ly.toFixed(1)}px)`
+          : `translate(0%, -50%) translate(${railX.toFixed(1)}px, ${ly.toFixed(1)}px)`;
+
+        const elbowX = side === "left"
+          ? Math.min(it.ax - 10, railX + 18)
+          : Math.max(it.ax + 10, railX - 18);
+        const line = this._calloutPaths.get(it.key);
+        if (line) {
+          line.setAttribute(
+            "points",
+            `${it.ax.toFixed(1)},${it.ay.toFixed(1)} ${elbowX.toFixed(1)},${ly.toFixed(1)} ${railX.toFixed(1)},${ly.toFixed(1)}`,
+          );
+        }
+        const dot = this._calloutDots.get(it.key);
+        if (dot) {
+          dot.style.display = "";
+          dot.setAttribute("cx", it.ax.toFixed(1));
+          dot.setAttribute("cy", it.ay.toFixed(1));
+        }
+      });
+    };
+
+    layoutColumn(left, "left");
+    layoutColumn(right, "right");
   }
 
   _animate() {
     requestAnimationFrame(() => this._animate());
     const dt = Math.min(this.clock.getDelta(), 0.05);
     this.elapsed += dt;
+
+    if (this._cameraTween) {
+      const k = 1 - Math.exp(-dt * 7.5);
+      this.camera.position.lerp(this._cameraTween.pos, k);
+      this.controls.target.lerp(this._cameraTween.target, k);
+      if (
+        this.camera.position.distanceTo(this._cameraTween.pos) < 0.012 &&
+        this.controls.target.distanceTo(this._cameraTween.target) < 0.012
+      ) {
+        this.camera.position.copy(this._cameraTween.pos);
+        this.controls.target.copy(this._cameraTween.target);
+        this._cameraTween = null;
+      }
+    }
     this.controls.update();
 
     if (this.skinMaterial) this.skinMaterial.uniforms.uTime.value = this.elapsed;
@@ -609,7 +827,14 @@ export class TCMScene3D {
     }
     if (this.taiji) this.taiji.update(this.state, dt, this.elapsed);
     if (this.dantians) this.dantians.update(this.state, dt, this.elapsed);
-    if (this.clockRing) this.clockRing.update(this.state, dt);
+    if (this.clockRing) {
+      const entry = this.clockRing.update(this.state, dt);
+      if (entry && entry.shichen !== this._lastClockKey) {
+        this._lastClockKey = entry.shichen;
+        const clockEl = document.getElementById("clock-text");
+        if (clockEl) clockEl.textContent = `子午流注 · ${entry.shichen}（${entry.name}当令）`;
+      }
+    }
     if (this.stasis && this.meridians) this.stasis.update(this.state, dt, this.meridians);
 
     for (const [key, o] of this.organs) {
