@@ -78,7 +78,7 @@ function initStudio() {
 
   // Mobile navigation drawer + safe responsive breakpoint reset
   function setNav(open) {
-    const narrow = window.matchMedia('(max-width: 960px)').matches;
+    const narrow = window.matchMedia('(max-width: 1080px)').matches;
     const active = Boolean(open && narrow);
     document.body.classList.toggle('nav-open', active);
     $('studio-menu')?.setAttribute('aria-expanded', String(active));
@@ -116,10 +116,10 @@ function initStudio() {
   });
 
   // Always close drawer cleanly whenever viewport crosses desktop/mobile threshold
-  const mq = window.matchMedia('(max-width: 960px)');
+  const mq = window.matchMedia('(max-width: 1080px)');
   mq.addEventListener?.('change', () => setNav(false));
   window.addEventListener('resize', () => {
-    if (window.innerWidth > 960 && document.body.classList.contains('nav-open')) setNav(false);
+    if (window.innerWidth > 1080 && document.body.classList.contains('nav-open')) setNav(false);
   });
 
   // Timeline proxy synchronization
