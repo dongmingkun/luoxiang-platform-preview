@@ -1,0 +1,133 @@
+{
+  "date": "2026-11-26",
+  "browser": "158.0.8127.88",
+  "checks": [
+    "new studio shell is used",
+    "real scene is loaded, not an anatomy screenshot",
+    "model resting view is stable",
+    "demo still hides free symptoms",
+    "four standard cases remain available",
+    "bilateral organ callouts have zero overlap",
+    "clicking organ callout opens quick-inspect popover",
+    "organ popover reset closes cleanly",
+    "camera back view shows active state",
+    "camera front view shows active state",
+    "case behavior preserved kidneyYang",
+    "case behavior preserved liverStag",
+    "case behavior preserved yinDef",
+    "case behavior preserved spleenDef",
+    "compare button opens before/after HUD with active state",
+    "compare HUD closes cleanly",
+    "simulation tab has original controls",
+    "original slider updates stage proxy",
+    "stage slider dispatches original teaching state",
+    "stage play proxies actual player",
+    "stage pause proxies actual player",
+    "layers tab reveals existing toggles",
+    "original layer button works",
+    "holographic visual mode preserved",
+    "female model toggle preserved",
+    "tab keyboard navigation is functional",
+    "no horizontal overflow 1920",
+    "usable real 3D viewport 1920",
+    "no horizontal overflow 1440",
+    "usable real 3D viewport 1440",
+    "no horizontal overflow 1280",
+    "usable real 3D viewport 1280",
+    "no horizontal overflow 768",
+    "usable real 3D viewport 768",
+    "mobile sidebar stays closed on resize 768",
+    "no horizontal overflow 390",
+    "usable real 3D viewport 390",
+    "mobile sidebar stays closed on resize 390",
+    "mobile navigation opens",
+    "mobile navigation closes with keyboard",
+    "reset disables both teaching timelines",
+    "ordinary mode retains original symptom controls",
+    "no UI state is persisted or uploaded",
+    "showcase remains reachable",
+    "no console or page errors",
+    "no failed or external requests"
+  ],
+  "geometry": [
+    {
+      "width": 1920,
+      "scroll": 1920,
+      "stage": {
+        "x": 239,
+        "y": 119,
+        "width": 1234,
+        "height": 797,
+        "top": 119,
+        "right": 1473,
+        "bottom": 916,
+        "left": 239
+      },
+      "navHidden": true
+    },
+    {
+      "width": 1440,
+      "scroll": 1440,
+      "stage": {
+        "x": 213,
+        "y": 117,
+        "width": 822,
+        "height": 621,
+        "top": 117,
+        "right": 1035,
+        "bottom": 738,
+        "left": 213
+      },
+      "navHidden": true
+    },
+    {
+      "width": 1280,
+      "scroll": 1280,
+      "stage": {
+        "x": 213,
+        "y": 117,
+        "width": 662,
+        "height": 621,
+        "top": 117,
+        "right": 875,
+        "bottom": 738,
+        "left": 213
+      },
+      "navHidden": true
+    },
+    {
+      "width": 768,
+      "scroll": 768,
+      "stage": {
+        "x": 15,
+        "y": 115,
+        "width": 738,
+        "height": 463,
+        "top": 115,
+        "right": 753,
+        "bottom": 578,
+        "left": 15
+      },
+      "navHidden": true
+    },
+    {
+      "width": 390,
+      "scroll": 390,
+      "stage": {
+        "x": 11,
+        "y": 113,
+        "width": 368,
+        "height": 373,
+        "top": 113,
+        "right": 379,
+        "bottom": 486,
+        "left": 11
+      },
+      "navHidden": true
+    }
+  ],
+  "errors": [],
+  "failures": [],
+  "external": [],
+  "writes": []
+}

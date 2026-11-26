@@ -1,0 +1,70 @@
+{
+  "date": "2026-11-26",
+  "url": "http://127.0.0.1:8020",
+  "geometry": [
+    {
+      "width": 1920,
+      "scroll": 1920
+    },
+    {
+      "width": 1280,
+      "scroll": 1280
+    },
+    {
+      "width": 390,
+      "scroll": 390
+    }
+  ],
+  "contrasts": [
+    {
+      "selector": "#stage-play",
+      "ratio": 7.92
+    },
+    {
+      "selector": ".inspector-next",
+      "ratio": 7.92
+    },
+    {
+      "selector": ".analysis-copy",
+      "ratio": 10.35
+    },
+    {
+      "selector": ".formula-brief",
+      "ratio": 9.47
+    },
+    {
+      "selector": ".inspector-boundary p",
+      "ratio": 11.37
+    },
+    {
+      "selector": "#stage-play",
+      "ratio": 7.92
+    },
+    {
+      "selector": ".teaching-boundary",
+      "ratio": 9.47
+    },
+    {
+      "selector": ".formula-note",
+      "ratio": 10.35
+    },
+    {
+      "selector": ".inspector-boundary p",
+      "ratio": 11.37
+    },
+    {
+      "selector": "#stage-play",
+      "ratio": 7.92
+    },
+    {
+      "selector": ".layer-pill",
+      "ratio": 9.68
+    },
+    {
+      "selector": ".inspector-boundary p",
+      "ratio": 11.37
+    }
+  ],
+  "matte_surfaces": true,
+  "errors": []
+}

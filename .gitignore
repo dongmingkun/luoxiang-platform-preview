@@ -38,3 +38,6 @@ deploy/preview_server.log
 deploy/preview_server.err.log
 __pycache__/
 *.pyc
+
+# Frontend dependencies (the browser runtime is vendored separately)
+node_modules/

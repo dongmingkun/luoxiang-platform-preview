@@ -1,0 +1,196 @@
+{
+  "date": "2026-11-26",
+  "browser": "158.0.8127.88",
+  "checks": [
+    "new studio shell is used",
+    "real scene is loaded, not an anatomy screenshot",
+    "model resting view is stable",
+    "back view changes the real camera",
+    "front view changes the real camera",
+    "demo still hides free symptoms",
+    "four standard cases remain available",
+    "case behavior preserved kidneyYang",
+    "case behavior preserved liverStag",
+    "case behavior preserved yinDef",
+    "case behavior preserved spleenDef",
+    "simulation tab has original controls",
+    "original slider updates stage proxy",
+    "formula change preserves the chosen camera view",
+    "stage slider dispatches original teaching state",
+    "stage play proxies actual player",
+    "stage pause proxies actual player",
+    "layers tab reveals existing toggles",
+    "original layer button works",
+    "holographic visual mode preserved",
+    "female model toggle preserved",
+    "model switch keeps rotation button and camera consistent",
+    "view reset keeps resting camera stable",
+    "tab keyboard navigation is functional",
+    "critical inspector text meets 4.5 contrast ratio",
+    "no horizontal overflow 1920",
+    "usable real 3D viewport 1920",
+    "no horizontal overflow 1440",
+    "usable real 3D viewport 1440",
+    "no horizontal overflow 1280",
+    "usable real 3D viewport 1280",
+    "no horizontal overflow 768",
+    "usable real 3D viewport 768",
+    "no horizontal overflow 390",
+    "usable real 3D viewport 390",
+    "closed mobile navigation is keyboard-inert",
+    "mobile navigation opens",
+    "mobile navigation closes with keyboard",
+    "desktop resize clears drawer trap and exposes navigation",
+    "reset disables both teaching timelines",
+    "ordinary mode retains original symptom controls",
+    "manual standard-text input opens the actual dialogue",
+    "manual input clears standard-case selection",
+    "no UI state is persisted or uploaded",
+    "showcase remains reachable",
+    "showcase instructional copy meets 4.5 contrast ratio",
+    "showcase uses the real new studio capture",
+    "showcase no horizontal overflow 1440",
+    "showcase no horizontal overflow 390",
+    "nine platform pages return HTTP 200",
+    "no console or page errors",
+    "no failed or external requests",
+    "missing local model is disclosed honestly",
+    "missing model retains case and timeline controls",
+    "failed sex switch is visible outside collapsed dialogue",
+    "failed sex switch preserves working male model"
+  ],
+  "geometry": [
+    {
+      "width": 1920,
+      "scroll": 1920,
+      "stage": {
+        "x": 241,
+        "y": 272.890625,
+        "width": 1246,
+        "height": 644.109375,
+        "top": 272.890625,
+        "right": 1487,
+        "bottom": 917,
+        "left": 241
+      }
+    },
+    {
+      "width": 1440,
+      "scroll": 1440,
+      "stage": {
+        "x": 213,
+        "y": 258.890625,
+        "width": 844,
+        "height": 578.109375,
+        "top": 258.890625,
+        "right": 1057,
+        "bottom": 837,
+        "left": 213
+      }
+    },
+    {
+      "width": 1280,
+      "scroll": 1280,
+      "stage": {
+        "x": 213,
+        "y": 258.890625,
+        "width": 684,
+        "height": 478.109375,
+        "top": 258.890625,
+        "right": 897,
+        "bottom": 737,
+        "left": 213
+      }
+    },
+    {
+      "width": 768,
+      "scroll": 768,
+      "stage": {
+        "x": 21,
+        "y": 253.890625,
+        "width": 726,
+        "height": 524,
+        "top": 253.890625,
+        "right": 747,
+        "bottom": 777.890625,
+        "left": 21
+      }
+    },
+    {
+      "width": 390,
+      "scroll": 390,
+      "stage": {
+        "x": 13,
+        "y": 246,
+        "width": 364,
+        "height": 467,
+        "top": 246,
+        "right": 377,
+        "bottom": 713,
+        "left": 13
+      }
+    }
+  ],
+  "contrasts": [
+    {
+      "selector": "[data-studio-tab=\"layers\"]",
+      "ratio": 4.99
+    },
+    {
+      "selector": ".layer-pill",
+      "ratio": 5.34
+    },
+    {
+      "selector": ".panel-intro p",
+      "ratio": 5.18
+    },
+    {
+      "selector": ".formula-note",
+      "ratio": 4.97
+    },
+    {
+      "selector": ".analysis-copy",
+      "ratio": 5.12
+    },
+    {
+      "selector": ".org-tag",
+      "ratio": 4.89
+    },
+    {
+      "selector": ".teaching-boundary",
+      "ratio": 5.48
+    },
+    {
+      "selector": ".inspector-boundary p",
+      "ratio": 5.26
+    },
+    {
+      "selector": ".stage-range small",
+      "ratio": 4.54
+    },
+    {
+      "selector": ".show-lede",
+      "ratio": 4.68
+    },
+    {
+      "selector": ".show-step p",
+      "ratio": 4.73
+    },
+    {
+      "selector": ".show-module.featured p",
+      "ratio": 5.12
+    },
+    {
+      "selector": ".show-evidence-grid p",
+      "ratio": 5.01
+    },
+    {
+      "selector": ".show-boundary span",
+      "ratio": 5.17
+    }
+  ],
+  "errors": [],
+  "failures": [],
+  "external": [],
+  "writes": []
+}

@@ -133,13 +133,13 @@ const check = (name, value) => { assert.ok(value, name); checks.push(name); };
         width: innerWidth,
         scroll: document.documentElement.scrollWidth,
         stage: document.getElementById('canvas-wrap').getBoundingClientRect().toJSON(),
-        navHidden: innerWidth <= 960 ? getComputedStyle(document.getElementById('studio-nav')).visibility === 'hidden' : true,
+        navHidden: innerWidth <= 960 ? (() => { const s = getComputedStyle(document.getElementById('studio-nav')); return s.display === 'none' || s.visibility === 'hidden'; })() : true,
       }));
       geometry.push(g);
       check(`no horizontal overflow ${width}`, g.scroll <= width);
       check(`usable real 3D viewport ${width}`, g.stage.width >= 300 && g.stage.height >= 300);
       if (width <= 960) {
-        const navClosedOnResize = await page.evaluate(() => !document.body.classList.contains('nav-open') && getComputedStyle(document.getElementById('studio-nav')).visibility === 'hidden');
+        const navClosedOnResize = await page.evaluate(() => { const s = getComputedStyle(document.getElementById('studio-nav')); return !document.body.classList.contains('nav-open') && (s.display === 'none' || s.visibility === 'hidden'); });
         check(`mobile sidebar stays closed on resize ${width}`, navClosedOnResize);
       }
       if (width === 390) {

@@ -48,5 +48,11 @@
 | WO-PF-20261108-001 | 教师端 / 教学控制台 | 待验收 | `codex/teacher-console` / 本地提交，Gitea 待网络恢复 | 队长 |
 | WO-PF-20261108-002 | 中草药资料接入与只读检索 | 待验收 | `codex/herb-dataset` / `87f5d71` / [PR #4](http://10.8.50.242:3030/cjh/Yang-Energy-Flow-Chart.profile-private/pulls/4) | 队长 |
 | WO-PF-20261112-001 | 往届作品参照与答辩任务台 | 待验收 | `codex/award-benchmark` / `7b68c40` / [PR #5](http://10.8.50.242:3030/cjh/Yang-Energy-Flow-Chart.profile-private/pulls/5) | 队长 |
+| WO-PF-20261126-001 | 三维工作台前端与总览改版 | 待验收 | `codex/frontend-studio` / `ed9fd01`；预览 `codex/frontend-studio-preview` / `93a33aa` / [PR #1](https://github.com/dongmingkun/luoxiang-platform-preview/pull/1) | 队长 |
+| WO-PF-20261126-002 | 深海蓝科技主题 | 待验收 | `codex/night-theme`；预览 `codex/frontend-studio-preview` / [PR #1](https://github.com/dongmingkun/luoxiang-platform-preview/pull/1) | 队长 |
+| WO-PF-20261126-003 | 曜石黑与琥珀金配色 | 待验收 | `codex/night-theme`；预览 `codex/frontend-studio-preview` / [PR #1](https://github.com/dongmingkun/luoxiang-platform-preview/pull/1) | 队长 |
+| WO-PF-20261126-004 | 石墨灰与信号橙 | 待验收 | `codex/night-theme`；预览 `codex/frontend-studio-preview` / [PR #1](https://github.com/dongmingkun/luoxiang-platform-preview/pull/1) | 队长 |
+| WO-PF-20261126-005 | 明亮图谱配色 | 待验收 | `codex/night-theme`；预览 `codex/frontend-studio-preview` / [PR #1](https://github.com/dongmingkun/luoxiang-platform-preview/pull/1) | 队长 |
+| WO-PF-20261126-006 | Vue 工作台与动态反馈 | 待验收 | `codex/vue-studio`；预览 `codex/frontend-studio-preview` / [PR #1](https://github.com/dongmingkun/luoxiang-platform-preview/pull/1) | 队长 |
 
 当前唯一预览：<http://127.0.0.1:8020/>（平台仓实时服务；说明见 `deploy/README.md`）。

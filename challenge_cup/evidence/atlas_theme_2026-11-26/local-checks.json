@@ -1,0 +1,188 @@
+{
+  "date": "2026-11-26",
+  "url": "http://127.0.0.1:8020",
+  "geometry": [
+    {
+      "width": 1920,
+      "scroll": 1920
+    },
+    {
+      "width": 1280,
+      "scroll": 1280
+    },
+    {
+      "width": 390,
+      "scroll": 390
+    }
+  ],
+  "contrasts": [
+    {
+      "selector": "#stage-play",
+      "ratio": 5.92
+    },
+    {
+      "selector": ".inspector-next",
+      "ratio": 5.92
+    },
+    {
+      "selector": ".analysis-copy",
+      "ratio": 6.47
+    },
+    {
+      "selector": ".formula-brief",
+      "ratio": 6.92
+    },
+    {
+      "selector": ".inspector-boundary p",
+      "ratio": 5.99
+    },
+    {
+      "selector": ".stage-eyebrow",
+      "ratio": 5.26
+    },
+    {
+      "selector": ".stage-ready",
+      "ratio": 6.71
+    },
+    {
+      "selector": ".organ-label",
+      "ratio": 9.25
+    },
+    {
+      "selector": ".stage-orientation button",
+      "ratio": 6.3
+    },
+    {
+      "selector": "#stage-play",
+      "ratio": 5.92
+    },
+    {
+      "selector": ".teaching-boundary",
+      "ratio": 6.92
+    },
+    {
+      "selector": ".formula-note",
+      "ratio": 6.47
+    },
+    {
+      "selector": ".inspector-boundary p",
+      "ratio": 5.99
+    },
+    {
+      "selector": ".stage-eyebrow",
+      "ratio": 5.26
+    },
+    {
+      "selector": ".stage-ready",
+      "ratio": 6.71
+    },
+    {
+      "selector": ".organ-label",
+      "ratio": 9.25
+    },
+    {
+      "selector": ".stage-orientation button",
+      "ratio": 6.3
+    },
+    {
+      "selector": "#stage-play",
+      "ratio": 5.92
+    },
+    {
+      "selector": ".layer-pill",
+      "ratio": 6.62
+    },
+    {
+      "selector": ".inspector-boundary p",
+      "ratio": 5.99
+    },
+    {
+      "selector": ".stage-eyebrow",
+      "ratio": 5.26
+    },
+    {
+      "selector": ".stage-ready",
+      "ratio": 6.71
+    },
+    {
+      "selector": ".organ-label",
+      "ratio": 9.25
+    },
+    {
+      "selector": ".stage-orientation button",
+      "ratio": 6.3
+    },
+    {
+      "selector": ".organ-popover-head strong",
+      "ratio": 9.46
+    },
+    {
+      "selector": ".organ-popover-meta",
+      "ratio": 6.2
+    },
+    {
+      "selector": ".organ-popover-actions button",
+      "ratio": 6.25
+    },
+    {
+      "selector": ".compare-kicker",
+      "ratio": 5.73
+    },
+    {
+      "selector": ".compare-hud-head strong",
+      "ratio": 9.46
+    },
+    {
+      "selector": ".compare-cell-label",
+      "ratio": 6.19
+    },
+    {
+      "selector": ".compare-cell-nums b",
+      "ratio": 9.44
+    },
+    {
+      "selector": ".compare-cell-nums span",
+      "ratio": 6.19
+    },
+    {
+      "selector": ".compare-close",
+      "ratio": 6.25
+    },
+    {
+      "selector": ".compare-controls button",
+      "ratio": 6.25
+    }
+  ],
+  "color_scheme": "light",
+  "errors": [],
+  "refined_label_contrasts": [
+    {
+      "text": "火",
+      "ratio": 5.89
+    },
+    {
+      "text": "木",
+      "ratio": 5.89
+    },
+    {
+      "text": "土",
+      "ratio": 6.95
+    },
+    {
+      "text": "金",
+      "ratio": 5.89
+    },
+    {
+      "text": "水",
+      "ratio": 6.95
+    },
+    {
+      "text": "胞宫",
+      "ratio": 5.89
+    },
+    {
+      "text": "胞宫",
+      "ratio": 5.89
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "checks": [
+    "legacy baseline has no state API",
+    "Vue mounts on legacy HTML",
+    "legacy DOM supplies actual pattern",
+    "legacy panels controlled",
+    "Vue drives native legacy timeline",
+    "legacy timeline drives Vue",
+    "legacy case drives Vue state",
+    "legacy reset synchronizes",
+    "one real canvas remains",
+    "legacy runtime no errors"
+  ],
+  "errors": []
+}
