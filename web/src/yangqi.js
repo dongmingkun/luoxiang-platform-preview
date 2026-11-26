@@ -1,4 +1,4 @@
-import { TCMScene3D } from "./scene3d.js?v=20261107defense";
+import { TCMScene3D } from "./scene3d.js?v=20261126award";
 import { NORMAL_STATE } from "./knowledge.js?v=20261107defense";
 
 const $ = id => document.getElementById(id);
@@ -168,9 +168,37 @@ async function changeSex(next) {
     [("btn-sex-male"), ("btn-sex-female")].forEach(id => { const b = $(id); if (b) b.disabled = false; });
   }
 }
+let cycleTimer = 0;
+function stopCycle() {
+  if (cycleTimer) clearInterval(cycleTimer);
+  cycleTimer = 0;
+  const btn = $("btn-yq-cycle");
+  if (btn) {
+    btn.classList.remove("is-on");
+    btn.setAttribute("aria-pressed", "false");
+    btn.textContent = "↻ 昼夜轮转";
+  }
+}
 function bindUI() {
-  ui.day?.addEventListener("click", () => applyPhase("day"));
-  ui.night?.addEventListener("click", () => applyPhase("night"));
+  const tabs = [...document.querySelectorAll("[data-yq-tab]")];
+  const panels = [...document.querySelectorAll("[data-yq-panel]")];
+  for (const tab of tabs) {
+    tab.addEventListener("click", () => {
+      const id = tab.dataset.yqTab;
+      tabs.forEach(t => t.setAttribute("aria-selected", String(t === tab)));
+      panels.forEach(p => { p.hidden = p.dataset.yqPanel !== id; });
+    });
+  }
+  $("btn-yq-cycle")?.addEventListener("click", e => {
+    if (cycleTimer) { stopCycle(); return; }
+    e.currentTarget.classList.add("is-on");
+    e.currentTarget.setAttribute("aria-pressed", "true");
+    e.currentTarget.textContent = "Ⅱ 停止轮转";
+    applyPhase(phase === "day" ? "night" : "day");
+    cycleTimer = setInterval(() => applyPhase(phase === "day" ? "night" : "day"), 3600);
+  });
+  ui.day?.addEventListener("click", () => { stopCycle(); applyPhase("day"); });
+  ui.night?.addEventListener("click", () => { stopCycle(); applyPhase("night"); });
   document.querySelectorAll("[data-channel]").forEach(b => {
     b.addEventListener("click", () => { channel = b.dataset.channel; applyChannel(); });
   });

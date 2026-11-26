@@ -12,23 +12,37 @@ export function parseCatalog(data) {
         || row.slice(2, 6).some(value => value !== null && typeof value !== 'string')
         || !Number.isInteger(row[6]) || row[6] < 1) throw new Error('资料记录格式或原始行号不一致。');
     ids.add(row[0]);
-    return { id: row[0], name: row[1], effect: row[2], nature: row[3], taste: row[4], channel: row[5], sameName: row[6],
-      search: norm(`${row[1]} ${row[2] ?? ''}`) };
+    const nameNorm = norm(row[1]);
+    return {
+      id: row[0], name: row[1], nameNorm, effect: row[2], nature: row[3], taste: row[4], channel: row[5], sameName: row[6],
+      search: norm(`${row[1]} ${row[2] ?? ''}`),
+    };
   });
 }
 
-export function filterEntries(rows, { query = '', nature = '', channel = '' } = {}) {
-  const text = norm(query), n = norm(nature), c = norm(channel);
-  return rows.filter(row => (!text || row.search.includes(text)) && (!n || norm(row.nature).includes(n))
+export function filterEntries(rows, { query = '', nature = '', taste = '', channel = '' } = {}) {
+  const text = norm(query), n = norm(nature), t = norm(taste), c = norm(channel);
+  const filtered = rows.filter(row => (!text || row.search.includes(text))
+    && (!n || norm(row.nature).includes(n))
+    && (!t || norm(row.taste).includes(t))
     && (!c || norm(row.channel).includes(c)));
+  if (!text) return filtered;
+  // Prioritize exact name match -> prefix match -> name contains -> effect contains (stable by source_row)
+  const rank = row => {
+    if (row.nameNorm === text) return 0;
+    if (row.nameNorm.startsWith(text)) return 1;
+    if (row.nameNorm.includes(text)) return 2;
+    return 3;
+  };
+  return filtered.sort((a, b) => rank(a) - rank(b) || a.id - b.id);
 }
 
 export function pageOf(rows, requested = 1, size = 24) {
   const limit = Math.max(1, Math.min(100, Math.trunc(Number(size)) || 24));
   const pages = Math.max(1, Math.ceil(rows.length / limit));
   const page = Math.min(pages, Math.max(1, Math.trunc(Number(requested)) || 1));
-  const start = (page-1)*limit;
-  return { rows: rows.slice(start, start+limit), total: rows.length, page, pages, start: rows.length ? start+1 : 0, end: Math.min(start+limit, rows.length) };
+  const start = (page - 1) * limit;
+  return { rows: rows.slice(start, start + limit), total: rows.length, page, pages, start: rows.length ? start + 1 : 0, end: Math.min(start + limit, rows.length) };
 }
 
 export function isHerbReference(input) {
