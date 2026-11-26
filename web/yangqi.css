@@ -568,3 +568,64 @@
   .yq-stage { order: -1; height: 580px; }
   .yq-panel .panel-scroll { overflow: visible; }
 }
+
+/* 时辰游标并列两条读数。页面沿用底图的松绿、纸白和赭金。 */
+.time-track { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 2px 8px; padding: 4px 0; font-size: 12px; }
+.time-track b { color: #185a4b; }
+.wei-track b { color: #72501d; }
+.wei-track progress { grid-column: 1 / -1; width: 100%; height: 5px; accent-color: #916921; }
+.clock-key { color: #43584e; font-size: 12px; line-height: 1.6; margin-top: 5px; }
+.clock-key summary, .atlas-card summary { cursor: pointer; }
+.clock-key p, .atlas-card p { margin: 5px 0; }
+.axis-list small { display: block; font-size: 12px; line-height: 1.6; }
+.qi-map .node-sub, .qi-map .pivot-label { font-size: 12px; paint-order: stroke; stroke: #f6faf6; stroke-width: 5px; stroke-linejoin: round; }
+.qi-map-head .yq-tag { flex-shrink: 0; }
+.yq-stage { position: relative; }
+.shichen-hud { pointer-events: auto; top: 60px; }
+.hud-nav, .atlas-options { display: flex; gap: 7px; align-items: center; flex-wrap: wrap; }
+.shichen-hud button { color: #f0f5ef; background: #234138; border: 1px solid #628675; border-radius: 5px; padding: 4px 7px; cursor: pointer; font-size: 12px; }
+.hud-nav { margin: 7px 0 4px; }
+.atlas-card select, .atlas-card button { color: #24493d; border: 1px solid #adc3b9; background: #f7faf7; border-radius: 5px; padding: 5px 8px; }
+.atlas-card > select { margin: 4px 0 8px; width: 100%; }
+.atlas-card input[type=file] { max-width: 100%; color: #374a42; }
+.atlas-card a { color: #185847; }
+#st-status { color: #70511e; }
+#surface-tags { position: absolute; inset: 0; pointer-events: none; z-index: 3; overflow: hidden; }
+.surface-tag { position: absolute; pointer-events: auto; transform: translate(6px,-50%); background: #243a32; color: #fff4d4; border: 1px solid #a89055; border-radius: 4px; padding: 2px 4px; font: 600 11px/1.4 sans-serif; white-space: nowrap; }
+.surface-tag::before { content: ""; position: absolute; top: 50%; left: -7px; width: 5px; height: 5px; border-radius: 50%; background: #ffe29b; transform: translateY(-50%); }
+.surface-tag.kidney-left, .surface-tag.kidney-right { color: #edf7ff; border-color: #759cb2; }
+.surface-tag.to-left { transform: translate(calc(-100% - 6px),-50%); }
+.surface-tag.to-left::before { left: auto; right: -7px; }
+.canvas-wrap.is-marking canvas { cursor: crosshair; }
+.yq-stage .canvas-wrap.is-real { background: radial-gradient(ellipse at center, #807970, #494844 70%, #343735); }
+@media (max-width: 960px) {
+  .yq-stage { height: auto; grid-template-rows: auto 1fr auto; }
+  .yq-stage-head { min-height: 42px; }
+  .yq-stage .canvas-wrap { height: clamp(420px,66vh,630px); }
+  .shichen-hud { position: static; grid-row: 3; width: auto; border-radius: 0; background: #15332c; }
+  .yq-stage-tools { grid-row: 4; padding: 8px; gap: 6px; }
+  .yq-stage .viewport-legend .hint { display: none; }
+}
+@media (max-width: 500px) {
+  .yq-layout { padding: 7px; gap: 9px; }
+  .yq-stage-kicker { display: none; }
+  .yq-stage-tools .tool { padding: 5px 6px; }
+  .yq-hud { bottom: 38px; left: 8px; }
+  .yq-hud span:last-child { display: none; }
+  .yq-stage .viewport-legend { left: 8px; }
+}
+
+.yq-app { grid-template-columns: minmax(0, 1fr); }
+.yq-app .lx-topbar, .yq-panel, .yq-layout { min-width: 0; }
+@media (max-width: 960px) {
+  .yq-app .lx-nav { max-width: 100%; overflow-x: auto; }
+  .yq-stage .shichen-hud { display: grid; grid-template-columns: 1fr auto; gap: 3px 9px; }
+  .shichen-hud-top, .shichen-hud-route, .shichen-hud-acu { grid-column: 1 / -1; }
+  .shichen-hud .hud-nav { margin: 0; grid-column: 1; }
+  .shichen-hud #atlas-open { grid-column: 2; }
+}
+
+.atlas-all { display: block; margin: 8px 0; }
+.surface-tag.compact { width: 11px; height: 11px; padding: 0; transform: translate(-50%,-50%); font-size: 0; border-radius: 50%; background: #d6a84d; }
+.surface-tag.compact::before { display: none; }
+.surface-tag.compact:focus-visible { outline: 2px solid white; }

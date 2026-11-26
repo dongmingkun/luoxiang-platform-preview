@@ -357,6 +357,10 @@ export class TCMScene3D {
     mesh.renderOrder = 1;
   }
 
+  buildMeridians(data) {
+    return createMeridianSystem(data);
+  }
+
   async _loadMeridians(sex = this.sex) {
     const path = sex === "female" ? "assets/meridians_female.json?v=20261107defense" : "assets/meridians.json?v=20261107defense";
     const data = await fetch(path).then(r => r.json());
@@ -366,7 +370,7 @@ export class TCMScene3D {
       this.scene.remove(this.meridians.group);
       this._disposeObject(this.meridians.group);
     }
-    this.meridians = createMeridianSystem(data);
+    this.meridians = this.buildMeridians(data);
     this.scene.add(this.meridians.group);
     this.meridians.setVesselsVisible(this.layers.vessels);
 
