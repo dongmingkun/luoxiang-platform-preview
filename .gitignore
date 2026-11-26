@@ -1,0 +1,40 @@
+# Human models never enter the platform repo
+*.glb
+*.fbx
+*.blend
+*.3dm
+meridians*.json
+meridians*.json.meta
+web/assets/*.glb
+web/assets/*.fbx
+web/assets/*.blend
+web/assets/meridians.json
+web/assets/meridians_female.json
+unity/TCMYinYang/Assets/Resources/Models/
+/unity/**/Models/
+blender/
+rhino/
+handoff/
+shared/tcm_data/
+
+# Real/identifiable research data never enters git
+challenge_cup/data/real/
+challenge_cup/data/*_raw.csv
+challenge_cup/data/*identifiable*
+challenge_cup/results/
+challenge_cup/results_*/
+
+# Unity / local runtime
+unity/TCMYinYang/Library/
+unity/TCMYinYang/Temp/
+unity/TCMYinYang/Logs/
+unity/TCMYinYang/obj/
+*.csproj
+*.sln
+deploy/local_server.pid
+deploy/local_server.log
+deploy/preview_server.pid
+deploy/preview_server.log
+deploy/preview_server.err.log
+__pycache__/
+*.pyc

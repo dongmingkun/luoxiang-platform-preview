@@ -1,0 +1,19 @@
+* text=auto
+*.py text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+*.glb binary
+*.fbx binary
+*.blend binary
+*.3dm binary
+*.png binary
+*.jpg binary
+
+# Supplied source artifacts: preserve their bytes/SHA-256; avoid enormous text diffs.
+datasets/herbs/originals/*.json -text -diff
+datasets/herbs/originals/*.csv -text -diff
+web/data/herbs/*.json text eol=lf
+web/data/herbs/catalog.json -diff

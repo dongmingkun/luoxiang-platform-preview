@@ -1,0 +1,27 @@
+{
+  "source_repo": "https://github.com/dongmingkun/tcm-human-model",
+  "source_visibility": "private",
+  "note": "模型不进入平台仓库；由队长从 GitHub 取用后手动放入 web/assets/。两仓不自动关联。",
+  "files": {
+    "web/assets/anatomy_male.glb": {
+      "target": "web/assets/anatomy_male.glb",
+      "size": 6411368,
+      "sha256": "6fcde5d2c345495cc24ebe15954f7d98bf05cc40f3d7e7724c8c73172e938131"
+    },
+    "web/assets/anatomy_female.glb": {
+      "target": "web/assets/anatomy_female.glb",
+      "size": 6411392,
+      "sha256": "a662f27122db497d8ba1d3c7e3d2b632aef85c6934f8218252c657a912d84dae"
+    },
+    "web/assets/meridians.json": {
+      "target": "web/assets/meridians.json",
+      "size": 189782,
+      "sha256": "4919e3e77f4c6bd824eea2789c61cce9f3b82d11a140e65d8c3d059d7b4954eb"
+    },
+    "web/assets/meridians_female.json": {
+      "target": "web/assets/meridians_female.json",
+      "size": 123721,
+      "sha256": "503c26adca881172cc95d1d88883cb024dca16620366b2a1b704f8d3382739d6"
+    }
+  }
+}

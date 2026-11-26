@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="络象经纬：可分层、聚焦、分离观察的人体结构教学图谱。Rhino+GPT 建模流程，本地模型可视化。" />
+  <title>人体结构图谱 | 络象经纬</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="structure.css?v=20261103" />
+  <script type="importmap">{"imports":{"three":"./vendor/three.module.js","three/addons/":"./vendor/addons/"}}</script>
+</head>
+<body>
+  <header class="atlas-header">
+    <a class="atlas-brand" href="structure.html"><span class="brand-mark" aria-hidden="true">络</span><span><strong>络象经纬</strong><small>LUOXIANG · HUMAN ATLAS</small></span></a>
+    <nav aria-label="平台导航"><a href="index.html">阴阳推演</a><a href="yangqi.html">阳气运行</a><a href="dataset.html">数据推演</a><a href="judge.html">评委速览</a></nav>
+    <span class="local-pill"><i></i>本机查看 · 文件不上传</span>
+  </header>
+  <main class="atlas-layout">
+    <aside class="atlas-sidebar">
+      <div class="eyebrow">STRUCTURE LIBRARY</div><h1>人体结构图谱</h1>
+      <p class="intro">从整体到局部，看清结构之间的空间关系。</p>
+      <section class="source-box">
+        <span class="section-label">01 / 教学模型</span>
+        <button id="pick-model" class="button primary" type="button">载入本机 GLB 模型 <span>↗</span></button>
+        <input id="model-file" type="file" accept=".glb,model/gltf-binary" hidden />
+        <div class="integrated-row"><select id="integrated-sex" aria-label="已手动整合的模型版本"><option value="male">男性</option><option value="female">女性比例重建</option></select><button id="load-integrated" type="button">载入已整合版</button></div>
+        <p id="source-status" role="status">支持原解剖 GLB 与 Rhino 结构教学版。平台不包含模型。</p>
+      </section>
+      <section class="system-box">
+        <span class="section-label">02 / 结构筛选</span>
+        <div id="system-filters" class="system-filters" role="group" aria-label="按系统筛选">
+          <button data-system="all" class="active" aria-pressed="true"><i style="--swatch:#589a91"></i>结构总览<span>ALL</span></button>
+          <button data-system="respiratory" aria-pressed="false"><i style="--swatch:#68bcb4"></i>呼吸结构<span>01</span></button>
+          <button data-system="circulatory" aria-pressed="false"><i style="--swatch:#de6c65"></i>循环结构<span>02</span></button>
+          <button data-system="digestive" aria-pressed="false"><i style="--swatch:#d7ab76"></i>消化结构<span>03</span></button>
+          <button data-system="urinary" aria-pressed="false"><i style="--swatch:#789fda"></i>泌尿结构<span>04</span></button>
+          <button data-system="nervous" aria-pressed="false"><i style="--swatch:#b7a0d8"></i>神经结构<span>05</span></button>
+          <button data-system="lymphatic" aria-pressed="false"><i style="--swatch:#bc7199"></i>淋巴结构<span>06</span></button>
+        </div>
+        <p class="quiet">按已含器官分组，未覆盖完整人体系统。</p>
+      </section>
+      <section class="layer-box">
+        <span class="section-label">03 / 图层与标注</span>
+        <label class="toggle"><span>体表参照</span><input id="show-skin" type="checkbox" checked /></label>
+        <label class="slider-label" for="skin-opacity"><span>体表透明度</span><output id="opacity-value">8%</output></label>
+        <input id="skin-opacity" type="range" min="0" max="0.65" step="0.01" value="0.08" />
+        <label class="toggle"><span>骨骼参照</span><input id="show-skeleton" type="checkbox" checked /></label>
+        <label class="toggle"><span>名称与引导线</span><input id="show-labels" type="checkbox" checked /></label>
+      </section>
+      <div class="pipeline-note"><b>Rhino + GPT</b><span>模型分层与教学展示<br />独立建模仓交付 · 队长手动接入</span></div>
+    </aside>
+
+    <section class="atlas-center" aria-label="人体三维观察区">
+      <div class="stage-heading"><div><span class="eyebrow">ANATOMICAL EXPLORER</span><h2 id="scene-title">整体结构 · 分层观察</h2></div><span id="model-badge" class="model-badge">等待载入</span></div>
+      <div id="atlas-stage" class="atlas-stage">
+        <div class="anatomy-axis" aria-hidden="true"><span>上 / S</span><span>右 / R</span><span>左 / L</span></div>
+        <svg id="leader-lines" class="leader-lines" aria-hidden="true"></svg>
+        <div id="anatomy-labels" class="anatomy-labels"></div>
+        <div id="empty-state" class="empty-state"><span class="empty-glyph" aria-hidden="true">◎</span><h3>载入模型，开始观察</h3><p>选择本机男性或女性教学 GLB。<br />用分层、透视与分离展示探索人体结构。</p><button id="empty-pick" class="button primary" type="button">选择本机模型</button><small>仅读取本机文件，不上传，不自动获取模型。</small></div>
+        <div class="stage-caption"><span id="mesh-count">本地模型 · 待载入</span><span>拖动旋转 · 滚轮缩放 · 点击器官聚焦</span></div>
+      </div>
+      <div class="view-toolbar" role="group" aria-label="标准视图"><button data-view="front" class="active" aria-pressed="true">正面</button><button data-view="back" aria-pressed="false">背面</button><button data-view="left" aria-pressed="false">左侧</button><button data-view="right" aria-pressed="false">右侧</button><span></span><button id="reset-view">复位</button><button id="rotate-model" aria-pressed="false">自动环绕</button></div>
+      <section class="explode-panel"><div><span class="eyebrow">SPATIAL RELATIONSHIPS</span><h3>结构分离展示 <span id="explode-value">0%</span></h3><p>沿展示方向展开器官，观察被遮挡的结构。</p></div><div><input id="explode" type="range" min="0" max="1" step="0.01" value="0" aria-label="结构分离程度" /><div class="range-scale"><span>原位参照</span><span>展开观察</span></div></div><p id="explode-warning" class="explode-warning" hidden>分离位置仅用于展示，已偏离解剖原位。请复位后判断位置关系。</p></section>
+    </section>
+
+    <aside class="atlas-inspector">
+      <div class="inspector-head"><span class="eyebrow">STRUCTURE INDEX</span><h2>结构索引 <span id="organ-count">—</span></h2><p>选择器官，查看局部与空间参照。</p></div>
+      <input id="organ-search" class="search" type="search" aria-label="查找器官" placeholder="查找器官，如：心、肺、肾" />
+      <div id="organ-list" class="organ-list"><p class="quiet">载入模型后显示实际包含的结构。</p></div>
+      <section class="selection-card" aria-live="polite"><span class="section-label">当前结构</span><h3 id="selected-name">尚未选择</h3><p id="selected-detail">选择结构后可单独观察，或恢复整体视图。</p><button id="isolate" class="button" type="button" disabled>单独观察</button><button id="clear-selection" class="text-button" type="button">恢复整体</button></section>
+      <p class="boundary-note">结构颜色用于教学区分，不表示生理状态。女性资产为比例重建；肺为程序补建。仅作教学可视化，不用于诊断、临床测量或定位。</p>
+    </aside>
+  </main>
+  <footer class="atlas-footer"><span>络象经纬 · 看清结构，理解联系</span><span>BodyParts3D © The Database Center for Life Science · <a href="https://creativecommons.org/licenses/by-sa/2.1/jp/" target="_blank" rel="noopener">CC BY-SA 2.1 Japan</a> · 代码 / Three.js MIT</span></footer>
+  <script type="module" src="src/structure.js?v=20261103"></script>
+</body>
+</html>
