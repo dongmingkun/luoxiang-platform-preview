@@ -86,6 +86,10 @@
 
 ---
 
+### Vue 3 展示层运行库（2026-11-26）
+
+本轮使用 Vue **3.5.46**（MIT），本地生产 runtime 与许可保存在 `web/vendor/vue/`，保留官方版权头。源码来自官方 npm 包；版本与完整性锁定于 `package-lock.json`，runtime SHA-256 与复现说明见该目录 README。`npm ci --ignore-scripts` 后运行 `npm run vendor:vue` 可复现；浏览器不访问 CDN，不需要构建服务器。Playwright 为验收用开发依赖，不参与页面运行。
+
 ## 4. 免责声明
 
 ### 新版界面截图（2026-11-26）

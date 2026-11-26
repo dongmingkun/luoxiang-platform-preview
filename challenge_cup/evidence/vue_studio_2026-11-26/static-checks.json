@@ -1,0 +1,24 @@
+{
+  "date": "2026-11-26",
+  "vue": "3.5.46",
+  "playwright": "1.64.1",
+  "runtime_sha256": "ce84b038719c72711385b18ef4da37113ca2d069f45dd19820c0b2dea96357fe",
+  "runtime_bytes": 116725,
+  "preview_base": "73b437b8f12d66b4212f8d0a7ffb72b110a2ee4b",
+  "protected_preview_modules_unchanged": [
+    "web/src/app.js",
+    "web/src/scene3d.js",
+    "web/src/knowledge.js",
+    "web/src/research.js",
+    "web/research.html",
+    "web/src/studio.js"
+  ],
+  "syntax_checked_modules": 6,
+  "review": "No remaining Critical/Important after targeted re-review",
+  "new_vue_checks": 37,
+  "old_ui_checks": 46,
+  "teacher_checks": 39,
+  "legacy_baseline_checks": 10,
+  "model_files_added": [],
+  "research_logic_changed": false
+}

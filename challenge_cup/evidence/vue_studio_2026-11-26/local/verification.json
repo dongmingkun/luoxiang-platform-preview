@@ -1,0 +1,69 @@
+{
+  "date": "2026-11-26",
+  "url": "http://127.0.0.1:8020",
+  "browser": "158.0.8127.88",
+  "checks": [
+    "six real Vue component mounts",
+    "local production Vue 3.5.46 is running",
+    "demo header returns to free mode",
+    "light atlas palette retained",
+    "initial standard case selection retained",
+    "panel transition responds to Vue state",
+    "Vue tabs control the existing panels",
+    "native slider updates Vue timeline",
+    "Vue timeline updates native simulation",
+    "one click starts actual playback",
+    "one click pauses actual playback",
+    "keyboard End selects and focuses layers",
+    "keyboard Home returns to case panel",
+    "case and Vue state agree: liverStag",
+    "case and Vue state agree: yinDef",
+    "case and Vue state agree: spleenDef",
+    "case and Vue state agree: kidneyYang",
+    "case change produces actual status feedback",
+    "canvas and scene survive Vue updates",
+    "component transitions retain unique control IDs",
+    "no horizontal overflow 1920",
+    "no horizontal overflow 1440",
+    "no horizontal overflow 1280",
+    "no horizontal overflow 768",
+    "no horizontal overflow 390",
+    "closed mobile drawer is inert",
+    "Vue opens mobile navigation",
+    "Escape restores menu focus",
+    "desktop resize clears drawer and inert state",
+    "reset clears both timelines and Vue case state",
+    "free header links to demo mode",
+    "free standard text reveals dialogue and clears case selection",
+    "no teaching data persisted",
+    "reduced motion retains selected indicator position",
+    "reduced motion skips panel animation",
+    "no console or page errors",
+    "runtime makes no external or write requests"
+  ],
+  "geometry": [
+    {
+      "width": 1920,
+      "scroll": 1920
+    },
+    {
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "width": 1280,
+      "scroll": 1280
+    },
+    {
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "width": 390,
+      "scroll": 390
+    }
+  ],
+  "errors": [],
+  "external": [],
+  "writes": []
+}
