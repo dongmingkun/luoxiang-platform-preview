@@ -1,0 +1,20 @@
+{
+  "date": "2026-11-26",
+  "original_control_ids_retained": 44,
+  "unique_main_page_ids": 69,
+  "preview_core_matches_github_base": [
+    "web/src/app.js",
+    "web/src/scene3d.js",
+    "web/src/agent.js",
+    "web/src/knowledge.js",
+    "web/src/research.js",
+    "web/research.html",
+    "web/data/herbs/catalog.json"
+  ],
+  "research_csv_columns": 101,
+  "forbidden_payload_paths": [],
+  "original_herb_files_not_in_preview": true,
+  "scoped_JS_checks": true,
+  "external_scene_diff_preserved_unstaged": true,
+  "scope": "UI-only publication; original GitHub scene/business/research modules preserved."
+}

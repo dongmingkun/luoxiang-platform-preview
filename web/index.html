@@ -4,9 +4,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" href="data:," />
-  <meta name="description" content="络象经纬·教学推演助手：标准教学案例、经典方作用方向与三维人体解剖可视化演示。" />
-  <title>络象经纬 · 阴阳二气与经络 3D</title>
+  <meta name="description" content="络象经纬：在三维人体中观察脏腑、经络与标准案例的教学状态。仅教学演示，不诊断、不处方。" />
+  <title>三维教学工作台 · 络象经纬</title>
   <link rel="stylesheet" href="styles.css?v=20261108teacher" />
+  <link rel="stylesheet" href="studio.css?v=20261126" />
   <script>
     window.__logs = [];
     for (const level of ["error", "warn"]) {
@@ -19,185 +20,94 @@
     window.addEventListener("error", e => window.__logs.push("window: " + e.message));
   </script>
 </head>
-<body>
-  <div class="app">
-    <header class="topbar">
-      <div class="brand">
-        <div class="yin-yang" aria-hidden="true"></div>
-        <div class="brand-text">
-          <h1>络象经纬 · 人体图</h1>
-          <p>TCM ANATOMY · v1.3 · 男/女 · 真实/全息 · 气血流</p>
-        </div>
-      </div>
-      <div class="top-actions">
-        <a class="btn ghost" href="showcase.html">演示总览</a>
-        <a class="btn ghost" href="teacher.html">教师端</a>
-        <a class="btn ghost" href="structure.html">人体结构</a>
-        <span class="privacy-pill"><i></i> 本地推理 · 症状不上传</span>
-        <a class="btn ghost" href="judge.html#defense-workbench">答辩任务台</a>
-        <a class="btn ghost" href="yangqi.html">阳气运行</a>
-        <a class="btn ghost" href="dataset.html">数据推演</a>
-        <a class="btn ghost" href="herbs.html">药材资料</a>
-        <a class="btn ghost" href="research.html">研究模式</a>
-        <button id="btn-reset" class="btn ghost" type="button">重置</button>
-      </div>
-    </header>
-
-    <main class="layout">
-      <aside class="left-panel">
-        <div class="panel-scroll">
-          <section class="agent-intro card">
-            <div class="section-kicker">教学推演 / CONSULT</div>
-            <div class="agent-line">
-              <span class="agent-orb"></span>
-              <div>
-                <strong>络象经纬 · 教学推演助手</strong>
-                <p id="agent-status">在线 · 等待标准案例/症状</p>
-              </div>
-            </div>
-          </section>
-
-          <div id="demo-banner" class="demo-banner" hidden>
-            <b>答辩模式</b>
-            <span>仅标准案例 · 不输入个人症状 · 不诊断/处方</span>
-            <a href="index.html">退出</a>
-          </div>
-
-          <p id="case-notice" class="case-notice" role="status" hidden></p>
-          <section id="chat" class="chat" aria-live="polite"></section>
-
-          <section class="chips-block">
-            <div class="block-head">
-              <span>常见症状</span>
-              <button id="btn-clear-symptoms" class="link-btn" type="button">清空所选</button>
-            </div>
-            <div id="symptom-chips" class="chips"></div>
-            <div class="sample-label">标准案例</div>
-            <div id="sample-cases" class="sample-cases"></div>
-          </section>
-
-          <form id="chat-form" class="chat-form" autocomplete="off">
-            <input id="chat-input" type="text" placeholder="描述不适，如：怕冷、腰膝酸软、夜尿多…" />
-            <button class="btn send" type="submit" aria-label="发送">发送</button>
-          </form>
-
-          <section id="analysis-card" class="card analysis-card">
-            <div class="card-title"><span>证候分析</span><span class="tag" id="analysis-tag">等待输入</span></div>
-            <div id="analysis-body" class="analysis-empty">
-              <p>选择标准案例或点选症状后，系统会给出教学性的证候匹配，并标出相关脏腑与经络。</p>
-            </div>
-          </section>
-
-          <section id="treatment-card" class="card treatment-card is-disabled">
-            <div class="card-title"><span>经典方作用方向演示</span><span class="tag" id="treatment-tag">未开始</span></div>
-            <div class="formula-row">
-              <label for="formula-select">经典方示例</label>
-              <select id="formula-select" disabled></select>
-            </div>
-            <div id="formula-note" class="formula-note">先完成教学匹配，再选择经典方示例；当前版本按证候演示作用方向，不做方剂间疗效比较。</div>
-
-            <p class="teaching-boundary">教学演示，不是生理测量/诊断/处方。</p>
-            <div class="timeline-head">
-              <span>服药模拟</span>
-              <span id="day-label">第 0 天</span>
-            </div>
-            <input id="day-slider" class="range" type="range" min="0" max="28" value="0" step="1" disabled />
-            <div class="range-scale"><span>服药前</span><span>7 天</span><span>14 天</span><span>28 天</span></div>
-            <div class="treatment-actions">
-              <button id="btn-before" class="btn ghost" type="button" disabled>服药前</button>
-              <button id="btn-after" class="btn ghost" type="button" disabled>服药后</button>
-              <button id="btn-play" class="btn primary" type="button" disabled>▶ 模拟服药</button>
-            </div>
-
-            <div class="metrics" id="metrics">
-              <div class="metric"><span>阴阳平衡</span><div class="bar"><i data-metric="balance"></i></div><b>—</b></div>
-              <div class="metric"><span>气机</span><div class="bar"><i data-metric="qi"></i></div><b>—</b></div>
-              <div class="metric"><span>血行</span><div class="bar"><i data-metric="blood"></i></div><b>—</b></div>
-              <div class="metric"><span>瘀滞</span><div class="bar danger"><i data-metric="stagnation"></i></div><b>—</b></div>
-            </div>
-            <div id="treatment-note" class="treatment-note">3D 会沿「证候 → 方剂作用方向」变化；这是可视化模拟，不是药效预测。</div>
-          </section>
-
-          <section class="card layers-card">
-            <div class="card-title"><span>透视层</span><span class="tag">LAYERS</span></div>
-            <div class="skin-row">
-              <label for="skin-opacity">皮肤透明度</label>
-              <input id="skin-opacity" class="range small" type="range" min="0" max="0.35" step="0.01" value="0.10" />
-              <b id="skin-opacity-value">标准</b>
-            </div>
-            <div id="layer-toggles" class="layer-toggles"></div>
-            <p class="privacy-note"><b>隐私保护</b> 骨盆外表面已做去性化处理，不展示外生殖器与生殖系统细节；男女模型以比例、胸廓与骨盆轮廓区分。</p>
-          </section>
-
-          <p class="disclaimer">
-            本页面是中医理论学习与三维可视化演示，不构成诊断或处方；方名为经典方示例，不含剂量。如有不适，请就医并在执业医师指导下用药。
-          </p>
-          <p class="attribution">
-            解剖数据：BodyParts3D, (c) The Database Center for Life Science, licensed under CC Attribution-Share Alike 2.1 Japan · 代码 MIT · Three.js MIT
-          </p>
-        </div>
-      </aside>
-
-      <section class="viewport">
-        <div id="canvas-wrap" class="canvas-wrap">
-          <div id="loading" class="loading">
-            <div class="loading-ring"></div>
-            <p id="loading-text">正在载入解剖模型…</p>
-          </div>
-          <div id="labels" class="labels" aria-hidden="true"></div>
-
-          <div class="view-head">
-            <div>
-              <div class="view-kicker">3D ANATOMY · LIVE</div>
-              <h2>写实解剖 · 器官透视</h2>
-            </div>
+<body class="studio-body">
+  <svg class="studio-symbols" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
+    <symbol id="icon-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+    <symbol id="icon-body" viewBox="0 0 24 24"><circle cx="12" cy="4" r="2"/><path d="M5 9l7-2 7 2M12 7v7m0 0-4 7m4-7 4 7M8 8l-1 6m9-6 1 6"/></symbol>
+    <symbol id="icon-cube" viewBox="0 0 24 24"><path d="m12 3 9 5v8l-9 5-9-5V8l9-5Zm0 10 9-5m-9 5L3 8m9 5v8M7.5 5.5l9 5"/></symbol>
+    <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></symbol>
+    <symbol id="icon-chart" viewBox="0 0 24 24"><path d="M4 3v17h17M7 15l4-5 4 2 5-7"/><circle cx="11" cy="10" r="1"/></symbol>
+    <symbol id="icon-leaf" viewBox="0 0 24 24"><path d="M20 3C8 2 3 8 5 15c7 7 15 0 15-12ZM4 21l12-13M7 17v-6m4 2h6"/></symbol>
+    <symbol id="icon-book" viewBox="0 0 24 24"><path d="M12 6C8 3 4 4 3 5v14c3-2 6-1 9 1m0-14c4-3 8-2 9-1v14c-3-2-6-1-9 1V6Z"/></symbol>
+    <symbol id="icon-check" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="m8 12 3 3 5-6M9 3V1m6 2V1"/></symbol>
+    <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+    <symbol id="icon-reset" viewBox="0 0 24 24"><path d="M4 10a8 8 0 1 1 1 8M4 4v6h6"/></symbol>
+  </defs></svg>
+  <div class="app studio-shell">
+    <aside class="studio-sidebar" id="studio-nav" aria-label="平台导航">
+      <a class="studio-brand" href="showcase.html"><span class="studio-mark">络</span><span><strong>络象经纬</strong><small>LUOXIANG</small></span></a>
+      <div class="nav-section-label">教学空间</div>
+      <nav class="studio-nav-links" aria-label="教学模块">
+        <a href="showcase.html"><svg><use href="#icon-grid"/></svg><span>演示总览</span></a>
+        <a href="index.html?demo=1" aria-current="page"><svg><use href="#icon-body"/></svg><span>三维教学</span><i></i></a>
+        <a href="structure.html"><svg><use href="#icon-cube"/></svg><span>人体结构</span></a>
+        <a href="yangqi.html"><svg><use href="#icon-sun"/></svg><span>阳气运行</span></a>
+        <a href="dataset.html"><svg><use href="#icon-chart"/></svg><span>数据推演</span></a>
+      </nav>
+      <div class="nav-section-label">资料与研究</div>
+      <nav class="studio-nav-links" aria-label="资料与研究">
+        <a href="herbs.html"><svg><use href="#icon-leaf"/></svg><span>药材资料</span></a>
+        <a href="teacher.html"><svg><use href="#icon-book"/></svg><span>教师端</span></a>
+        <a href="research.html"><svg><use href="#icon-check"/></svg><span>研究模式</span></a>
+        <a href="judge.html#defense-workbench"><svg><use href="#icon-arrow"/></svg><span>答辩任务台</span></a>
+      </nav>
+      <div class="sidebar-note"><span class="local-dot"></span><span>本地处理 · 不上传作答</span><small>让结构可见，让教学有据。</small></div>
+    </aside>
+    <button class="studio-scrim" id="studio-scrim" aria-label="关闭导航" hidden></button>
+    <div class="studio-main">
+      <header class="studio-header">
+        <div class="header-location"><button class="studio-menu" id="studio-menu" type="button" aria-label="打开平台导航" aria-controls="studio-nav" aria-expanded="false">☰</button><span>教学空间</span><span class="breadcrumb-slash">/</span><b>三维教学工作台</b></div>
+        <div class="studio-header-actions"><span class="scope-label"><i></i> 仅教学演示</span><a href="judge.html">项目说明 ↗</a><button id="btn-reset" class="studio-reset" type="button"><svg><use href="#icon-reset"/></svg>重置</button></div>
+      </header>
+      <div class="studio-heading"><div><div class="studio-eyebrow">ANATOMY × TRADITIONAL CHINESE MEDICINE</div><h1>观其形，循其络<span>。</span></h1><p>从一个标准案例出发，观察脏腑、经络与教学状态的变化。</p></div><div class="studio-workflow" aria-label="教学步骤"><span class="is-current"><b>01</b> 选案例</span><i></i><span><b>02</b> 观结构</span><i></i><span><b>03</b> 看变化</span></div></div>
+      <main class="layout studio-workspace">
+        <section class="viewport studio-stage" aria-label="三维人体教学视图">
+          <div class="view-head"><div><span class="stage-eyebrow">ANATOMICAL EXPLORER</span><h2>人体 · 经络</h2></div><span class="stage-ready" id="stage-ready"><i></i> 正在载入本机模型</span></div>
+          <div id="canvas-wrap" class="canvas-wrap">
+            <div class="stage-grid" aria-hidden="true"></div>
+            <div id="loading" class="loading"><div class="loading-ring"></div><p id="loading-text">正在载入解剖模型…</p></div>
+            <div id="labels" class="labels" aria-hidden="true"></div>
             <div class="view-state" id="view-state">正常 · 阴平阳秘</div>
+            <div class="stage-orientation"><span>观察视角</span><button type="button" data-camera-view="front" disabled>正面</button><button type="button" data-camera-view="back" disabled>背面</button></div>
+            <div class="flow-hud" id="flow-hud" title="数值为教学可视化参数，不是生理测量。"><span class="flow-title">教学参数</span><span class="flow-readout qi"><i></i>气 <b id="flow-qi">—</b></span><span class="flow-readout blood"><i></i>血 <b id="flow-blood">—</b></span></div>
+            <div class="viewport-legend"><span><i class="swatch yin"></i>阴经</span><span><i class="swatch yang"></i>阳经</span><span><i class="swatch blocked"></i>瘀阻</span><span class="hint">拖拽旋转 · 滚轮缩放</span></div>
+            <div class="clock-readout" id="clock-readout"><span class="clock-dot"></span><span id="clock-text">子午流注 · 时间运行中</span></div>
           </div>
-
-          <div class="view-tools">
-            <span class="tool-label">性别</span>
-            <button id="btn-sex-male" class="tool is-on" type="button" title="男性教学模型">男</button>
-            <button id="btn-sex-female" class="tool" type="button" title="女性教学模型（比例重建）">女</button>
-            <span class="tool-sep" aria-hidden="true"></span>
-            <button id="btn-mode-real" class="tool is-on" type="button" title="真实皮肤与解剖色">真实</button>
-            <button id="btn-mode-holo" class="tool" type="button" title="全息透视">全息</button>
-            <button id="btn-view-reset" class="tool" type="button" title="复位视角">复位</button>
-            <button id="btn-rotate" class="tool is-on" type="button" title="自动旋转">环绕</button>
-            <button id="btn-compare" class="tool" type="button" title="前后对比">对比</button>
+          <div class="view-tools"><div class="tool-group"><span class="tool-label">模型</span><button id="btn-sex-male" class="tool is-on" type="button" title="男性教学模型">男</button><button id="btn-sex-female" class="tool" type="button" title="女性教学模型">女</button></div><div class="tool-group"><span class="tool-label">显示</span><button id="btn-mode-real" class="tool is-on" type="button">真实</button><button id="btn-mode-holo" class="tool" type="button">全息</button></div><div class="tool-group"><button id="btn-view-reset" class="tool" type="button">复位</button><button id="btn-rotate" class="tool" type="button">环绕</button><button id="btn-compare" class="tool" type="button">对比</button></div></div>
+          <div class="stage-timeline" id="stage-timeline" hidden><button id="stage-play" type="button" disabled aria-label="播放教学变化"><span>▶</span>播放</button><div class="stage-range"><div><span>教学时间轴 <small>模拟，非疗效预测</small></span><b id="stage-day-label">第 0 天</b></div><input id="stage-day-slider" type="range" min="0" max="28" step="1" value="0" disabled aria-label="教学时间轴天数"/><div class="stage-ticks"><span>第 0 天</span><span>7 天</span><span>14 天</span><span>28 天</span></div></div></div>
+        </section>
+        <aside class="left-panel studio-inspector" aria-label="教学操作面板">
+          <div class="inspector-heading"><div><span>TEACHING NOTES</span><h2>从案例开始</h2></div><span class="inspector-step" id="inspector-step">01 / 03</span></div>
+          <div class="inspector-tabs" role="tablist" aria-label="教学操作分组" hidden><button id="tab-case" role="tab" aria-controls="panel-case" aria-selected="true" data-studio-tab="case" type="button">案例</button><button id="tab-simulation" role="tab" aria-controls="panel-simulation" aria-selected="false" data-studio-tab="simulation" tabindex="-1" type="button">推演</button><button id="tab-layers" role="tab" aria-controls="panel-layers" aria-selected="false" data-studio-tab="layers" tabindex="-1" type="button">图层</button></div>
+          <div class="panel-scroll">
+            <section id="panel-case" class="inspector-panel" role="tabpanel" aria-labelledby="tab-case" data-studio-panel="case">
+              <div id="demo-banner" class="demo-banner" hidden><b>标准案例模式</b><span>不输入个人症状</span><a href="index.html">自由教学</a></div>
+              <p id="case-notice" class="case-notice" role="status" hidden></p>
+              <section class="chips-block"><div class="section-kicker">选择一个标准案例</div><div id="sample-cases" class="sample-cases"></div><div class="block-head"><span>常见症状</span><button id="btn-clear-symptoms" class="link-btn" type="button">清空所选</button></div><div id="symptom-chips" class="chips"></div></section>
+              <form id="chat-form" class="chat-form" autocomplete="off"><input id="chat-input" type="text" placeholder="输入教学案例的症状描述…" aria-label="教学案例描述"/><button class="btn send" type="submit" aria-label="发送">发送</button></form>
+              <section id="analysis-card" class="card analysis-card"><div class="card-title"><span>案例解析</span><span class="tag" id="analysis-tag">等待选择</span></div><div id="analysis-body" class="analysis-empty"><div class="analysis-placeholder">从上方选择一个案例</div><p>观察证候与相关脏腑、经络的教学对应关系。</p></div></section>
+              <button class="inspector-next" data-open-panel="simulation" type="button">观察教学推演 <svg><use href="#icon-arrow"/></svg></button>
+              <details class="studio-dialogue"><summary>教学助手 · 对话记录<span>＋</span></summary><section class="agent-intro"><div class="agent-line"><span class="agent-orb"></span><div><strong>本地教学助手</strong><p id="agent-status">等待标准案例</p></div></div></section><section id="chat" class="chat" aria-label="教学对话" aria-live="polite"></section></details>
+            </section>
+            <section id="panel-simulation" class="inspector-panel" role="tabpanel" aria-labelledby="tab-simulation" data-studio-panel="simulation">
+              <div class="panel-intro"><span>02 / 观察变化</span><h3>让时间成为观察线索</h3><p>拖动时间轴，比较教学状态。数值为规则模拟，不代表生理测量或药物效果。</p></div>
+              <section id="treatment-card" class="card treatment-card is-disabled"><div class="card-title"><span>经典方作用方向演示</span><span class="tag" id="treatment-tag">未开始</span></div><div class="formula-row"><label for="formula-select">经典方示例</label><select id="formula-select" disabled></select></div><div id="formula-note" class="formula-note">先选择标准案例，再查看对应的经典方示例。</div><p class="teaching-boundary">教学演示，不是生理测量/诊断/处方。</p><div class="timeline-head"><span>服药模拟</span><span id="day-label">第 0 天</span></div><input id="day-slider" class="range" type="range" min="0" max="28" value="0" step="1" disabled/><div class="range-scale"><span>服药前</span><span>7 天</span><span>14 天</span><span>28 天</span></div><div class="treatment-actions"><button id="btn-before" class="btn ghost" type="button" disabled>服药前</button><button id="btn-after" class="btn ghost" type="button" disabled>服药后</button><button id="btn-play" class="btn primary" type="button" disabled>▶ 模拟服药</button></div><div class="metrics" id="metrics"><div class="metric"><span>阴阳平衡</span><div class="bar"><i data-metric="balance"></i></div><b>—</b></div><div class="metric"><span>气机</span><div class="bar"><i data-metric="qi"></i></div><b>—</b></div><div class="metric"><span>血行</span><div class="bar"><i data-metric="blood"></i></div><b>—</b></div><div class="metric"><span>瘀滞</span><div class="bar danger"><i data-metric="stagnation"></i></div><b>—</b></div></div><div id="treatment-note" class="treatment-note">这是可视化模拟，不是药效预测。</div></section>
+            </section>
+            <section id="panel-layers" class="inspector-panel" role="tabpanel" aria-labelledby="tab-layers" data-studio-panel="layers">
+              <div class="panel-intro"><span>03 / 分层探索</span><h3>由整体，看向局部</h3><p>按需显示结构与教学投影，用透明度保留空间参照。</p></div>
+              <section class="card layers-card"><div class="card-title"><span>透视图层</span><span class="tag">LAYERS</span></div><div class="skin-row"><label for="skin-opacity">皮肤透明度</label><input id="skin-opacity" class="range small" type="range" min="0" max="0.35" step="0.01" value="0.10"/><b id="skin-opacity-value">标准</b></div><div id="layer-toggles" class="layer-toggles"></div><p class="privacy-note"><b>隐私保护</b> 骨盆外表面去性化，不展示外生殖器与生殖系统细节；男女以比例、胸廓与骨盆轮廓区分，具体版本须经整合验收。</p></section>
+              <div class="layer-explainer"><b>结构与教学投影，分开理解。</b><p>解剖结构用于空间参照，经络与气血流用于理论教学，不替代临床定位。</p><a href="structure.html">进入人体结构图谱 ↗</a></div>
+            </section>
           </div>
-
-          <div class="flow-hud" id="flow-hud" title="气：经络粒子流速/强度；血：血管粒子流速/强度。紫=阻滞，暗红=瘀滞。">
-            <span class="flow-title">气血流</span>
-            <span class="flow-readout qi"><i></i>气 <b id="flow-qi">—</b></span>
-            <span class="flow-readout blood"><i></i>血 <b id="flow-blood">—</b></span>
-          </div>
-
-          <div class="viewport-legend">
-            <span><i class="swatch yin"></i>阴经</span>
-            <span><i class="swatch yang"></i>阳经</span>
-            <span><i class="swatch blocked"></i>瘀阻</span>
-            <span><i class="swatch qi"></i>气</span>
-            <span><i class="swatch blood"></i>血</span>
-            <span class="hint">拖拽旋转 · 滚轮缩放</span>
-          </div>
-
-          <div class="clock-readout" id="clock-readout">
-            <span class="clock-dot"></span>
-            <span id="clock-text">子午流注 · 时间运行中</span>
-          </div>
-        </div>
-      </section>
-    </main>
+          <div class="inspector-boundary"><span>教学边界</span><p>标准案例不是真实病例；不诊断、不处方、不预测疗效。内容与学习价值仍待审阅、验证。</p></div>
+        </aside>
+      </main>
+      <footer class="studio-footer"><span>络象经纬 · 三维教学原型</span><span>BodyParts3D © The Database Center for Life Science · CC BY-SA 2.1 Japan <span class="footer-more">· 代码 / Three.js MIT</span></span></footer>
+      <noscript><nav>此三维工作台需要 JavaScript。可查看 <a href="judge.html">项目说明</a> 或 <a href="showcase.html">演示总览</a>。</nav></noscript>
+    </div>
   </div>
-
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "./vendor/three.module.js",
-        "three/addons/": "./vendor/addons/"
-      }
-    }
-  </script>
+  <script type="importmap">{"imports":{"three":"./vendor/three.module.js","three/addons/":"./vendor/addons/"}}</script>
   <script type="module" src="src/app.js?v=20261108teacher"></script>
+  <script type="module" src="src/studio.js?v=20261126"></script>
 </body>
 </html>

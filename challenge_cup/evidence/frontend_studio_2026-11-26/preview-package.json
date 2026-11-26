@@ -1,0 +1,8 @@
+{
+  "base": "642bb733259e716ff5d8209e7402b51a3c76315b",
+  "url": "http://127.0.0.1:8021",
+  "original_preview_scene_used": true,
+  "concurrent_platform_scene_excluded": true,
+  "model_mapping": "Existing local model directory; no files copied or downloaded",
+  "verification": "verification.json"
+}
