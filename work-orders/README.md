@@ -52,5 +52,6 @@
 | WO-PF-20261126-002 | 深海蓝科技主题 | 待验收 | `codex/night-theme`；预览 `codex/frontend-studio-preview` / [PR #1](https://github.com/dongmingkun/luoxiang-platform-preview/pull/1) | 队长 |
 | WO-PF-20261126-003 | 曜石黑与琥珀金配色 | 待验收 | `codex/night-theme`；预览 `codex/frontend-studio-preview` / [PR #1](https://github.com/dongmingkun/luoxiang-platform-preview/pull/1) | 队长 |
 | WO-PF-20261126-004 | 石墨灰与信号橙 | 待验收 | `codex/night-theme`；预览 `codex/frontend-studio-preview` / [PR #1](https://github.com/dongmingkun/luoxiang-platform-preview/pull/1) | 队长 |
+| WO-PF-20261126-005 | 明亮图谱配色 | 待验收 | `codex/night-theme`；预览 `codex/frontend-studio-preview` / [PR #1](https://github.com/dongmingkun/luoxiang-platform-preview/pull/1) | 队长 |
 
 当前唯一预览：<http://127.0.0.1:8020/>（平台仓实时服务；说明见 `deploy/README.md`）。
