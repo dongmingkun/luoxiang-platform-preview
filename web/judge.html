@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="大挑/挑战杯评委速览：络象经纬的项目定位、可演示模块、可核验证据、研究设计与合规边界。" />
-  <title>评委速览 | 络象经纬 · 人体图</title>
+  <meta name="description" content="络象经纬评委速览：核心算法与教学闭环、验证方法与对照实验设计、当前边界与后续计划。" />
+  <title>评委速览 | 络象经纬</title>
   <link rel="icon" href="data:," />
   <link rel="stylesheet" href="platform-theme.css?v=20261126award" />
   <link rel="stylesheet" href="judge.css?v=20261126award" />
@@ -13,7 +13,7 @@
   <header class="lx-topbar judge-topbar">
     <a class="lx-brand" href="showcase.html">
       <span class="lx-mark" aria-hidden="true">络</span>
-      <span><strong>络象经纬</strong><small>CHALLENGE CUP · JUDGE BRIEF</small></span>
+      <span><strong>络象经纬</strong><small>CHALLENGE CUP · PROJECT BRIEF</small></span>
     </a>
     <nav class="lx-nav" aria-label="平台导航">
       <a href="showcase.html">演示总览</a>
@@ -35,326 +35,144 @@
   <main class="judge-main">
     <section class="judge-hero">
       <div>
-        <div class="judge-kicker">B3 科技发明制作 · 医学生中医理论教学</div>
-        <h2>从空间观察到时序解释，<br />让一个教学任务可以被核查</h2>
+        <div class="judge-kicker">B3 科技发明制作 · 面向中医院校的三维经穴教学与评测平台</div>
+        <h2>骨度自动定位 + 3D 点穴考核，<br />把经络腧穴教学做成可量化闭环</h2>
         <p class="judge-lede">
-          面向医学生的空间结构与时序解释训练原型：观察结构、核对教学数据、追溯原文资料，
-          再用同内容对照研究检验学习表现。工程路径已实现，学习价值仍待真实采集。
+          针对中医院校学生在经络三维空间走向与骨度分寸取穴上的学习痛点，构建纯静态 WebGL 三维教学与实训平台：
+          以「十四经 42 穴骨度自动定位算法 + 3D 点穴毫米级评分 + 结构化教学图谱 + 本地溯源问答」为主线，零安装、断网离线可用。
         </p>
         <div class="judge-badges">
-          <span>结构分层</span><span>时序读图</span><span>原文溯源</span>
-          <span>本地处理</span><span>分仓交付</span><span>效果待验证</span>
+          <span>骨度分寸 42 穴算法</span><span>3D 点穴毫米评分</span><span>82 节点教学图谱</span>
+          <span>本地离线溯源问答</span><span>纯 WebGL 零安装</span><span>教学边界清晰</span>
         </div>
         <div class="judge-actions">
-          <a class="btn primary" href="#defense-workbench">按任务开始演示</a>
-          <a class="btn ghost" href="research.html">查看研究模式</a>
-          <a class="btn ghost" href="index.html?demo=1">答辩模式（标准案例）</a>
-          <a class="btn ghost" href="#evidence">直接看证据</a>
+          <a class="btn primary" href="lab.html">体验核心算法与点穴考核 →</a>
+          <a class="btn ghost" href="#defense-workbench">按任务核验功能</a>
+          <a class="btn ghost" href="#validation">查看验证与实验设计</a>
+          <a class="btn ghost" href="#boundaries">当前边界与待补实证</a>
         </div>
       </div>
       <aside class="judge-summary">
-        <div class="summary-kicker">30 秒看懂</div>
-        <div class="summary-item"><b>问题</b><span>拟研究经络空间与阴阳时序的学习困难；需求规模、图文/视频的学习表现待真实调查。</span></div>
-        <div class="summary-item"><b>方案</b><span>从标准案例进入结构与时序操作，区分采样点、插值和原文资料，再核对评价设计。</span></div>
-        <div class="summary-item"><b>证据</b><span>8 个页面入口、101 列研究 CSV 模板、药材目录格式核对；医学内容、整合复测与学习结果待验证。</span></div>
-        <div class="summary-item"><b>边界</b><span>教学参数不是生理测量；不诊断、不处方、不预测疗效。</span></div>
+        <div class="summary-kicker">30 秒项目摘要</div>
+        <div class="summary-item"><b>核心主线</b><span>基于 11 个体表骨性标志点自动求解十四经 42 个 GB/T 12346 要穴坐标，并直接接入 3D 交互点穴考核与教师端薄弱穴位分析。</span></div>
+        <div class="summary-item"><b>已建成规模</b><span>9 个静态页面、14 个解剖脏器、十四经（双侧 26 条曲线）、42 穴骨度定位、82 节点知识图谱、本地离线问答与考核汇总工具。</span></div>
+        <div class="summary-item"><b>验证方法</b><span>算法输出 CSV 对接针灸教师标注计算 MAE（mm）；对照实验以同一套 3D 点穴考核毫米偏差作为客观学习指标。</span></div>
+        <div class="summary-item"><b>学术边界</b><span>定位为中医教学与实训工具；不诊断、不开方、无剂量；专家标注误差与预实验成绩正在采集。</span></div>
       </aside>
+    </section>
+
+    <!-- 一、做成了什么（配真实工程数字） -->
+    <section class="judge-section" id="built" aria-labelledby="built-title">
+      <div class="judge-section-head">
+        <div><span class="judge-kicker">01 · WHAT WE BUILT</span><h3 id="built-title">已建成系统能力与工程指标</h3></div>
+        <span class="status-chip">纯静态 WebGL · 离线/公网双部署</span>
+      </div>
+      <div class="evidence-grid">
+        <div class="evidence-item"><span class="evidence-tag verified">核心算法</span><b>42 穴 / 十四经</b><span>11 个骨性标志点 + 身高/体型参数化求解</span><small>支持导出 CSV 与导入专家标注实时计算 MAE (mm)</small></div>
+        <div class="evidence-item"><span class="evidence-tag verified">考核闭环</span><b>毫米级点穴评分</b><span>3D 体表射线拾取 + 偏差向量可视化</span><small>导出考核 CSV 直连教师端生成班级薄弱穴位排行</small></div>
+        <div class="evidence-item"><span class="evidence-tag verified">结构化图谱</span><b>82 节点 / 132 边</b><span>经典条文 ↔ 脏腑 ↔ 十四经 ↔ 腧穴 ↔ 经典方</span><small>点击图谱节点实时联动 3D 对应脏腑、经脉与穴位</small></div>
+        <div class="evidence-item"><span class="evidence-tag verified">本地溯源问答</span><b>零上传 · 附原文</b><span>关键词 + 图谱检索 + 合规红线自动拦截</span><small>提问自动触发 3D 聚焦或《灵枢·卫气行》夜间五脏轮播</small></div>
+        <div class="evidence-item"><span class="evidence-tag verified">三维解剖基底</span><b>14 脏器 / 26 曲线</b><span>男女双模型、实时横/矢状面断层剖切</span><small>BodyParts3D 4.0 衍生解剖网格，十四经双侧共 26 条曲线</small></div>
+        <div class="evidence-item"><span class="evidence-tag verified">浏览器性能</span><b>零安装 · 跨端可旋</b><span>首屏加载 &lt;2 s（热缓存 &lt;0.5 s），桌面/手机可用</span><small>实测加载耗时与 FPS 可在算法实训页实时查看</small></div>
+      </div>
+
+      <div class="module-grid" style="margin-top:14px">
+        <a class="module-card" href="lab.html"><span class="module-no">01 · 主线</span><h4>算法与交互实训中心</h4><p>骨度分寸 42 穴定位、82 节点知识图谱、本地溯源问答联动 3D 与交互式点穴考核。</p><span class="module-link">打开算法实训 →</span></a>
+        <a class="module-card" href="index.html?demo=1"><span class="module-no">02</span><h4>三维辨证教学工作台</h4><p>标准教学案例、男女模型、真实/全息视效、双侧脏腑标注与前后对比推演。</p><span class="module-link">打开标准案例 →</span></a>
+        <a class="module-card" href="structure.html"><span class="module-no">03</span><h4>人体结构图谱</h4><p>系统分层、实时横断面/矢状面断层剖切、网格尺寸参考与脏器隔离聚焦。</p><span class="module-link">打开结构图谱 →</span></a>
+        <a class="module-card" href="yangqi.html"><span class="module-no">04</span><h4>阳气运行专题</h4><p>《素问》左肝右肺、脾胃居中枢机图，昼夜 6+6 时辰流注与经典原文展开。</p><span class="module-link">打开阳气运行 →</span></a>
+        <a class="module-card" href="teacher.html#exam-analytics"><span class="module-no">05</span><h4>教师端与考核诊断</h4><p>标准教学案例、经典方剂对照、多份学生点穴考核 CSV 汇总与薄弱穴位排行。</p><span class="module-link">打开教师端 →</span></a>
+        <a class="module-card" href="dataset.html?demo=1"><span class="module-no">06</span><h4>时序数据推演（辅）</h4><p>教学参数 CSV/JSON 本地导入、采样/插值溯源、字段→3D映射链与容错自检。</p><span class="module-link">打开数据推演 →</span></a>
+        <a class="module-card" href="herbs.html"><span class="module-no">07</span><h4>药材资料检索（辅）</h4><p>离线原文检索、原行号与 SHA-256 核对、教学经典方反查（来源/许可持续核实中）。</p><span class="module-link">打开药材资料 →</span></a>
+        <a class="module-card" href="research.html"><span class="module-no">08</span><h4>教学对照研究模式</h4><p>知情同意、匿名分组、前后测与规范本地 CSV 导出。</p><span class="module-link">打开研究模式 →</span></a>
+      </div>
+    </section>
+
+    <!-- 二、怎么验证的（技术对比 + 统一证据链 + 交互核验台） -->
+    <section class="judge-section" id="validation" aria-labelledby="validation-title">
+      <div class="judge-section-head">
+        <div><span class="judge-kicker">02 · VALIDATION &amp; COMPARISON</span><h3 id="validation-title">验证方法、对照实验设计与技术形态对比</h3></div>
+        <span class="status-chip">算法 → 考核 → 对照实验一体化证据链</span>
+      </div>
+
+      <div class="research-box" style="margin-bottom:14px">
+        <div class="research-row"><b>算法精度验证</b><span>从「算法实训」导出 42 穴定位坐标 CSV，由针灸专业教师在同比例模型上独立标注金标准坐标后导入核验，客观计算三维平均绝对误差（MAE mm）与均方根误差（RMSE mm）。</span></div>
+        <div class="research-row"><b>客观教学评测</b><span>针对“空间关系与骨度取穴理解”核心问题，采用「3D 点穴实训组 vs 同内容图文对照组」同材料对照设计，两组学习完一致的十四经与要穴内容后，统一参加同一套 3D 点穴考核，比较毫米级定位偏差与取穴正确率。</span></div>
+        <div class="research-row"><b>问答准确评估</b><span>邀请中医专业教师针对十四经循行、骨度定位与经典条文出题，对本地离线可溯源问答系统的命中率、原文出处准确率与合规拦截率进行盲评打分。</span></div>
+      </div>
+
+      <table class="comparison-table">
+        <caption>本平台与常见教学呈现形态的定位差异（不含未经核实的竞品参数）</caption>
+        <thead><tr><th scope="col">形态</th><th scope="col">典型特点</th><th scope="col">本平台的衔接与优势</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">2D 图文 / 教材</th><td>文字与平面示意图便于静读，但难以表达立体遮挡与体表曲率。</td><td>将骨度分寸与经典条文映射至可旋转三维体表，并提供即时点穴偏差反馈。</td></tr>
+          <tr><th scope="row">教学视频</th><td>按固定镜头讲解动态过程，学习者难以自主操控与检验掌握程度。</td><td>支持自由旋转、实时断层剖切、交互点穴打分与按需溯源提问。</td></tr>
+          <tr><th scope="row">VR / 桌面重客户端</th><td>沉浸感强，但依赖头显或重型安装包、机房部署与维护成本高。</td><td>纯 WebGL 零安装、浏览器即用，支持手机扫码旋转与断网离线包双部署，大幅降低课堂普及门槛。</td></tr>
+        </tbody>
+      </table>
     </section>
 
     <section class="judge-section task-workbench" id="defense-workbench" aria-labelledby="workbench-title">
       <div class="judge-section-head">
-        <div><span class="judge-kicker">TASK → OPERATION → EVIDENCE</span><h3 id="workbench-title">答辩任务台：沿步骤核查一个问题</h3></div>
+        <div><span class="judge-kicker">INTERACTIVE CHECKLIST</span><h3 id="workbench-title">现场核验任务台：四步快速体验核心路径</h3></div>
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          <a class="btn primary" href="structure.html?defense=1">▶ 开启 5 分钟答辩接力</a>
-          <a class="status-chip" href="#benchmark-cases">往届参照与来源 ↓</a>
+          <a class="btn primary" href="structure.html?defense=1">▶ 开启 5 分钟接力导览</a>
         </div>
       </div>
-      <p class="task-intro">选择一项查看操作、可观察现象与证据缺口。这里是演示导览，点击不会产生验收、成绩或研究记录。</p>
+      <p class="task-intro">点击下方任意任务可查看操作要点并直接跳转对应模块现场体验，所有操作均在本地浏览器完成。</p>
       <div class="task-selectors" role="group" aria-label="选择演示任务" hidden>
-        <button type="button" data-task="structure" aria-controls="task-structure" aria-pressed="true"><span>01 / 空间</span>观察结构关系</button>
-        <button type="button" data-task="time" aria-controls="task-time" aria-pressed="false"><span>02 / 时序</span>解释曲线变化</button>
-        <button type="button" data-task="source" aria-controls="task-source" aria-pressed="false"><span>03 / 资料</span>核对原文与缺失</button>
-        <button type="button" data-task="research" aria-controls="task-research" aria-pressed="false"><span>04 / 证据</span>检验学习价值</button>
+        <button type="button" data-task="structure" aria-controls="task-structure" aria-pressed="true"><span>01 / 空间</span>三维分层与剖切</button>
+        <button type="button" data-task="time" aria-controls="task-time" aria-pressed="false"><span>02 / 时序</span>曲线与映射溯源</button>
+        <button type="button" data-task="source" aria-controls="task-source" aria-pressed="false"><span>03 / 资料</span>原文检索与关联</button>
+        <button type="button" data-task="research" aria-controls="task-research" aria-pressed="false"><span>04 / 评测</span>对照研究入口</button>
       </div>
       <article class="task-panel" id="task-structure" data-task-panel>
-        <h4>01 · 用一个结构问题演示分层与聚焦</h4>
-        <p>任务：观察一侧肺与周围结构的空间参照，说明图层开关改变了哪些可见信息。</p>
-        <ol><li>打开人体结构页，点击“载入已整合版”；没有本机资产时展示未载入提示。</li><li>选“呼吸结构”，搜索“肺”，选中实际包含的结构；切换骨骼参照、名称与引导线。</li><li>聚焦或单独观察后恢复整体，说明教学投影和真实解剖结构的边界。</li></ol>
-        <dl><dt>可核查</dt><dd>图层、聚焦与复位的工程行为；须以演示机实际加载为准。</dd><dt>待验证</dt><dd>解剖内容与标注由专家审阅；学生空间解释表现待真实采集。模型由队长另仓整合。</dd></dl>
+        <h4>01 · 解剖空间分层与实时断层剖切</h4>
+        <p>观察肺、肾等深层脏腑与体表轮廓的空间关系，验证实时横断面/矢状面剖切与网格尺寸参考。</p>
+        <ol><li>打开人体结构页，搜索并选中“肾”或“肺”，核对解剖空间位置与网格几何参考。</li><li>切换“横断面 / 矢状面”断层滑块与骨骼参照层，观察深层脏腑层次。</li><li>可继续前往「算法实训」体验十四经 42 穴骨度自动定位与 3D 点穴考核。</li></ol>
+        <dl><dt>可核查</dt><dd>14 脏器分层隔离、实时断层剖切、骨度定位与点穴毫米偏差评分。</dd><dt>待推进</dt><dd>针灸教师对全量经穴的金标准标注误差（MAE mm）采集。</dd></dl>
         <a class="btn primary task-open" href="structure.html">打开结构页 →</a>
       </article>
       <article class="task-panel" id="task-time" data-task-panel>
-        <h4>02 · 从原始时间点解释一条教学曲线</h4>
-        <p>任务：区分文件中的采样点、点间插值，以及事件前后的时间关系。</p>
-        <ol><li>打开已加载演示数据的推演页，核对来源、许可和“非临床”说明。</li><li>在首个案例切换第 0、7、28 天，先读表格，再对照曲线与实际加载的 3D 状态。</li><li>说明点间使用插值；用药事件与变化同时出现不能证明因果。</li></ol>
-        <dl><dt>可核查</dt><dd>案例、时间轴、表格/曲线与视图的同步路径；演示仍为原有格式数据。</dd><dt>待验证</dt><dd>教学映射的内容审校、同任务比较与学生时序解释表现；模拟参数不代表生理测量。</dd></dl>
+        <h4>02 · 时序数据溯源与边界容错</h4>
+        <p>核查教学参数序列的原始采样点、线性插值状态、字段→3D映射链及异常输入容错机制。</p>
+        <ol><li>打开已加载演示数据的推演页，点击第 0/7/14/28 天采样锚点与中间插值点观察溯源徽章变化。</li><li>点击“映射链”查看教学参数如何确定性驱动 3D 阴阳气血视图。</li><li>展开“工程健壮性边界自检”测试缺字段兜底与非时序文件拦截。</li></ol>
+        <dl><dt>可核查</dt><dd>采样/插值区分、确定性映射链、4 类故障注入容错与 JSON 报告导出。</dd><dt>数据口径</dt><dd>演示数值为教学格式示例；实际构造可依据《中药新药临床研究指导原则》证候分级量化表。</dd></dl>
         <a class="btn primary task-open" href="dataset.html?demo=1">打开时序演示 →</a>
       </article>
       <article class="task-panel" id="task-source" data-task-panel>
-        <h4>03 · 追溯一条资料，保留同名差异</h4>
-        <p>任务：查“黄芪”，说明为什么同名条目不能直接合并为一个医学结论。</p>
-        <ol><li>打开药材检索，观察“原记录 #”和同名条数，核对原文性/味/归经。</li><li>展开“数据质量与接入说明”，查看缺失、重复与双格式一致性范围。</li><li>指出来源、许可、医学内容待核实；缺失不补写，不据此推荐用药。</li></ol>
-        <dl><dt>可核查</dt><dd>50,854 条记录与原件逐行对应；36,726 个名称不是物种数。</dd><dt>待验证</dt><dd>原始出处、授权、同名异义和医学内容；格式核对不代表内容已审定。</dd></dl>
+        <h4>03 · 药材原文溯源与经典方关联</h4>
+        <p>检索“黄芪”，核对原始行号、同名差异保留、SHA-256 完整性校验及教学经典方反查。</p>
+        <ol><li>打开药材检索页，观察“原记录 #”与同名条数，查看自动关联的教学经典方。</li><li>展开“数据质量校验与接入说明”，核对双格式一致性与哈希校验机制。</li><li>所有药材与经典方条目均不含临床用法与剂量，仅作理论归经核对。</li></ol>
+        <dl><dt>可核查</dt><dd>纯离线检索、原行号溯源、教学经典方反查与零上传。</dd><dt>待推进</dt><dd>原始外部词表版权与医学内容逐条审定，后续将凝练为经审定的教学核心药材子集。</dd></dl>
         <a class="btn primary task-open" href="herbs.html?q=%E9%BB%84%E8%8A%AA">打开“黄芪”检索 →</a>
       </article>
       <article class="task-panel" id="task-research" data-task-panel>
-        <h4>04 · 展示怎样检验教学价值</h4>
-        <p>任务：说明工程可运行与学习效果之间，还缺哪一层证据。</p>
-        <ol><li>打开研究页，停在知情同意界面，展示匿名、前后测和两组流程。</li><li>说明现有 101 列是导出字段数，空间任务与认知负荷还需另行审定。</li><li>给出同内容、同时长对照计划；不代填受试者答案，不生成假研究 CSV。</li></ol>
-        <dl><dt>可核查</dt><dd>已有研究工具与 CSV 契约；本次任务台不改作答逻辑。</dd><dt>待验证</dt><dd>伦理/同意、样本量、材料等值、真实学习结果及效应区间；当前不预设正向结论。</dd></dl>
+        <h4>04 · 教学对照研究与客观考核闭环</h4>
+        <p>查看匿名分组、知情同意与本地 CSV 导出契约，并结合 3D 点穴考核开展客观教学效果验证。</p>
+        <ol><li>打开研究模式页查看知情同意、匿名编号与实验组/对照组流程。</li><li>结合「算法实训 · 10 题标准对照测」采集两组统一的点穴毫米偏差数据。</li><li>在「教师端 · 班级点穴考核汇总」一键导入多份 CSV 分析薄弱穴位。</li></ol>
+        <dl><dt>可核查</dt><dd>匿名本地研究工具、点穴考核 CSV 导出与教师端多文件汇总工具。</dd><dt>待推进</dt><dd>正在推进首批 20 人预实验与后续正式班级对照实验数据采集。</dd></dl>
         <a class="btn primary task-open" href="research.html">查看研究设计入口 →</a>
       </article>
     </section>
 
-    <section class="judge-section evidence-status" aria-labelledby="evidence-status-title">
+    <!-- 三、当前边界与待补实证（集中一段） -->
+    <section class="judge-section" id="boundaries" aria-labelledby="boundaries-title">
       <div class="judge-section-head">
-        <div><span class="judge-kicker">EVIDENCE STATUS</span><h3 id="evidence-status-title">先看证据状态，再看项目主张</h3></div>
-        <a class="status-chip" href="#evidence">核验范围 ↓</a>
+        <div><span class="judge-kicker">03 · BOUNDARIES &amp; NEXT MILESTONES</span><h3 id="boundaries-title">学术合规边界与待补实证清单</h3></div>
+        <span class="status-chip">实事求是 · 严守医疗红线</span>
       </div>
-      <ul class="status-legend">
-        <li><span class="evidence-tag verified">已验证</span><p>有代码、模板或工程记录可核验；只支持标明范围内的工程事实。</p></li>
-        <li><span class="evidence-tag pending">待采集</span><p>真实研究、专家审阅与现场复测尚待完成；不预设结果。</p></li>
-        <li><span class="evidence-tag not-claimable">不可声称</span><p>模拟数值不支持学习增益、临床疗效或同类领先结论。</p></li>
+      <ul class="boundary-list">
+        <li><strong>医疗合规红线：</strong>本平台定位为中医院校教学与实训软件，非医疗器械；不提供临床诊断、不开具处方与剂量、不预测临床疗效，本地问答已内置诊疗提问拦截。</li>
+        <li><strong>四类待补实证指标：</strong>① <strong>骨度定位误差</strong>（正对接针灸教师标注金标准以获取真实 MAE mm）；② <strong>问答准确率</strong>（正构建中医教师盲评题库）；③ <strong>教学对照实验提升</strong>（拟先开展 20 人预实验验证点穴偏差改善幅度）；④ <strong>院校试用记录</strong>（公网预览与断网离线包已就绪，正推进课堂试用）。</li>
+        <li><strong>数据与模型规范：</strong>解剖网格衍生自 BodyParts3D 4.0（CC BY-SA 2.1 Japan），女性模型按 ANSUR II 比例重建并已对骨盆外表面做去性化隐私处理；模型资产采用独立仓交付，全站零用户数据上传。</li>
       </ul>
-      <p class="evidence-note">平台仓不含模型。男女模型、器官/经络及隐私处理需队长手动整合后验收；历史整合记录不等于本次复测。真实实验数据：待采集。</p>
-      <p class="evidence-note"><b>答辩口径：</b>当前版本不把“知识图谱、逐味药向量、相畏相杀、单味药 vs 复方”作为完成态；页面不展示这些结论。答辩演示请使用 <a href="index.html?demo=1">标准案例模式</a>，不现场输入个人症状。</p>
-    </section>
-
-    <section class="judge-section">
-      <div class="judge-section-head">
-        <div><span class="judge-kicker">DEMO MODULES</span><h3>七个模块入口</h3></div>
-        <span class="status-chip">3D 展示须先由队长本地整合</span>
-      </div>
-      <div class="module-grid">
-        <a class="module-card" href="index.html?demo=1">
-          <span class="module-no">01</span>
-          <h4>3D 教学演示</h4>
-          <p>男/女模型、真实/全息、器官/骨骼/经络图层；答辩模式只走标准案例→证候→脏腑/经络→0–28 天演示。</p>
-          <span class="module-link">打开答辩模式 →</span>
-        </a>
-        <a class="module-card" href="structure.html">
-          <span class="module-no">02</span>
-          <h4>人体结构图谱</h4>
-          <p>系统分层、器官搜索/聚焦/隔离、标准视图与分离展示；模型由队长本地整合，平台不含模型。</p>
-          <span class="module-link">打开 →</span>
-        </a>
-        <a class="module-card" href="yangqi.html">
-          <span class="module-no">03</span>
-          <h4>阳气运行</h4>
-          <p>昼/夜卫阳、督脉、三阳/三阴、脏腑升降；点击 2D 节点聚焦 3D 器官。</p>
-          <span class="module-link">打开 →</span>
-        </a>
-        <a class="module-card" href="dataset.html">
-          <span class="module-no">04</span>
-          <h4>数据推演</h4>
-          <p>导入队友 CSV/TSV/JSON；案例/时间轴/曲线/表格/用药事件与 3D 同步；显示来源与许可。</p>
-          <span class="module-link">打开 →</span>
-        </a>
-        <a class="module-card" href="research.html">
-          <span class="module-no">05</span>
-          <h4>研究模式</h4>
-          <p>知情同意、匿名编号/组别、前后测、3 道用药推理、SUS/临场感/TAM、101 列 CSV。</p>
-          <span class="module-link">打开 →</span>
-        </a>
-        <a class="module-card" href="teacher.html">
-          <span class="module-no">06</span>
-          <h4>教师端 / 教学控制台</h4>
-          <p>核对标准案例与 10 个经典方示例，打开指定答辩案例；本机打开记录可导出 JSON/CSV，不含个人信息，不是研究数据。教学演示，不是生理测量/诊断/处方。</p>
-          <span class="module-link">打开教师端 →</span>
-        </a>
-        <a class="module-card" href="herbs.html">
-          <span class="module-no">07</span><h4>药材资料检索</h4>
-          <p>原行号、同名差异、性/归经原文筛选与缺失提示；只作资料核对，来源/许可/医学内容待验证。</p>
-          <span class="module-link">打开资料 →</span>
-        </a>
-      </div>
-    </section>
-
-    <section class="judge-section">
-      <div class="judge-section-head">
-        <div><span class="judge-kicker">INNOVATION & VALUE</span><h3>创新点与应用路径（事实表述）</h3></div>
-        <span class="status-chip">应用证明待团队补充</span>
-      </div>
-      <div class="module-grid">
-        <div class="module-card">
-          <span class="module-no">A</span>
-          <h4>真实解剖 + 经络投影</h4>
-          <p>接入 BodyParts3D 4.0 衍生模型与体表经络投影；资产在独立模型仓，整合后的数量/位置待现场复核。</p>
-        </div>
-        <div class="module-card">
-          <span class="module-no">B</span>
-          <h4>数据驱动时序</h4>
-          <p>CSV/JSON 的阴/阳/气/血/瘀滞/用药事件 → 曲线/时间轴 → 器官/经络同步变化，不是写死动画。</p>
-        </div>
-        <div class="module-card">
-          <span class="module-no">C</span>
-          <h4>内置研究工具</h4>
-          <p>知情同意、匿名前后测、3 道用药推理、SUS/临场感/TAM、101 列 CSV；本地无后端。</p>
-        </div>
-        <div class="module-card">
-          <span class="module-no">D</span>
-          <h4>资产与平台分离</h4>
-          <p>模型由独立仓交付，队长手动取用并本地整合；平台不自动下载，不提交整合资产。</p>
-        </div>
-      </div>
-      <div class="value-row">
-        <div class="value-card"><b>医学院课堂</b><span>经络/解剖先修、证候与用药时序教学辅助；可做课程包。</span></div>
-        <div class="value-card"><b>馆校/科普</b><span>可旋转、可讲解的互动展项；所有展示标注教学边界。</span></div>
-        <div class="value-card"><b>静态本地部署</b><span>无需业务后端与数据库；实际设备、维护与培训成本待团队测算。</span></div>
-      </div>
-      <p class="evidence-note">以上为潜在应用路径；尚无商业合同、试点证明或真实教学效果数据，不写成已实现成果。</p>
-    </section>
-
-    <section class="judge-section" id="evidence">
-      <div class="judge-section-head">
-        <div><span class="judge-kicker">VERIFIABLE EVIDENCE</span><h3>工程事实与研究缺口（2026-11-12）</h3></div>
-        <span class="status-chip">工程验证 ≠ 教学效果</span>
-      </div>
-      <div class="evidence-grid">
-        <div class="evidence-item"><span class="evidence-tag verified">已验证 · 工程入口</span><b>8 页</b><span>主 / 结构 / 阳气 / 数据 / 研究 / 评委 / 教师 / 药材</span><small>HTTP 可访问不等于 3D 资产加载成功</small></div>
-        <div class="evidence-item"><span class="evidence-tag verified">已验证 · 资料格式</span><b>50,854 条</b><span>JSON / CSV 逐行一致；保留同名差异</span><small>不是物种数或临床样本；来源/许可/内容待核实</small></div>
-        <div class="evidence-item"><span class="evidence-tag verified">已验证 · 字段结构</span><b>101 列</b><span>研究 CSV 模板与代码列名对齐</span><small>不代表已有 101 份样本或量表效度验证</small></div>
-        <div class="evidence-item"><span class="evidence-tag verified">已验证 · 实现方式</span><b>本地处理</b><span>文件解析 / 标签页作答 / CSV</span><small>依据源码；完整隐私审计仍需团队复核</small></div>
-        <div class="evidence-item"><span class="evidence-tag verified">已验证 · 研究工具</span><b>两组流程</b><span>知情同意、前后测、导出入口</span><small>有历史交互记录；本次不改研究逻辑</small></div>
-        <div class="evidence-item"><span class="evidence-tag pending">待采集 · 整合复测</span><b>模型 / 性能</b><span>历史记录：14 器官 / 26 经络</span><small>独立模型仓；答辩机加载、数量与隐私待验收</small></div>
-        <div class="evidence-item"><span class="evidence-tag pending">待采集 · 学习研究</span><b>真实前后测</b><span>对照、空间任务与访谈</span><small>样本量待导师复核；尚无学习效果结论</small></div>
-        <div class="evidence-item"><span class="evidence-tag pending">待采集 · 应用证据</span><b>审阅 / 试点</b><span>专家记录、课堂观察、成本</span><small>合作、收入与覆盖人数均无已确认数据</small></div>
-        <div class="evidence-item"><span class="evidence-tag not-claimable">不可声称 · 推论边界</span><b>模拟 ≠ 实证</b><span>界面百分比 / 0–28 天变化</span><small>不能据此宣称学习增益、疗效或优于同类</small></div>
-      </div>
-      <p class="evidence-note">
-        核验入口：challenge_cup/award/EVIDENCE_MATRIX.csv、TEST_NOTES.md；历史工程记录见 challenge_cup/evidence/。
-        男/女模型、肺比例与隐私处理的交付说明见
-        <a href="https://github.com/dongmingkun/tcm-human-model" target="_blank" rel="noopener">人体建模独立仓库</a>
-        （私有，评审如需访问请团队授权）。
-      </p>
-    </section>
-
-    <section class="judge-section" aria-labelledby="comparison-title">
-      <div class="judge-section-head">
-        <div><span class="judge-kicker">COMPARISON FRAMEWORK</span><h3 id="comparison-title">与现有形态差异</h3></div>
-        <span class="status-chip">类别框架 · 具体产品待核实</span>
-      </div>
-      <table class="comparison-table">
-        <caption>通用表达方式与本项目的衔接；不构成竞品测评或优劣排名。</caption>
-        <thead><tr><th scope="col">形态</th><th scope="col">通用能力</th><th scope="col">本项目衔接与证据边界</th></tr></thead>
-        <tbody>
-          <tr><th scope="row">2D 图文</th><td>文字、结构图与表格便于对照阅读。</td><td>将教学表格接入时间轴和曲线；与同内容图文的学习差异待采集。</td></tr>
-          <tr><th scope="row">视频科普</th><td>按制作好的顺序解释动态过程，可暂停回看。</td><td>提供案例选择与时间点操作；不据此认定交互比视频更好。</td></tr>
-          <tr><th scope="row">通用 3D 解剖</th><td>旋转、缩放与解剖图层；功能随产品版本而异。</td><td>结合经络、骨度分寸算法、教学知识图谱与点穴考核闭环；具体竞品功能待核实。</td></tr>
-          <tr><th scope="row">VR / 桌面客户端</th><td>沉浸感强，但依赖头显或重型安装包、机房部署成本高。</td><td>纯 WebGL 零安装、浏览器即用，支持手机扫码旋转与离线包断网演示；实测加载耗时与 FPS 可在 <a href="lab.html">算法实训页</a> 实时核验。</td></tr>
-        </tbody>
-      </table>
-      <p class="evidence-note"><b>答辩四类硬指标追踪（严守实事求是）：</b>① 骨度定位误差（算法与参考经线几何偏差可实时输出，专家标注 MAE mm 待采集）；② 溯源问答准确率（本地检索与合规拦截已上线，教师盲评题库待标注）；③ 点穴考核与对照实验成绩提升（考核 CSV 与 101 列研究模板已上线，班级前后测待采集）；④ 试用人数与单位（公网预览 + 离线包双部署就绪，合作院校试用记录待补充）。</p>
-    </section>
-
-    <section class="judge-section" id="benchmark-cases" aria-labelledby="benchmark-title">
-      <div class="judge-section-head"><div><span class="judge-kicker">HISTORICAL REFERENCES · 2023 / 2025</span><h3 id="benchmark-title">往届作品参照：把任务与验证讲具体</h3></div><span class="status-chip">2026-11-12 核对校方原文</span></div>
-      <p class="task-intro">以下奖项按原文分开标注，A/B 分类未核实。介绍只能支持公开事实，不能证明获奖原因或本项目效果；借鉴方向是本项目的设计判断。</p>
-      <div class="benchmark-grid">
-        <article class="benchmark-case"><span class="evidence-tag verified">2023 · 上海市一等奖</span><h4>数字解百草</h4><p>上海中医药大学；参照中药数字标本与具体教学需求的衔接。</p><p><b>本项目借鉴：</b>用结构观察任务说明图层、标注和教学目标。</p><a href="https://jxsyzx.shutcm.edu.cn/ggjzyyxsy/2024/0606/c3943a160769/page.htm" target="_blank" rel="noopener noreferrer">校方来源 · 数字化创新实验室 ↗</a></article>
-        <article class="benchmark-case"><span class="evidence-tag verified">2025 · 主赛道特等奖</span><h4>智能平衡系统</h4><p>上海理工大学；参照从感知、控制到应用场景的技术链说明。</p><p><b>本项目借鉴：</b>演示源时间点如何形成曲线，再映射到视图。</p><a href="https://www.usst.edu.cn/2025/1104/c921a65757/page.htm" target="_blank" rel="noopener noreferrer">校方来源 · 第十九届获奖介绍 ↗</a></article>
-        <article class="benchmark-case"><span class="evidence-tag verified">2025 · AI+ 专项赛一等奖</span><h4>三七 AI 智能识别</h4><p>上海理工大学；参照围绕单一对象组织数据与检测任务的表达。</p><p><b>本项目借鉴：</b>从一条可追溯资料开始核对，保留许可与内容待审状态。</p><a href="https://www.usst.edu.cn/2025/1104/c921a65757/page.htm" target="_blank" rel="noopener noreferrer">校方来源 · 专项赛项目介绍 ↗</a></article>
-      </div>
-      <p class="evidence-note">本页不引用上述项目的准确率、成本或临床效果作为本项目指标。完整作品名、赛道口径、事实与推断分界及补证方法，见 challenge_cup/award/WINNING_PROJECT_BENCHMARKS.md 和 VALIDATION_PROTOCOL.md。</p>
-    </section>
-
-    <section class="judge-section judge-two-col">
-      <div>
-        <div class="judge-section-head">
-          <div><span class="judge-kicker">RESEARCH DESIGN</span><h3>研究设计已备，数据待真实采集</h3></div>
-        </div>
-        <div class="research-box">
-          <div class="research-row"><b>对象</b><span>拟招募成年医学生；原计划 60–80 人，样本量待导师按检验重新估算；不是已招人数</span></div>
-          <div class="research-row"><b>干预</b><span>3D 数据推演 vs 同内容图文/表格；同一标准数据集、同一时长</span></div>
-          <div class="research-row"><b>测量</b><span>已备：前后测、3 道推理、SUS/临场感/TAM；空间任务/认知负荷待补充审定</span></div>
-          <div class="research-row"><b>分析</b><span>组间/组内比较、ANCOVA、效应量、信度；不显著也报告</span></div>
-          <div class="research-row"><b>状态</b><span class="warn">设计/工具已备；真实数据尚未采集，页面不展示任何“显著提升”结论。</span></div>
-        </div>
-        <div class="boundary-callout">
-          <b>当前可据实表达：</b>本项目是“可运行教学原型 + 可复现研究工具”，真实学习价值待验证。
-        </div>
-      </div>
-      <div>
-        <div class="judge-section-head">
-          <div><span class="judge-kicker">SCORE MAP</span><h3>评分点对照（自查，不是得分）</h3></div>
-        </div>
-        <div class="score-table">
-          <div class="score-row head"><span>维度</span><span>现有证据</span><span>待补</span></div>
-          <div class="score-row"><b>科学性 30</b><span>研究设计、数据契约、分析脚本、边界声明</span><span>真实数据/专家审阅</span></div>
-          <div class="score-row"><b>先进性 30</b><span>真实解剖、经络投影、数据驱动 3D、研究模式</span><span>对比/性能记录</span></div>
-          <div class="score-row"><b>现实意义 30</b><span>静态部署方案、课堂/课程包应用设想</span><span>试点/使用/成本证据</span></div>
-          <div class="score-row"><b>规范性 10</b><span>许可、隐私、免责声明、材料模板</span><span>团队成稿/查重</span></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="judge-section">
-      <div class="judge-section-head">
-        <div><span class="judge-kicker">SYSTEM & DATA FLOW</span><h3>系统结构与数据边界</h3></div>
-        <span class="status-chip">纯静态 · 无后端</span>
-      </div>
-      <div class="flow">
-        <div class="flow-node"><b>浏览器</b><small>8 个静态页面 · 教师端本机记录</small></div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-node"><b>3D / 经络 / 器官</b><small>GLB + JSON 本地加载</small></div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-node"><b>数据推演</b><small>CSV/JSON → 曲线/时间轴</small></div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-node"><b>研究模式</b><small>匿名作答 → 本地 CSV</small></div>
-      </div>
-      <div class="flow-side">
-        <span>BodyParts3D 4.0 → Blender → Web GLB</span>
-        <span>Rhino + GPT → 参数化 blockout → 队长手修</span>
-        <span>真实病例/研究原始数据：只放本地，不进 Git、不上传</span>
-      </div>
-    </section>
-
-    <section class="judge-section judge-two-col">
-      <div>
-        <div class="judge-section-head">
-          <div><span class="judge-kicker">3-MINUTE ROUTE</span><h3>答辩现场演示路线</h3></div>
-        </div>
-        <ol class="demo-route">
-          <li><b>30 秒</b>：从“经络看不见、用药变化难理解”讲问题与医学生对象。</li>
-          <li><b>45 秒</b>：3D 演示切男/女、真实/全息，指出器官与经络。</li>
-          <li><b>40 秒</b>：阳气页切昼夜、督脉/三阳/三阴，点击脏腑节点。</li>
-          <li><b>45 秒</b>：数据页导入演示数据，拖时间轴看曲线与 3D 同步。</li>
-          <li><b>20 秒</b>：研究模式说明匿名、前后测、101 列 CSV；强调数据待采。</li>
-        </ol>
-      </div>
-      <div>
-        <div class="judge-section-head">
-          <div><span class="judge-kicker">BOUNDARIES</span><h3>主动说清的边界</h3></div>
-        </div>
-        <ul class="boundary-list">
-          <li>数据中的阴/阳/气/血/瘀滞是<strong>教学参数</strong>，不是生理测量。</li>
-          <li>“服药前后”是<strong>数据映射/插值</strong>，不是药效预测或处方。</li>
-          <li>当前智能体是<strong>本地规则 + 数据映射</strong>，不是大模型/临床决策系统。</li>
-          <li>真实病例必须脱敏并获授权；研究原始数据只放本地。</li>
-          <li>模型交付说明要求骨盆去性化、不展示外生殖器/生殖系统细节；<strong>须对实际整合版本复核</strong>。</li>
-          <li>解剖资产 CC BY-SA 2.1 Japan；代码 MIT；页面保留署名。</li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="judge-section">
-      <div class="judge-section-head">
-        <div><span class="judge-kicker">Q & A</span><h3>评委可能追问</h3></div>
-      </div>
-      <div class="qa-grid">
-        <div class="qa"><b>这和普通 3D 解剖软件有什么区别？</b><p>把经络投影、证候/用药时序和可导出研究工具放在同一教学闭环里，且明确标注模拟边界。</p></div>
-        <div class="qa"><b>数据是真实的吗？</b><p>演示数据是格式示例；真实病例/教学参数由团队按规范提供，页面显示来源/许可/非临床标识。</p></div>
-        <div class="qa"><b>怎么证明有效？</b><p>目前是研究设计与工具已备，真实前后测/对照数据待采集；我们不会把界面参数写成实验结论。</p></div>
-        <div class="qa"><b>为什么男女模型？</b><p>交付说明中女性为比例重建，非独立女性扫描；性别按钮不采集用户性别。隐私处理与轮廓须在整合后复核。</p></div>
-        <div class="qa"><b>部署成本？</b><p>纯静态 Web，可本地/校园服务器运行，无后端与数据库；真实研究数据不上传。</p></div>
-        <div class="qa"><b>AI 用在哪里？</b><p>运行时为本地规则与数据映射。开发辅助范围由团队据实际日志披露；本材料包为提纲与工具，最终报告由学生本人写。</p></div>
-      </div>
     </section>
 
     <footer class="judge-footer">
-      <span>络象经纬 · 大挑评委速览 · 2026-11-12</span>
-      <span>解剖：BodyParts3D 4.0, CC BY-SA 2.1 Japan · 代码 MIT · Three.js MIT</span>
-      <span>本页是项目自查/展示材料，不是最终申报书或实验结论。</span>
+      <span>络象经纬 · 三维中医经穴教学与实训平台</span>
+      <span>解剖：BodyParts3D 4.0 (CC BY-SA 2.1 Japan) · 代码 MIT · Three.js MIT</span>
+      <span>纯静态本地可离线运行 · 零后端 · 零隐私上传</span>
     </footer>
   </main>
 

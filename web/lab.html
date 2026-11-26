@@ -51,10 +51,10 @@
           <section class="lab-tab-panel" data-lab-panel="locator">
             <div class="lab-card">
               <div class="lab-card-head">
-                <b>骨度分寸 · 腧穴自动定位算法</b>
+                <b>骨度分寸 · 十四经 42 穴自动定位</b>
                 <span class="lab-tag">GB/T 12346</span>
               </div>
-              <p class="lab-desc">基于 11 个体表骨性标志点自动折算局部「同身寸」，按身高与体型参数实时求解 18 个国标示范穴位三维体表坐标（Raycaster 贴合）。</p>
+              <p class="lab-desc">基于 11 个体表骨性标志点折算局部「同身寸」，按身高与体型参数实时求解十四经（每经 3 个核心要穴，共 42 穴）体表三维坐标，并支持导入针灸专家金标准 CSV 评测真实毫米误差。</p>
 
               <div class="param-grid">
                 <label class="param-row">
@@ -78,25 +78,27 @@
 
               <div class="locator-eval-bar">
                 <div>
-                  <span>算法解 vs 经线参考均值</span>
-                  <b id="locator-ref-diff">— mm</b>
+                  <span>体表网格贴合成功</span>
+                  <b id="locator-ref-diff">— / 42 穴</b>
                 </div>
                 <div>
                   <span>专家标注金标准误差 (MAE)</span>
-                  <b class="is-pending">待专家标注采集</b>
+                  <b id="locator-expert-mae" class="is-pending">待导入专家标注 CSV</b>
                 </div>
               </div>
 
               <div class="lab-btn-row">
                 <button id="btn-toggle-landmarks" type="button" class="lab-btn is-on">显示骨性标志点 (11)</button>
-                <button id="btn-export-acupoints" type="button" class="lab-btn">导出坐标 CSV</button>
+                <button id="btn-export-acupoints" type="button" class="lab-btn">导出 42 穴 CSV</button>
+                <label class="lab-btn" for="expert-csv-input" style="text-align:center;cursor:pointer">导入专家标注核验</label>
+                <input id="expert-csv-input" type="file" accept=".csv" hidden />
               </div>
             </div>
 
             <div class="lab-card">
               <div class="lab-card-head">
-                <b>国标示范经穴坐标表（点击聚焦 3D）</b>
-                <span class="lab-tag" id="acu-count-tag">18 穴</span>
+                <b>十四经国标要穴坐标表（点击聚焦 3D）</b>
+                <span class="lab-tag" id="acu-count-tag">42 穴</span>
               </div>
               <div id="acupoint-list" class="acupoint-list"></div>
             </div>
@@ -109,9 +111,10 @@
                 <b>3D 交互式点穴考核闭环</b>
                 <span class="lab-tag">距离评分</span>
               </div>
-              <p class="lab-desc">直接在右侧 3D 人体体表点击取穴，系统按三维欧氏偏差（mm）即时评分并标出偏差向量；结果可导出 CSV 导入教师端汇总班级薄弱穴位。</p>
+              <p class="lab-desc">直接在右侧 3D 人体体表点击取穴，系统按三维欧氏偏差（mm）即时评分并标出偏差向量；可作为「3D 实训组 vs 图文对照组」的统一客观后测指标，导出 CSV 导入教师端汇总。</p>
               <div class="lab-btn-row">
-                <button id="btn-exam-start" type="button" class="lab-btn primary">开始 5 题随机考核</button>
+                <button id="btn-exam-start" type="button" class="lab-btn primary">开始 5 题速测</button>
+                <button id="btn-exam-start-10" type="button" class="lab-btn">10 题标准对照测</button>
                 <button id="btn-exam-hint" type="button" class="lab-btn" disabled>显示骨度提示</button>
               </div>
             </div>
@@ -266,7 +269,7 @@
   </div>
 
   <script type="importmap">{"imports":{"three":"./vendor/three.module.js","three/addons/":"./vendor/addons/"}}</script>
-  <script type="module" src="src/lab.js?v=20261127lab"></script>
+  <script type="module" src="src/lab.js?v=20261127lab2"></script>
   <script type="module" src="src/defense-guide.js?v=20261126award"></script>
 </body>
 </html>

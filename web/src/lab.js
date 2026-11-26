@@ -1,9 +1,9 @@
 import * as THREE from "three";
 import { TCMScene3D } from "./scene3d.js?v=20261126qi";
 import { NORMAL_STATE } from "./knowledge.js?v=20261107defense";
-import { solveBoneCunAcupoints, scoreAcupointClick } from "./cun-locator.js?v=20261127lab";
-import { KG_NODES, KG_EDGES, KG_NODE_TYPES, getKgStats, getNodeNeighbors } from "./tcm-kg.js?v=20261127lab";
-import { PRESET_QUESTIONS, queryLocalQA } from "./local-qa.js?v=20261127lab";
+import { solveBoneCunAcupoints, scoreAcupointClick, evaluateAgainstExpertCsv } from "./cun-locator.js?v=20261127lab2";
+import { KG_NODES, KG_EDGES, KG_NODE_TYPES, getKgStats, getNodeNeighbors } from "./tcm-kg.js?v=20261127lab2";
+import { PRESET_QUESTIONS, queryLocalQA } from "./local-qa.js?v=20261127lab2";
 
 const $ = id => document.getElementById(id);
 
@@ -111,7 +111,7 @@ function runBoneCunSolver() {
   if (ui.cunFa) ui.cunFa.textContent = `${solved.cunMetrics.forearmCm} cm`;
   if (ui.cunLl) ui.cunLl.textContent = `${solved.cunMetrics.lowerLegCm} cm`;
   if (ui.locatorRefDiff) {
-    ui.locatorRefDiff.textContent = solved.meanRefDiffMm != null ? `${solved.meanRefDiffMm} mm` : "—";
+    ui.locatorRefDiff.textContent = `${solved.snappedCount} / ${solved.points.length} 穴`;
   }
   if (ui.acuCountTag) ui.acuCountTag.textContent = `${solved.points.length} 穴`;
 
@@ -219,17 +219,16 @@ function exportAcupointsCsv() {
 /* ============================================================
  * 2. 3D 交互式点穴考核闭环（Raycaster 精准拾取 + 毫米偏差打分）
  * ============================================================ */
-function startExam() {
+function startExam(questionCount = 5) {
   if (!solved) return;
-  // 精选 5 个代表性体表清晰易点的国标穴位并洗牌
-  const pool = ["ST36", "SP6", "CV12", "CV4", "ST25", "GV14", "GV4", "LI11", "PC6", "CV17"]
+  const pool = ["ST36", "SP6", "CV12", "CV4", "ST25", "GV14", "GV4", "LI11", "PC6", "CV17", "BL23", "BL13", "GB34", "SP9", "LU5", "HT7"]
     .map(id => solved.points.find(p => p.id === id))
     .filter(Boolean);
   for (let i = pool.length - 1; i > 0; i -= 1) {
     const j = Math.floor(Math.random() * (i + 1));
     [pool[i], pool[j]] = [pool[j], pool[i]];
   }
-  examQueue = pool.slice(0, 5);
+  examQueue = pool.slice(0, Math.min(questionCount, pool.length));
   examIndex = 0;
   examRecords.length = 0;
   examActive = true;
@@ -386,28 +385,41 @@ function renderKnowledgeGraph(activeId = "cls_weiqi") {
   const stats = getKgStats();
   if (ui.kgStatsTag) ui.kgStatsTag.textContent = `${stats.nodeCount} 节点 · ${stats.edgeCount} 边`;
 
-  const cols = ["classic", "organ", "meridian", "acupoint", "herb"];
-  const colX = { classic: 42, organ: 118, meridian: 195, acupoint: 272, herb: 348 };
-  const coords = new Map();
-
-  for (const col of cols) {
-    const items = KG_NODES.filter(n => n.type === col);
-    const step = 318 / Math.max(1, items.length);
-    items.forEach((n, idx) => {
-      coords.set(n.id, { x: colX[col], y: 34 + step * (idx + 0.5) });
-    });
-  }
-
+  // 85 节点全图聚焦渲染：在 5 列中优先展示当前节点及其 1–2 跳关联子图（每列最多展示 6 个关键节点，保持清晰可读）
   const neighborIds = new Set([activeId]);
   KG_EDGES.forEach(e => {
     if (e.from === activeId) neighborIds.add(e.to);
     if (e.to === activeId) neighborIds.add(e.from);
   });
+  const secondHop = new Set(neighborIds);
+  KG_EDGES.forEach(e => {
+    if (neighborIds.has(e.from)) secondHop.add(e.to);
+    if (neighborIds.has(e.to)) secondHop.add(e.from);
+  });
+
+  const cols = ["classic", "organ", "meridian", "acupoint", "herb"];
+  const colX = { classic: 42, organ: 118, meridian: 195, acupoint: 272, herb: 348 };
+  const coords = new Map();
+  const visibleNodes = [];
+
+  for (const col of cols) {
+    const allCol = KG_NODES.filter(n => n.type === col);
+    const prioritized = [
+      ...allCol.filter(n => n.id === activeId),
+      ...allCol.filter(n => n.id !== activeId && neighborIds.has(n.id)),
+      ...allCol.filter(n => !neighborIds.has(n.id) && secondHop.has(n.id)),
+      ...allCol.filter(n => !secondHop.has(n.id)),
+    ].slice(0, 6);
+    const step = 318 / Math.max(1, prioritized.length);
+    prioritized.forEach((n, idx) => {
+      coords.set(n.id, { x: colX[col], y: 34 + step * (idx + 0.5) });
+      visibleNodes.push(n);
+    });
+  }
 
   const svgNS = "http://www.w3.org/2000/svg";
   ui.kgSvg.innerHTML = "";
 
-  // Column headers
   cols.forEach(c => {
     const t = document.createElementNS(svgNS, "text");
     t.setAttribute("x", String(colX[c]));
@@ -420,7 +432,6 @@ function renderKnowledgeGraph(activeId = "cls_weiqi") {
     ui.kgSvg.appendChild(t);
   });
 
-  // Edges
   KG_EDGES.forEach(e => {
     const a = coords.get(e.from);
     const b = coords.get(e.to);
@@ -433,8 +444,7 @@ function renderKnowledgeGraph(activeId = "cls_weiqi") {
     ui.kgSvg.appendChild(path);
   });
 
-  // Nodes
-  KG_NODES.forEach(n => {
+  visibleNodes.forEach(n => {
     const c = coords.get(n.id);
     if (!c) return;
     const meta = KG_NODE_TYPES[n.type];
@@ -455,7 +465,9 @@ function renderKnowledgeGraph(activeId = "cls_weiqi") {
     const label = document.createElementNS(svgNS, "text");
     label.setAttribute("y", "3");
     if (isAct) label.setAttribute("fill", "#ffffff");
-    const shortLabel = n.label.replace(/（.*?）/g, "").replace(/《|》/g, "").slice(0, 6);
+    const shortLabel = n.type === "acupoint"
+      ? n.label.split(" ")[0]
+      : n.label.replace(/（.*?）/g, "").replace(/《|》/g, "").replace(/ 经穴标准$/, "").slice(0, 6);
     label.textContent = shortLabel;
 
     g.append(rect, label);
@@ -640,9 +652,26 @@ function bindEvents() {
     renderLocator3D();
   });
   ui.btnExportAcu?.addEventListener("click", exportAcupointsCsv);
+  $("expert-csv-input")?.addEventListener("change", async e => {
+    const file = e.target.files?.[0];
+    if (!file || !solved) return;
+    const res = evaluateAgainstExpertCsv(solved.points, await file.text());
+    const el = $("locator-expert-mae");
+    if (el) {
+      if (res.ok) {
+        el.classList.remove("is-pending");
+        el.textContent = `MAE ${res.maeMm} mm · RMSE ${res.rmseMm} mm (${res.matched}穴)`;
+      } else {
+        el.classList.add("is-pending");
+        el.textContent = res.message;
+      }
+    }
+    e.target.value = "";
+  });
 
   // Exam events
-  ui.btnExamStart?.addEventListener("click", startExam);
+  ui.btnExamStart?.addEventListener("click", () => startExam(5));
+  $("btn-exam-start-10")?.addEventListener("click", () => startExam(10));
   ui.btnExamHint?.addEventListener("click", () => {
     if (ui.examQHint) ui.examQHint.hidden = !ui.examQHint.hidden;
   });

@@ -2,8 +2,8 @@
  * 络象经纬 · 本地离线可溯源问答引擎（知识图谱 + 关键词加权检索 + 3D 联动指令）
  * 严格限定于中医理论教学问答，自动拦截临床诊断、处方与剂量类提问；100% 本地运行、零上传。
  */
-import { BONE_CUN_RULES } from "./cun-locator.js?v=20261127lab";
-import { KG_NODES } from "./tcm-kg.js?v=20261127lab";
+import { BONE_CUN_RULES } from "./cun-locator.js?v=20261127lab2";
+import { KG_NODES } from "./tcm-kg.js?v=20261127lab2";
 
 const CLINICAL_GUARD_RE = /(开药|开方|处方|几克|多少克|剂量|吃什么药|诊断|确诊|癌症|肿瘤|怀孕|孕妇|急救|血压高怎么吃|血糖高怎么吃)/;
 

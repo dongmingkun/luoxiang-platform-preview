@@ -1,4 +1,6 @@
-import { TCMScene3D } from "./scene3d.js?v=20261126qi";
+import { YangqiScene } from "./yangqi-scene.js";
+import { SLOTS as SHICHEN_SCHEDULE, weiAt } from "./yangqi-clock.js";
+import { setupStomachAtlas } from "./yangqi-atlas.js";
 import { NORMAL_STATE } from "./knowledge.js?v=20261107defense";
 
 const $ = id => document.getElementById(id);
@@ -7,38 +9,22 @@ const SIX_FU = ["Stomach", "SmallIntestine", "LargeIntestine", "Gallbladder", "B
 const YANG_MERIDIANS = ["LI", "SI", "TE", "ST", "GB", "BL"];
 const YIN_MERIDIANS = ["LU", "HT", "PC", "SP", "KI", "LR"];
 
-// 十二时辰子午流注 + 《灵枢·卫气行》昼阳 25 度 / 夜阴 25 度（肾→心→肺→肝→脾相克传变）
-const SHICHEN_SCHEDULE = [
-  { key: "mao", name: "卯时", short: "卯", hours: "05:00–07:00", phase: "day", meridian: "LI", meridianName: "手阳明大肠经当令", organ: "LargeIntestine", focusOrgan: "Lungs", route: "昼行阳分（25度）· 平旦卫气出目行表", acu: "合谷 LI4 · 曲池 LI11" },
-  { key: "chen", name: "辰时", short: "辰", hours: "07:00–09:00", phase: "day", meridian: "ST", meridianName: "足阳明胃经当令", organ: "Stomach", focusOrgan: "Stomach", route: "昼行阳分（25度）· 中焦受纳通降", acu: "天枢 ST25 · 足三里 ST36" },
-  { key: "si", name: "巳时", short: "巳", hours: "09:00–11:00", phase: "day", meridian: "SP", meridianName: "足太阴脾经当令", organ: "Spleen", focusOrgan: "Spleen", route: "昼行阳分（25度）· 脾主升清输精", acu: "三阴交 SP6 · 阴陵泉 SP9" },
-  { key: "wu", name: "午时", short: "午", hours: "11:00–13:00", phase: "day", meridian: "HT", meridianName: "手少阴心经当令", organ: "Heart", focusOrgan: "Heart", route: "昼行阳分（25度）· 重阳之极，心阳温通", acu: "少海 HT3 · 神门 HT7" },
-  { key: "wei", name: "未时", short: "未", hours: "13:00–15:00", phase: "day", meridian: "SI", meridianName: "手太阳小肠经当令", organ: "SmallIntestine", focusOrgan: "Heart", route: "昼行阳分（25度）· 分清泌浊", acu: "后溪 SI3 · 小海 SI8" },
-  { key: "shen", name: "申时", short: "申", hours: "15:00–17:00", phase: "day", meridian: "BL", meridianName: "足太阳膀胱经当令", organ: "Bladder", focusOrgan: "Kidneys", route: "昼行阳分（25度）· 阳气循背下行", acu: "肺俞 BL13 · 肾俞 BL23 · 委中 BL40" },
-  { key: "you", name: "酉时", short: "酉", hours: "17:00–19:00", phase: "day", meridian: "KI", meridianName: "足少阴肾经当令", organ: "Kidneys", focusOrgan: "Kidneys", route: "阳尽入阴之交 · 卫气将由足少阴入肾", acu: "涌泉 KI1 · 太溪 KI3" },
-  { key: "xu", name: "戌时", short: "戌", hours: "19:00–21:00", phase: "night", meridian: "KI", meridianName: "夜入五脏 ① 肾（足少阴）", organ: "Kidneys", focusOrgan: "Kidneys", route: "《灵枢·卫气行》夜行阴分（25度）：首入于肾", acu: "太溪 KI3 · 气穴 KI13" },
-  { key: "hai", name: "亥时", short: "亥", hours: "21:00–23:00", phase: "night", meridian: "HT", meridianName: "夜入五脏 ② 肾→心", organ: "Heart", focusOrgan: "Heart", route: "《灵枢·卫气行》夜行阴分（25度）：肾注于心", acu: "神门 HT7 · 内关 PC6" },
-  { key: "zi", name: "子时", short: "子", hours: "23:00–01:00", phase: "night", meridian: "LU", meridianName: "夜入五脏 ③ 心→肺", organ: "Lungs", focusOrgan: "Lungs", route: "《灵枢·卫气行》夜行阴分（25度）：心注于肺", acu: "中府 LU1 · 太渊 LU9" },
-  { key: "chou", name: "丑时", short: "丑", hours: "01:00–03:00", phase: "night", meridian: "LR", meridianName: "夜入五脏 ④ 肺→肝", organ: "Liver", focusOrgan: "Liver", route: "《灵枢·卫气行》夜行阴分（25度）：肺注于肝", acu: "太冲 LR3 · 期门 LR14" },
-  { key: "yin", name: "寅时", short: "寅", hours: "03:00–05:00", phase: "night", meridian: "SP", meridianName: "夜入五脏 ⑤ 肝→脾（复注肾）", organ: "Spleen", focusOrgan: "Spleen", route: "《灵枢·卫气行》夜行阴分（25度）：肝注于脾，复归于肾为周", acu: "三阴交 SP6 · 大横 SP15" },
-];
-
 const REAL_LAYERS = {
   skin: true, organs: true, skeleton: false, meridians: true,
   vessels: false, flow: true, clock: false, taiji: false,
 };
 const HOLO_LAYERS = {
   skin: true, organs: true, skeleton: true, meridians: true,
-  vessels: true, flow: true, clock: true, taiji: true,
+  vessels: true, flow: true, clock: false, taiji: true,
 };
 const LAYER_DEFS = [
   ["skin", "皮肤"], ["organs", "器官"], ["skeleton", "骨骼"], ["meridians", "经络"],
-  ["vessels", "血脉"], ["flow", "气血流"], ["clock", "流注环"], ["taiji", "太极/丹田"],
+  ["vessels", "血脉"], ["flow", "气血流"], ["taiji", "太极/丹田"],
 ];
 let layers = { ...REAL_LAYERS };
 
 function opacityLabel(v) {
-  return v < 0.04 ? "透视" : v < 0.12 ? "清透" : v < 0.22 ? "标准" : "可见";
+  return Math.round(v * 100) + "%";
 }
 
 function buildLayerToggles() {
@@ -51,7 +37,7 @@ function buildLayerToggles() {
     b.addEventListener("click", () => {
       layers[key] = !layers[key];
       b.classList.toggle("is-on", layers[key]);
-      if (scene) scene.setLayers(layers);
+      if (scene) { scene.clearInspection(); scene.setLayers(layers); }
     });
     ui.layerToggles?.appendChild(b);
   }
@@ -82,6 +68,7 @@ const ui = {
 };
 
 let scene = null;
+let atlas = null;
 let shichenIdx = 1; // 默认辰时（07:00-09:00，足阳明胃经）
 let phase = "day";
 let channel = "shichen";
@@ -99,7 +86,7 @@ function buildShichenTicks() {
   SHICHEN_SCHEDULE.forEach((slot, idx) => {
     const btn = document.createElement("button");
     btn.type = "button";
-    btn.className = `shichen-tick${slot.phase === "night" ? " is-night-slot" : ""}${idx === shichenIdx ? " is-on" : ""}`;
+    btn.className = `shichen-tick${weiAt(idx).phase === "night" ? " is-night-slot" : ""}${idx === shichenIdx ? " is-on" : ""}`;
     btn.textContent = slot.short;
     btn.title = `${slot.name}（${slot.hours}）· ${slot.meridianName}`;
     btn.dataset.shichenIdx = String(idx);
@@ -126,7 +113,7 @@ function highlightOrganUI(organKey, scrollNote = false) {
 }
 
 function phaseText() {
-  return phase === "day" ? "昼 · 卫阳行阳二十五度" : "夜 · 卫阳入阴二十五度";
+  return "卫气 · " + weiAt(shichenIdx).label;
 }
 
 function channelLabel() {
@@ -134,12 +121,10 @@ function channelLabel() {
   return {
     shichen: `${slot.name} · ${slot.meridianName}`,
     du: "督脉 · 阳脉之海（命门→大椎→百会）",
-    yang: "三阳经 · 躯干→四肢布散",
-    yin: "三阴经 · 四肢→五脏归藏",
+    yang: "手足三阳 · 六条阳经",
+    yin: "手足三阴 · 六条阴经",
     zangfu: "五脏六腑 · 左升右降中枢",
-    fu: phase === "day"
-      ? "阳主阴从 · 昼行表卫外（阴从于内）"
-      : "阳主阴从 · 夜入阴宅温养（阴为阳之宅）",
+    fu: phase === "day" ? "卫气昼行 · 阳分路线" : "卫气夜行 · 肾→心→肺→肝→脾→肾",
   }[channel] || "";
 }
 
@@ -150,6 +135,8 @@ function setChannelButtons() {
 }
 
 function setPhaseButtons() {
+  ui.day.setAttribute("aria-pressed", String(phase === "day"));
+  ui.night.setAttribute("aria-pressed", String(phase === "night"));
   ui.day?.classList.toggle("is-on", phase === "day");
   ui.night?.classList.toggle("is-on", phase === "night");
 }
@@ -158,28 +145,30 @@ function updateShichenUI() {
   const slot = currentSlot();
   if (ui.shichenSlider) ui.shichenSlider.value = String(shichenIdx);
   document.querySelectorAll(".shichen-tick").forEach(b => {
-    b.classList.toggle("is-on", Number(b.dataset.shichenIdx) === shichenIdx);
+    const current = Number(b.dataset.shichenIdx) === shichenIdx;
+    b.classList.toggle("is-on", current);
+    b.setAttribute("aria-pressed", String(current));
   });
-  if (ui.shichenCurrentLabel) {
-    ui.shichenCurrentLabel.innerHTML = `<b>${slot.name}</b> · ${slot.hours} · ${slot.meridianName}`;
-  }
-  if (ui.shichenDegreeTag) {
-    ui.shichenDegreeTag.textContent = slot.phase === "day" ? "昼 · 阳分 25度" : "夜 · 阴分 25度";
-  }
-  if (ui.hudName) ui.hudName.textContent = slot.name;
-  if (ui.hudHours) ui.hudHours.textContent = slot.hours;
-  if (ui.hudMeridian) ui.hudMeridian.textContent = slot.meridianName;
-  if (ui.hudRoute) ui.hudRoute.textContent = slot.route;
-  if (ui.hudAcu) ui.hudAcu.textContent = `示范穴位（GB/T 12346）：${slot.acu}`;
-  if (ui.viewState) ui.viewState.textContent = `${slot.name} · ${slot.phase === "day" ? "卫阳行阳分" : "卫阳入五脏"}`;
+  const wei = weiAt(shichenIdx);
+  ui.shichenSlider.setAttribute("aria-valuetext", slot.name + " " + slot.hours);
+  ui.shichenCurrentLabel.textContent = slot.meridianName;
+  ui.shichenDegreeTag.textContent = wei.label + " · " + wei.range;
+  $("wei-progress").value = wei.end;
+  $("slot-hours").textContent = slot.name + " · " + slot.hours;
+  ui.hudName.textContent = slot.name;
+  ui.hudHours.textContent = slot.hours;
+  ui.hudMeridian.textContent = slot.meridianName;
+  ui.hudRoute.textContent = slot.route;
+  ui.hudAcu.textContent = "经穴举例 · " + slot.acu;
+  ui.viewState.textContent = slot.name + " · " + slot.meridianName.replace("当令", "");
 }
 
 function applyFuYang() {
   if (!scene) return;
   if (phase === "day") {
-    scene.setAffected(["Kidneys", "Brain"], ["DU", ...YANG_MERIDIANS]);
+    scene.setAffected([], YANG_MERIDIANS);
   } else {
-    scene.setAffected(["Kidneys", ...FIVE_ZANG], ["DU", ...YIN_MERIDIANS]);
+    scene.setAffected(FIVE_ZANG, []);
   }
 }
 
@@ -187,8 +176,9 @@ function applyChannel() {
   setChannelButtons();
   const slot = currentSlot();
   if (scene) {
+    scene.clearInspection();
     if (channel === "shichen") {
-      scene.setAffected([slot.organ], [slot.meridian]);
+      scene.setAffected(slot.organ ? [slot.organ] : [], [slot.meridian]);
     } else if (channel === "fu") {
       applyFuYang();
     } else if (channel === "du") {
@@ -201,16 +191,16 @@ function applyChannel() {
       scene.setAffected([...FIVE_ZANG, "Stomach"], []);
     }
   }
-  if (channel === "shichen" && slot.focusOrgan) {
-    highlightOrganUI(slot.focusOrgan, false);
+  if (channel === "shichen") {
+    highlightOrganUI(slot.organ, false);
   }
+  atlas?.setChannel(channel === "shichen" ? slot.meridian : null);
   if (ui.focusLabel) ui.focusLabel.textContent = channelLabel();
 }
 
 function applyShichen(idx) {
   shichenIdx = ((idx % SHICHEN_SCHEDULE.length) + SHICHEN_SCHEDULE.length) % SHICHEN_SCHEDULE.length;
-  const slot = currentSlot();
-  phase = slot.phase;
+  phase = weiAt(shichenIdx).phase;
   document.body.classList.toggle("is-night", phase === "night");
   setPhaseButtons();
   updateShichenUI();
@@ -222,19 +212,21 @@ function applyShichen(idx) {
 }
 
 function applyPhasePreset(next) {
-  const targetIdx = next === "night" ? 7 : 1; // 戌时（夜首入肾）或 辰时（昼足阳明）
+  const targetIdx = next === "night" ? 6 : 0;
   channel = "shichen";
   applyShichen(targetIdx);
 }
 
 function applyMode(mode) {
+  atlas?.cancelMark();
   visualMode = mode === "holo" ? "holo" : "real";
   layers = { ...(visualMode === "real" ? REAL_LAYERS : HOLO_LAYERS) };
   syncLayerPills();
-  const opacity = visualMode === "real" ? 0.16 : 0.10;
+  const opacity = visualMode === "real" ? 0.38 : 0.07;
   if (ui.skinOpacity) ui.skinOpacity.value = opacity;
   if (ui.skinOpacityValue) ui.skinOpacityValue.textContent = opacityLabel(opacity);
   if (scene) {
+    scene.clearInspection();
     scene.setVisualMode(visualMode);
     scene.setLayers(layers);
     scene.setSkinOpacity(opacity);
@@ -246,6 +238,7 @@ function applyMode(mode) {
 async function changeSex(next) {
   if (!scene || switching || next === sex) return;
   switching = true;
+  atlas.suspend();
   ["btn-sex-male", "btn-sex-female"].forEach(id => { const b = $(id); if (b) b.disabled = true; });
   try {
     const ok = await scene.setSex(next);
@@ -253,12 +246,14 @@ async function changeSex(next) {
     sex = next;
     applyMode(visualMode);
     applyShichen(shichenIdx);
+    $("btn-rotate").classList.remove("is-on");
     $("btn-sex-male")?.classList.toggle("is-on", sex === "male");
     $("btn-sex-female")?.classList.toggle("is-on", sex === "female");
   } catch (e) {
     console.error(e);
     if (ui.focusLabel) ui.focusLabel.textContent = "模型切换失败";
   } finally {
+    atlas.attach(scene);
     switching = false;
     ["btn-sex-male", "btn-sex-female"].forEach(id => { const b = $(id); if (b) b.disabled = false; });
   }
@@ -280,6 +275,7 @@ function bindUI() {
   const tabs = [...document.querySelectorAll("[data-yq-tab]")];
   const panels = [...document.querySelectorAll("[data-yq-panel]")];
   const switchTab = id => {
+    if (id !== "meridians") atlas?.cancelMark();
     tabs.forEach(t => t.setAttribute("aria-selected", String(t.dataset.yqTab === id)));
     panels.forEach(p => { p.hidden = p.dataset.yqPanel !== id; });
   };
@@ -300,6 +296,20 @@ function bindUI() {
   ui.day?.addEventListener("click", () => { stopCycle(); applyPhasePreset("day"); });
   ui.night?.addEventListener("click", () => { stopCycle(); applyPhasePreset("night"); });
 
+  for (const [id, delta] of [["slot-prev", -1], ["slot-next", 1]]) {
+    $(id).addEventListener("click", () => {
+      stopCycle();
+      channel = "shichen";
+      applyShichen(shichenIdx + delta);
+    });
+  }
+  $("atlas-open").addEventListener("click", () => {
+    stopCycle();
+    channel = "shichen";
+    applyShichen(1);
+    switchTab("meridians");
+    $("st-point").focus();
+  });
   ui.shichenSlider?.addEventListener("input", e => {
     stopCycle();
     channel = "shichen";
@@ -316,11 +326,20 @@ function bindUI() {
 
   // 左侧 2D 升降图节点点击 → 联动 3D 聚焦 + 左侧要点高亮
   document.querySelectorAll(".organ-node").forEach(node => {
+    node.setAttribute("role", "button");
+    node.setAttribute("tabindex", "0");
+    node.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        node.dispatchEvent(new MouseEvent("click"));
+      }
+    });
     node.addEventListener("click", () => {
       const key = node.dataset.organ;
       if (!key) return;
+      stopCycle();
       highlightOrganUI(key, true);
-      if (scene) scene.focusOrgan(key);
+      if (scene) { scene.clearInspection(); scene.focusOrgan(key); $("btn-rotate").classList.remove("is-on"); }
       if (ui.focusLabel) ui.focusLabel.textContent = `聚焦脏腑 · ${node.querySelector("text")?.textContent || key}`;
     });
   });
@@ -330,6 +349,7 @@ function bindUI() {
     const key = e.detail?.key;
     const zh = e.detail?.meta?.zh || key;
     if (!key) return;
+    stopCycle();
     switchTab("axis");
     highlightOrganUI(key, true);
     if (ui.focusLabel) ui.focusLabel.textContent = `聚焦脏腑 · ${zh}`;
@@ -339,7 +359,19 @@ function bindUI() {
   $("btn-sex-female")?.addEventListener("click", () => changeSex("female"));
   $("btn-mode-real")?.addEventListener("click", () => applyMode("real"));
   $("btn-mode-holo")?.addEventListener("click", () => applyMode("holo"));
-  $("btn-view-reset")?.addEventListener("click", () => scene?.resetView());
+  for (const [id, organ, view] of [["inspect-stomach", "Stomach", "front"], ["inspect-kidneys", "Kidneys", "back"]]) {
+    $(id).addEventListener("click", () => {
+      if (!scene || switching) return;
+      atlas?.cancelMark();
+      stopCycle();
+      if (!layers.organs) { layers.organs = true; scene.setLayers(layers); syncLayerPills(); }
+      scene.inspectOrgan(organ, view);
+      highlightOrganUI(organ);
+      $("btn-rotate").classList.remove("is-on");
+      ui.focusLabel.textContent = organ === "Stomach" ? "正面 · 单独显示胃" : "背面 · 单独显示双肾";
+    });
+  }
+  $("btn-view-reset")?.addEventListener("click", () => { scene?.resetView(); $("btn-rotate").classList.remove("is-on"); applyChannel(); });
   $("btn-rotate")?.addEventListener("click", e => {
     if (!scene) return;
     scene.controls.autoRotate = !scene.controls.autoRotate;
@@ -355,13 +387,16 @@ function bindUI() {
 async function boot() {
   buildLayerToggles();
   buildShichenTicks();
+  atlas = setupStomachAtlas();
   bindUI();
   applyShichen(shichenIdx);
-  scene = new TCMScene3D($("canvas-wrap"), $("labels"), ui.loadingText);
+  const loadingScene = new YangqiScene($("canvas-wrap"), $("labels"), ui.loadingText);
   try {
-    await scene.init();
+    await loadingScene.init();
+    scene = loadingScene;
+    atlas.attach(scene);
     scene.setState(NORMAL_STATE, [], []);
-    applyMode("real");
+    applyMode(visualMode);
     applyShichen(shichenIdx);
     ui.loading.classList.add("is-hidden");
     setTimeout(() => ui.loading.remove(), 500);

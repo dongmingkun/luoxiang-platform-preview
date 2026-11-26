@@ -717,9 +717,9 @@ function setupLearning() {
   const isExp = state.group === 1;
   $("#experiment-block").hidden = !isExp;
   $("#control-block").hidden = isExp;
-  $("#learning-title").textContent = isExp ? "3D 智能体学习任务" : "图文材料阅读";
+  $("#learning-title").textContent = isExp ? "三维教学系统学习任务" : "图文材料阅读";
   $("#learning-desc").textContent = isExp
-    ? "请按任务单使用 3D 智能体与数据推演页，重点观察“用药事件—阴阳气血曲线—脏腑/经络 3D 变化”的对应关系。只使用页面里的标准案例/演示数据。"
+    ? "请按任务单使用三维教学系统与数据推演页，重点观察“用药事件—阴阳气血曲线—脏腑/经络 3D 变化”的对应关系。只使用页面里的标准案例/演示数据。"
     : "请阅读下面的图文材料，重点理解阴阳、五行、脏腑、气血、经络、子午流注，以及数据表中用药前后的变化方向。";
   $("#task-done").checked = Boolean(state.taskCompleted);
   $("#btn-learning").disabled = !$("#task-done").checked;
