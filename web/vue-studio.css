@@ -1,0 +1,68 @@
+/* Responsive Vue presentation feedback; the anatomy canvas is never remounted. */
+.studio-body .inspector-tabs { position: relative; isolation: isolate; }
+.studio-body .inspector-tabs button { position: relative; z-index: 1; background: transparent; box-shadow: none; }
+.studio-body .inspector-tabs button[aria-selected="true"] { background: transparent; box-shadow: none; }
+.studio-body .vue-tab-indicator {
+  position: absolute; z-index: 0; left: 4px; top: 4px; bottom: 4px;
+  width: calc((100% - 8px) / 3); border-radius: 7px; background: #fffefa;
+  box-shadow: inset 0 -2px #a75239; pointer-events: none;
+  transition: transform 240ms cubic-bezier(.2,.7,.2,1);
+}
+.studio-body .vue-heading-caption { min-width: 0; position: relative; }
+.studio-body .vue-heading-caption > span { font-size: 10px; color: #536c70; letter-spacing: .08em; }
+.studio-body .vue-heading-caption h2 { white-space: nowrap; }
+.studio-body .vue-caption-enter-active { transition: opacity 180ms ease, transform 180ms ease; }
+.studio-body .vue-caption-leave-active { position: absolute; transition: opacity 120ms ease, transform 120ms ease; }
+.studio-body .vue-caption-enter-from { opacity: 0; transform: translateY(6px); }
+.studio-body .vue-caption-leave-to { opacity: 0; transform: translateY(-5px); }
+.studio-body .stage-range-head { position: relative; }
+.studio-body #stage-day-slider {
+  appearance: none; -webkit-appearance: none; border: 0; border-radius: 99px;
+  height: 6px; margin-block: 8px;
+  background: linear-gradient(to right, #a75239 0 var(--vue-progress), #dbe3dc var(--vue-progress) 100%);
+}
+.studio-body #stage-day-slider::-webkit-slider-thumb {
+  appearance: none; width: 17px; height: 17px; border-radius: 50%;
+  border: 3px solid #fffefa; background: #a75239; box-shadow: 0 0 0 1px #b77a61;
+  transition: box-shadow 150ms ease;
+}
+.studio-body #stage-day-slider::-moz-range-thumb {
+  width: 12px; height: 12px; border-radius: 50%; border: 3px solid #fffefa; background: #a75239;
+}
+.studio-body #stage-day-slider:hover::-webkit-slider-thumb { box-shadow: 0 0 0 5px #a752391c; }
+.studio-body #stage-day-slider:disabled { opacity: .5; cursor: default; }
+.studio-body .vue-play-icon { display: inline-block; min-width: 13px; }
+.studio-body .vue-feedback-root {
+  position: absolute; top: 68px; left: 0; right: 0; z-index: 8;
+  display: flex; justify-content: center; pointer-events: none; padding-inline: 12px;
+}
+.studio-body .vue-feedback {
+  display: flex; align-items: center; gap: 7px; padding: 8px 13px;
+  color: #344d50; background: #fffef8f2; border: 1px solid #bacdc1;
+  box-shadow: 0 4px 16px #263f3712; border-radius: 8px;
+  font-size: 12px; max-width: 100%;
+}
+.studio-body .vue-feedback i { width: 6px; height: 6px; border-radius: 50%; background: #a75239; }
+.studio-body .vue-feedback-enter-active,
+.studio-body .vue-feedback-leave-active { transition: opacity 200ms ease, transform 200ms ease; }
+.studio-body .vue-feedback-enter-from,
+.studio-body .vue-feedback-leave-to { opacity: 0; transform: translateY(-7px); }
+.studio-body .studio-nav-links a,
+.studio-body .sample,
+.studio-body .tool { transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease; }
+.studio-body.vue-studio-ready { scroll-behavior: smooth; }
+@media (max-width: 540px) {
+  .studio-body .vue-feedback-root { top: 103px; }
+  .studio-body .vue-heading-caption h2 { font-size: 17px; }
+  .studio-body .stage-range-head small { display: block; margin: 2px 0 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .studio-body.vue-studio-ready { scroll-behavior: auto; }
+  .studio-body .vue-tab-indicator { transition: none !important; }
+  .studio-body [class*="vue-caption-"],
+  .studio-body [class*="vue-feedback-"] { transition: none !important; transform: none !important; }
+  .studio-body .studio-nav-links a,
+  .studio-body .sample,
+  .studio-body .tool,
+  .studio-body #stage-day-slider::-webkit-slider-thumb { transition: none !important; }
+}

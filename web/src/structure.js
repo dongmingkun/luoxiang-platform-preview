@@ -1,3 +1,4 @@
+import { integratedLink, isPlatformPages, validateEmbeddedGLB, embeddedManager } from "./model-files.js";
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -144,24 +145,10 @@ function standardView(view = 'front', preserveZoom = false, animate = true) {
   }
 }
 
-function validateEmbeddedGLB(buffer) {
-  if (buffer.byteLength < 28) throw new Error('文件过短，无法识别 GLB。');
-  const view = new DataView(buffer);
-  if (view.getUint32(0, true) !== 0x46546c67 || view.getUint32(4, true) !== 2 || view.getUint32(8, true) !== buffer.byteLength) {
-    throw new Error('请选择有效的 glTF 2.0 二进制 GLB。');
-  }
-  const size = view.getUint32(12, true);
-  if (20 + size > buffer.byteLength || view.getUint32(16, true) !== 0x4e4f534a) throw new Error('GLB JSON 数据块不完整。');
-  const json = JSON.parse(new TextDecoder().decode(new Uint8Array(buffer, 20, size)));
-  if ([...(json.buffers || []), ...(json.images || [])].some(item => item.uri)) {
-    throw new Error('仅接受资源内嵌的 GLB；请在建模工具中打包纹理后导出。');
-  }
-  return json;
-}
-
 function status(text, error = false) {
   $('source-status').textContent = text;
   $('source-status').classList.toggle('error', error);
+  if (!root && error) $('empty-state').querySelector('p').textContent = text;
 }
 
 function updateSystemCounts() {
@@ -178,7 +165,7 @@ function updateSystemCounts() {
 
 async function loadBuffer(buffer, name, token) {
   const json = validateEmbeddedGLB(buffer);
-  const parsed = await new GLTFLoader().parseAsync(buffer, '');
+  const parsed = await new GLTFLoader(embeddedManager()).parseAsync(buffer, '');
   if (token !== loadToken) { dispose(parsed.scene); return; }
   const found = [];
   parsed.scene.traverse(mesh => {
@@ -241,7 +228,8 @@ async function loadBuffer(buffer, name, token) {
   organs.clear();
   for (const [key, value] of sortedOrgans) organs.set(key, value);
 
-  selected = null; isolated = false; expansion = 0; system = 'all';
+  selected = null; isolated = false; expansion = 0;
+  if (![...organs.keys()].some(key => META[key]?.[2] === system)) system = 'all';
   $('explode').value = '0';
   $('explode-value').textContent = '0%';
   $('explode-warning').hidden = true;
@@ -250,7 +238,7 @@ async function loadBuffer(buffer, name, token) {
   $('mesh-count').textContent = `${organs.size} 个器官结构 · ${triangles.toLocaleString('zh-CN')} 三角面`;
   status(`${name} · 已就绪${json.asset?.extras?.project === '络象经纬' ? ' · Rhino 教学版' : ''}`);
   updateSystemCounts();
-  setSystem('all', false);
+  setSystem(system, false);
   resize();
   standardView('front', false, false);
 }
@@ -273,8 +261,9 @@ async function loadIntegrated(sex = $('integrated-sex').value, silentIfMissing =
   try {
     status(`正在载入 ${name}…`);
     const response = await fetch(`assets/${name}`);
+    if (token !== loadToken) return;
     if (!response.ok) {
-      if (silentIfMissing) {
+      if (response.status === 404 && silentIfMissing) {
         status('未检测到本机预置模型，请点击上方按钮载入本机 GLB 文件。');
         return;
       }
@@ -283,8 +272,7 @@ async function loadIntegrated(sex = $('integrated-sex').value, silentIfMissing =
     await loadBuffer(await response.arrayBuffer(), name, token);
   } catch (error) {
     if (token === loadToken) {
-      if (silentIfMissing) status('支持原解剖 GLB 与 Rhino 结构教学版。点击上方载入本机文件。');
-      else status(error.message, true);
+      status(error.message || '模型无法读取，请选择本机 GLB 文件重试。', true);
     }
   }
 }
@@ -639,7 +627,18 @@ resize();
 standardView('front', false, false);
 animate();
 // Automatically load local integrated male model if available on the preview server; silently fallback if absent.
-loadIntegrated('male', true);
+const localLink = $('structure-integrated-link');
+localLink.href = integratedLink("structure.html");
+localLink.hidden = location.origin === new URL(localLink.href).origin;
+if (isPlatformPages) {
+  $('integrated-sex').closest('.integrated-row').hidden = true;
+  $('model-badge').textContent = '待选本机文件';
+  $('empty-state').querySelector('p').textContent = '选择已取得的教学 GLB，或打开运行在此电脑 8020 端口的完整版。';
+  status('网页已就绪，请选择本机教学 GLB。');
+  updateSystemCounts();
+} else {
+  loadIntegrated('male', true);
+}
 
 window.addEventListener('pagehide', event => {
   if (event.persisted) return;

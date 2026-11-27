@@ -7,7 +7,7 @@ import {
   buildAnalysisReply, buildTreatmentReply, urgentReply, detectFormula,
   detectOrgan, detectMeridian, isCompareIntent, isResetIntent, isTreatIntent,
 } from "./agent.js?v=20261108teacher";
-import { TCMScene3D } from "./scene3d.js?v=20261126qi";
+import { startModelLoader } from "./model-loader.js";
 
 const $ = id => document.getElementById(id);
 const ui = {
@@ -536,29 +536,21 @@ async function boot() {
     }
   }
 
-  scene = new TCMScene3D($("canvas-wrap"), ui.labels, ui.loadingText);
-  try {
-    await scene.init();
-    scene.setLayers(layers);
-    scene.setSkinOpacity(Number(ui.skinOpacity.value));
-    scene.setState(pattern ? beforeState : NORMAL_STATE, pattern?.organs || [], pattern?.meridians || []);
-    if (pattern) scene.setAffected(pattern.organs, pattern.meridians);
-    setVisualMode("real");
-    setSexButtons("male");
-    ui.loading.classList.add("is-hidden");
-    setTimeout(() => ui.loading.remove(), 500);
-    window.__tcmScene = scene;
-    console.log("[TCM] scene ready", {
-      meridians: scene.meridians?.meridians?.length,
-      organs: scene.organs?.size,
-      skin: !!scene.skin,
-      labels: scene.labels?.size,
-    });
-  } catch (e) {
-    ui.loadingText.textContent = "3D 模型加载失败；请通过本地 HTTP 服务打开（不要直接双击 HTML），并确认 assets/anatomy_male.glb 存在。";
-    console.error(e);
-    addMessage("agent", "3D 解剖模型没有加载成功。请用本地服务打开页面（如 python -m http.server 8000），并确认 web/assets/anatomy_male.glb 与 anatomy_female.glb 存在。");
-  }
+  startModelLoader({
+    wrap: $("canvas-wrap"), labels: ui.labels, loading: ui.loading, text: ui.loadingText,
+    onReady(loaded) {
+      scene = loaded;
+      sex = scene.sex;
+      scene.setState(pattern ? beforeState : NORMAL_STATE, pattern?.organs || [], pattern?.meridians || []);
+      setVisualMode(visualMode);
+      if (pattern && currentDay) applyDay(currentDay);
+      setSexButtons(sex);
+      for (const [key, button] of [["male", ui.btnSexMale], ["female", ui.btnSexFemale]]) {
+        if (button) button.disabled = !!scene.localModels && !scene.localModels.has(key);
+      }
+      window.__tcmScene = scene;
+    },
+  });
 
   ui.form.addEventListener("submit", e => {
     e.preventDefault();

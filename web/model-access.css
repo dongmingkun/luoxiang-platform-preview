@@ -1,0 +1,12 @@
+.model-actions { display: grid; justify-items: center; gap: 10px; max-width: 36rem; padding: 0 16px; text-align: center; }
+.model-actions[hidden], .model-actions [hidden], .loading-ring[hidden], .empty-state [hidden], .integrated-row[hidden] { display: none !important; }
+.model-actions p { margin: 0; font-size: 13px; }
+.model-actions .model-buttons { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; }
+.model-actions button, .model-actions a, .empty-state .integrated-link { font: inherit; font-size: 13px; line-height: 1.4; cursor: pointer; border-radius: 7px; padding: 7px 11px; }
+.model-actions button, .model-actions a { border: 1px solid #78978d; background: #f6f7f2; color: #234c41; text-decoration: none; }
+.model-actions button:first-child { color: white; background: #20654f; border-color: #20654f; }
+.empty-state .integrated-link { color: #185940; background: #f3f8f4; border: 1px solid #b8cbbc; text-decoration: none; }
+.loading[data-model-state="waiting"] { padding: 16px; text-align: center; }
+.loading[data-model-state="waiting"] p { color: #dae7e2; }
+.studio-body .loading[data-model-state="waiting"] { background: #20342e; color: #f5f8f5; }
+.studio-body .loading[data-model-state="waiting"] p { color: #ecf2ee; }

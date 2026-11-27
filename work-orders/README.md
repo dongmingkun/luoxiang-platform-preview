@@ -48,5 +48,6 @@
 | WO-PF-20261108-001 | 教师端 / 教学控制台 | 待验收 | `codex/teacher-console` / 本地提交，Gitea 待网络恢复 | 队长 |
 | WO-PF-20261108-002 | 中草药资料接入与只读检索 | 待验收 | `codex/herb-dataset` / `87f5d71` / [PR #4](http://10.8.50.242:3030/cjh/Yang-Energy-Flow-Chart.profile-private/pulls/4) | 队长 |
 | WO-PF-20261112-001 | 往届作品参照与答辩任务台 | 待验收 | `codex/award-benchmark` / `7b68c40` / [PR #5](http://10.8.50.242:3030/cjh/Yang-Energy-Flow-Chart.profile-private/pulls/5) | 队长 |
+| WO-PF-20261127-002 | 桌面与网页预览的模型载入 | 待验收 | `codex/model-loading-preview` | 队长 |
 
 当前唯一预览：<http://127.0.0.1:8020/>（平台仓实时服务；说明见 `deploy/README.md`）。
