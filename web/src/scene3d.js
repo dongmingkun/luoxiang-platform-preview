@@ -1,3 +1,4 @@
+import { embeddedManager } from "./model-files.js";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
@@ -119,7 +120,7 @@ export class TCMScene3D {
   }
 
   async init() {
-    this._setupScene();
+    if (!this.renderer) this._setupScene();
     await this._loadGLB(this.sex);
     await this._loadMeridians(this.sex);
     this._resetCameraForModel();
@@ -222,17 +223,18 @@ export class TCMScene3D {
     const token = ++this._loadToken;
     const female = sex === "female";
     const path = female ? "assets/anatomy_female.glb?v=20261107defense" : "assets/anatomy_male.glb?v=20261107defense";
-    const loader = new GLTFLoader();
+    const loader = new GLTFLoader(this.localModels ? embeddedManager() : undefined);
     this._setLoading(female ? "正在载入女性教学模型…" : "正在载入男性教学模型…");
-    const gltf = await new Promise((resolve, reject) => {
+    const local = this.localModels?.get(sex);
+    if (this.localModels && !local) throw new Error("尚未选择这一性别的本机模型。");
+    const gltf = local ? await loader.parseAsync(local.buffer, "") : await new Promise((resolve, reject) => {
       loader.load(path, resolve, xhr => {
         if (xhr.total) {
           const pct = Math.min(100, Math.round((xhr.loaded / xhr.total) * 100));
           this._setLoading(`正在载入解剖模型 ${pct}%`);
         }
       }, err => {
-        console.error(err);
-        this._setLoading("解剖模型加载失败");
+        this._setLoading("解剖模型未载入");
         reject(err);
       });
     });
@@ -359,7 +361,11 @@ export class TCMScene3D {
 
   async _loadMeridians(sex = this.sex) {
     const path = sex === "female" ? "assets/meridians_female.json?v=20261107defense" : "assets/meridians.json?v=20261107defense";
-    const data = await fetch(path).then(r => r.json());
+    const local = this.localModels?.get(sex);
+    const data = local ? local.data : await fetch(path).then(r => {
+      if (!r.ok) throw new Error("配套经络文件未载入。");
+      return r.json();
+    });
     this.data = data;
 
     if (this.meridians) {

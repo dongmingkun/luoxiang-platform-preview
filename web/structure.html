@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="platform-theme.css?v=20261126award" />
   <link rel="stylesheet" href="structure.css?v=20261126award" />
   <script type="importmap">{"imports":{"three":"./vendor/three.module.js","three/addons/":"./vendor/addons/"}}</script>
+  <link rel="stylesheet" href="model-access.css" />
 </head>
 <body class="atlas-body">
   <header class="lx-topbar">
@@ -124,6 +125,7 @@
           <h3>载入三维解剖模型</h3>
           <p>选择本机男性或女性教学 GLB，即可进行分层透视、单脏器聚焦与空间分离观察。</p>
           <button id="empty-pick" class="button primary" type="button">选择本机 GLB 模型</button>
+          <a id="structure-integrated-link" class="integrated-link" hidden>打开本机完整版</a>
           <small>仅在本地浏览器内存中解析，绝不上传至任何服务器。</small>
         </div>
 
@@ -191,7 +193,7 @@
     <span>BodyParts3D © DBCLS · <a href="https://creativecommons.org/licenses/by-sa/2.1/jp/" target="_blank" rel="noopener">CC BY-SA 2.1 Japan</a> · 代码 / Three.js MIT</span>
   </footer>
 
-  <script type="module" src="src/structure.js?v=20261126award2"></script>
+  <script type="module" src="src/structure.js?v=20261127load"></script>
   <script type="module" src="src/defense-guide.js?v=20261126award"></script>
 </body>
 </html>

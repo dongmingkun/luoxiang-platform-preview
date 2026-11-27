@@ -21,6 +21,7 @@
     }
     window.addEventListener("error", e => window.__logs.push("window: " + e.message));
   </script>
+  <link rel="stylesheet" href="model-access.css" />
 </head>
 <body class="studio-body">
   <svg class="studio-symbols" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
@@ -115,7 +116,15 @@
           <div id="canvas-wrap" class="canvas-wrap">
             <div class="stage-reticle" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
             <div class="stage-grid" aria-hidden="true"></div>
-            <div id="loading" class="loading"><div class="loading-ring"></div><p id="loading-text">正在载入解剖模型…</p></div>
+            <div id="loading" class="loading"><div class="loading-ring"></div><p id="loading-text" role="status">正在载入解剖模型…</p>
+              <div id="model-actions" class="model-actions" hidden>
+                <p>男性使用 anatomy_male.glb 和 meridians.json；女性使用 anatomy_female.glb 和 meridians_female.json。可同时选择两组，文件仅在本页读取。</p>
+                <input type="file" id="teaching-files" accept=".glb,.json" multiple hidden />
+                <div class="model-buttons"><button type="button" id="pick-teaching-files">选择模型与经络文件</button>
+                  <a id="open-integrated" hidden>打开本机完整版</a><button type="button" id="retry-model">重新检测</button>
+                </div>
+              </div>
+            </div>
             <div id="labels" class="labels"></div>
 
             <div class="view-state" id="view-state">正常 · 阴平阳秘</div>
@@ -378,7 +387,7 @@
   </div>
 
   <script type="importmap">{"imports":{"three":"./vendor/three.module.js","three/addons/":"./vendor/addons/"}}</script>
-  <script type="module" src="src/app.js?v=20261126qi"></script>
+  <script type="module" src="src/app.js?v=20261127load"></script>
   <script type="module" src="src/vue-studio.js?v=20261126vue"></script>
   <script type="module" src="src/defense-guide.js?v=20261126award"></script>
 </body>

@@ -1,0 +1,16 @@
+{
+  "name": "luoxiang-platform-web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local-only Vue presentation layer for Luoxiang teaching studio",
+  "scripts": {
+    "vendor:vue": "node deploy/vendor_vue.mjs",
+    "test:vue": "node deploy/verify_vue_studio.cjs"
+  },
+  "dependencies": {
+    "vue": "3.5.46"
+  },
+  "devDependencies": {
+    "playwright": "1.64.1"
+  }
+}

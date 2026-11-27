@@ -38,3 +38,4 @@ deploy/preview_server.log
 deploy/preview_server.err.log
 __pycache__/
 *.pyc
+node_modules/
